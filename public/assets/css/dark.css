@@ -1,0 +1,150 @@
+/* Initialize Variables */
+/* Bclinico Project Color */
+/* Medical Color */
+.color-black33 {
+  color: unset; }
+
+.bgc-snowshade,
+.bgc-snowshade2 {
+  background-color: transparent; }
+
+body {
+  background-color: #111111;
+  color: gray; }
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  color: #ffffff !important; }
+  h1 small,
+  h1 .small, h2 small,
+  h2 .small, h3 small,
+  h3 .small, h4 small,
+  h4 .small, h5 small,
+  h5 .small, h6 small,
+  h6 .small,
+  .h1 small,
+  .h1 .small, .h2 small,
+  .h2 .small, .h3 small,
+  .h3 .small, .h4 small,
+  .h4 .small, .h5 small,
+  .h5 .small, .h6 small,
+  .h6 .small {
+    font-weight: normal;
+    line-height: 1;
+    color: #eeeeee !important; }
+  h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+  .h1 a, .h2 a, .h3 a, .h4 a, .h5 a, .h6 a {
+    color: #eeeeee !important; }
+
+a {
+  color: #eeeeee !important; }
+
+blockquote {
+  color: #ffffff; }
+
+.dropdown-content {
+  background-color: gray; }
+
+.ulockd-ohour-info.style2 {
+  background-color: transparent; }
+
+.header-middle,
+.our-shop,
+.ulockd-testimonial,
+.ulockd-blog,
+.ulockd-ffact-one {
+  background-color: transparent !important; }
+
+.ulockd-cell,
+.ulockd-addrss,
+.ulockd-info > p {
+  color: gray; }
+
+.header-nav .main-header-nav.navbar-scrolltofixed {
+  background-color: #111111; }
+
+.ulockd-ffact-one p {
+  color: #ffffff !important; }
+
+nav.navbar.bootsnav.menu-style1 ul.nav li a.active,
+nav.navbar.bootsnav.menu-style1 ul.nav li a:hover,
+nav.navbar.bootsnav.menu-style1 ul.nav li a:focus,
+nav.navbar.bootsnav li.dropdown ul.dropdown-menu li a:hover,
+nav.navbar.bootsnav li.dropdown ul.dropdown-menu li a:focus {
+  color: #ffffff !important; }
+
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+  background-color: transparent; }
+
+nav.navbar.bootsnav li.dropdown ul.dropdown-menu {
+  background-color: #111111; }
+
+nav.navbar.bootsnav.menu-style1 ul.nav li a {
+  color: #DCDCDC !important; }
+
+.modal-content,
+nav.navbar.bootsnav.menu-style2 ul.nav li a.active,
+nav.navbar.bootsnav.menu-style2 ul.nav li a:hover,
+nav.navbar.bootsnav.menu-style2 ul.nav li a:focus,
+nav.navbar.bootsnav li.dropdown ul.dropdown-menu li a:hover,
+nav.navbar.bootsnav li.dropdown ul.dropdown-menu li a:focus {
+  color: #111111 !important; }
+
+nav.navbar.bootsnav.menu-style2 ul.nav li a {
+  color: gray !important; }
+
+.ulockd-partner-thumb {
+  background-color: #bbbbbb !important; }
+
+form.ulockd-login-form, form.ulockd-reg-form {
+  background-color: gray; }
+
+.cart-list li.total span {
+  color: gray; }
+
+@media only screen and (max-width: 992px) {
+  nav.menu-style1,
+  nav.navbar.bootsnav .navbar-toggle {
+    background-color: transparent !important; } }
+.about-box {
+  background-color: transparent;
+  border: 1px solid #ffffff; }
+
+.ulockd-service-three,
+.ficon-box,
+.ulockd-team-member,
+.partner-slider {
+  background-color: transparent; }
+
+.testimonial,
+.blog-npost {
+  background-color: gray; }
+
+.flip-container .flipper .back {
+  background-color: gray; }
+
+article.ulockd-blog-post .bp-details {
+  background-color: transparent; }
+
+.footer-contact p,
+.footer-fst-col p {
+  color: unset; }
+
+.ftr-phone,
+.ftr-fax,
+.ftr-mail {
+  color: unset; }
+
+.twitter.style2 ul li {
+  color: unset; }
+
+.ulockd-divider1:before {
+  background-color: rgba(0, 0, 0, 0.8);
+  content: "";
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%; }
+
+/*# sourceMappingURL=dark.css.map */

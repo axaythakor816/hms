@@ -1,0 +1,153 @@
+	/*
+  	Flaticon icon font: Flaticon
+  	Creation date: 05/08/2017 08:12
+  	*/
+
+@font-face {
+  font-family: "Flaticon";
+  src: url("../fonts/Flaticon.eot");
+  src: url("../fonts/Flaticond41d.eot?#iefix") format("embedded-opentype"),
+       url("../fonts/Flaticon.woff") format("woff"),
+       url("../fonts/Flaticon.ttf") format("truetype"),
+       url("../fonts/Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("../fonts/Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+font-style: normal;
+}
+
+.flaticon-throat:before { content: "\f100"; }
+.flaticon-kidney:before { content: "\f101"; }
+.flaticon-person-2:before { content: "\f102"; }
+.flaticon-emergency-ambulance:before { content: "\f103"; }
+.flaticon-business-4:before { content: "\f104"; }
+.flaticon-like:before { content: "\f105"; }
+.flaticon-protest:before { content: "\f106"; }
+.flaticon-technology:before { content: "\f107"; }
+.flaticon-command:before { content: "\f108"; }
+.flaticon-classroom:before { content: "\f109"; }
+.flaticon-business-3:before { content: "\f10a"; }
+.flaticon-focus:before { content: "\f10b"; }
+.flaticon-calendar-1:before { content: "\f10c"; }
+.flaticon-unlink:before { content: "\f10d"; }
+.flaticon-calendar:before { content: "\f10e"; }
+.flaticon-clock-2:before { content: "\f10f"; }
+.flaticon-play-button-1:before { content: "\f110"; }
+.flaticon-clock-1:before { content: "\f111"; }
+.flaticon-id-card:before { content: "\f112"; }
+.flaticon-chat-2:before { content: "\f113"; }
+.flaticon-chat-1:before { content: "\f114"; }
+.flaticon-chat:before { content: "\f115"; }
+.flaticon-people-10:before { content: "\f116"; }
+.flaticon-people-9:before { content: "\f117"; }
+.flaticon-medal-2:before { content: "\f118"; }
+.flaticon-location:before { content: "\f119"; }
+.flaticon-people-8:before { content: "\f11a"; }
+.flaticon-speech-bubble:before { content: "\f11b"; }
+.flaticon-business-2:before { content: "\f11c"; }
+.flaticon-telephone-2:before { content: "\f11d"; }
+.flaticon-social:before { content: "\f11e"; }
+.flaticon-medal-1:before { content: "\f11f"; }
+.flaticon-medal:before { content: "\f120"; }
+.flaticon-people-7:before { content: "\f121"; }
+.flaticon-people-6:before { content: "\f122"; }
+.flaticon-people-5:before { content: "\f123"; }
+.flaticon-credit-card:before { content: "\f124"; }
+.flaticon-facebook:before { content: "\f125"; }
+.flaticon-health-care-1:before { content: "\f126"; }
+.flaticon-twitter:before { content: "\f127"; }
+.flaticon-flickr:before { content: "\f128"; }
+.flaticon-right-arrow-1:before { content: "\f129"; }
+.flaticon-left-arrow-1:before { content: "\f12a"; }
+.flaticon-business-1:before { content: "\f12b"; }
+.flaticon-left-arrow:before { content: "\f12c"; }
+.flaticon-right-arrow:before { content: "\f12d"; }
+.flaticon-add:before { content: "\f12e"; }
+.flaticon-instagram:before { content: "\f12f"; }
+.flaticon-house-key:before { content: "\f130"; }
+.flaticon-checkbox-pen-outline:before { content: "\f131"; }
+.flaticon-woman-and-child-holding-hands:before { content: "\f132"; }
+.flaticon-linkedin-logo:before { content: "\f133"; }
+.flaticon-facebook-logo:before { content: "\f134"; }
+.flaticon-twitter-logo-on-black-background:before { content: "\f135"; }
+.flaticon-target:before { content: "\f136"; }
+.flaticon-email-filled-closed-envelope:before { content: "\f137"; }
+.flaticon-clock-circular-outline:before { content: "\f138"; }
+.flaticon-event-date-and-time-symbol:before { content: "\f139"; }
+.flaticon-24-hours-phone-assistance-service:before { content: "\f13a"; }
+.flaticon-business:before { content: "\f13b"; }
+.flaticon-folder:before { content: "\f13c"; }
+.flaticon-clock:before { content: "\f13d"; }
+.flaticon-ambulance:before { content: "\f13e"; }
+.flaticon-interface:before { content: "\f13f"; }
+.flaticon-trophy-for-sports:before { content: "\f140"; }
+.flaticon-black-back-closed-envelope-shape:before { content: "\f141"; }
+.flaticon-link-symbol:before { content: "\f142"; }
+.flaticon-calendar-with-a-clock-time-tools:before { content: "\f143"; }
+.flaticon-magnifier:before { content: "\f144"; }
+.flaticon-multiple-users-silhouette:before { content: "\f145"; }
+.flaticon-play-button:before { content: "\f146"; }
+.flaticon-home:before { content: "\f147"; }
+.flaticon-tags:before { content: "\f148"; }
+.flaticon-map-marker:before { content: "\f149"; }
+.flaticon-square-shape-shadow:before { content: "\f14a"; }
+.flaticon-thumbs-up-hand-symbol:before { content: "\f14b"; }
+.flaticon-flickr-website-logo-silhouette:before { content: "\f14c"; }
+.flaticon-add-square-button:before { content: "\f14d"; }
+.flaticon-medical-kit:before { content: "\f14e"; }
+.flaticon-mark:before { content: "\f14f"; }
+.flaticon-telephone-1:before { content: "\f150"; }
+.flaticon-old-handphone:before { content: "\f151"; }
+.flaticon-checked-mark:before { content: "\f152"; }
+.flaticon-wedding-invitation:before { content: "\f153"; }
+.flaticon-twitter-logo-silhouette:before { content: "\f154"; }
+.flaticon-home-page:before { content: "\f155"; }
+.flaticon-lock:before { content: "\f156"; }
+.flaticon-blocks-with-angled-cuts:before { content: "\f157"; }
+.flaticon-straight-quotes:before { content: "\f158"; }
+.flaticon-medical-11:before { content: "\f159"; }
+.flaticon-signs:before { content: "\f15a"; }
+.flaticon-transport:before { content: "\f15b"; }
+.flaticon-medical-10:before { content: "\f15c"; }
+.flaticon-medical-9:before { content: "\f15d"; }
+.flaticon-health-care:before { content: "\f15e"; }
+.flaticon-exercise:before { content: "\f15f"; }
+.flaticon-people-4:before { content: "\f160"; }
+.flaticon-people-3:before { content: "\f161"; }
+.flaticon-medical-8:before { content: "\f162"; }
+.flaticon-medical-7:before { content: "\f163"; }
+.flaticon-cardiogram:before { content: "\f164"; }
+.flaticon-people-2:before { content: "\f165"; }
+.flaticon-medical-6:before { content: "\f166"; }
+.flaticon-pregnant-woman:before { content: "\f167"; }
+.flaticon-brain-in-head:before { content: "\f168"; }
+.flaticon-medical-5:before { content: "\f169"; }
+.flaticon-medical-4:before { content: "\f16a"; }
+.flaticon-person-1:before { content: "\f16b"; }
+.flaticon-people-1:before { content: "\f16c"; }
+.flaticon-shape-1:before { content: "\f16d"; }
+.flaticon-medical-3:before { content: "\f16e"; }
+.flaticon-sign:before { content: "\f16f"; }
+.flaticon-tool-1:before { content: "\f170"; }
+.flaticon-circle:before { content: "\f171"; }
+.flaticon-medical-2:before { content: "\f172"; }
+.flaticon-shape:before { content: "\f173"; }
+.flaticon-medical-1:before { content: "\f174"; }
+.flaticon-person:before { content: "\f175"; }
+.flaticon-people:before { content: "\f176"; }
+.flaticon-tool:before { content: "\f177"; }
+.flaticon-baby-with-diaper:before { content: "\f178"; }
+.flaticon-medical-stethoscope-variant:before { content: "\f179"; }
+.flaticon-medical:before { content: "\f17a"; }
+.flaticon-telephone:before { content: "\f17b"; }

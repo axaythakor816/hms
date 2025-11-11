@@ -1,0 +1,35 @@
+/* Initialize Variables */
+/* Bclinico Project Color */
+/* Medical Color */
+body {
+  background-color: #DCDCDC !important;
+  margin: 0 auto;
+  overflow-x: hidden !important;
+  width: 1200px; }
+
+.header-middle,
+.ulockd-fservice,
+.ulockd-team,
+.ulockd-about,
+.ulockd-team-two,
+.ulockd-about2,
+.ulockd-causes {
+  background-color: #ffffff; }
+
+.main-slider2 .caption {
+  padding: 12% 18%; }
+
+.main-slider2 .mslider-caption {
+  padding: 13% 15% !important; }
+
+.ulockd-partner,
+.ulockd-footer2 {
+  background-color: #ffffff; }
+
+.box-bg1 {
+  background-image: url("../images/pattern/2.jpg"); }
+
+.box-bg2 {
+  background-image: url("../images/pattern/3.png"); }
+
+/*# sourceMappingURL=boxed.css.map */
