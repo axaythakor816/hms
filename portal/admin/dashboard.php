@@ -1,8 +1,7 @@
 <?php
-require_once('includes/auth_check.php');
-require_once('includes/header.php');
-require_once('includes/sidebar.php');
+require_once('../includes/header.php');
 ?>
+
         <div class="page-wrapper">
             <div class="content">
 			
@@ -11,7 +10,7 @@ require_once('includes/sidebar.php');
 					<div class="row">
 						<div class="col-sm-12">
 							<ul class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.php">Dashboard </a></li>
+								<li class="breadcrumb-item"><a href="dashboard.php">Dashboard </a></li>
 								<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 								<li class="breadcrumb-item active">Admin Dashboard</li>
 							</ul>
@@ -24,15 +23,13 @@ require_once('includes/sidebar.php');
 					<div class="row">
 						<div class="col-md-6">
 							<div class="morning-user">
-								<h2>Good Morning, <span><?php
-								require_once('includes/config.php');
-								?>axay</span></h2>
+								<h2>Good Morning, <span>axay</span></h2>
 								<p>Have a nice day at work</p>
 							</div>
 						</div>
 						<div class="col-md-6 position-blk">
 							<div class="morning-img">
-								<img src="assets/img/morning-img-01.png" alt="">
+								<img src="../assets/img/morning-img-01.png" alt="">
 							</div>
 						</div>
 					</div>
@@ -43,50 +40,25 @@ require_once('includes/sidebar.php');
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
 							<div class="dash-boxs comman-flex-center">
-								<img src="assets/img/icons/calendar.svg" alt="">
+								<img src="../assets/img/icons/calendar.svg" alt="">
 							</div>
-							<?php
-										 
-										
-											$query="SELECT * FROM appointment";
-											$data=mysqli_query($conn,$query);
-											if($result=mysqli_num_rows($data));
-											{
-											
-                                             
-													?>
+							
 							<div class="dash-content dash-count">
 								<h4>Appointments</h4>
-								<h2><span class="counter-up" ><?php echo $result; ?></span></h2>
-								<?php
-							}
-						
-							?>
+								<h2><span class="counter-up" >5</span></h2>
+
 							</div>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="dash-widget">
 							<div class="dash-boxs comman-flex-center">
-								<img src="assets/img/icons/profile-add.svg" alt="">
+								<img src="../assets/img/icons/profile-add.svg" alt="">
 							</div>
-							<?php
-										 
-										
-											$query="SELECT * FROM patient";
-											$data=mysqli_query($conn,$query);
-											if($result=mysqli_num_rows($data));
-											{
-											
-                                             
-													?>
+							
 							<div class="dash-content dash-count">
 								<h4>New Patients</h4>
-								<h2><span class="counter-up" ><?php echo $result; ?></span></h2>
-								<?php
-							}
-							?>
-								
+								<h2><span class="counter-up" >5</span></h2>							
 							</div>
                         </div>
                     </div>
@@ -117,7 +89,7 @@ require_once('includes/sidebar.php');
 									<h4>Patient by Department</h4>
 								</div>	
 								<div id="donut-chart-dash" class="chart-user-icon">
-									<img src="assets/img/icons/user-icon.svg" alt="">
+									<img src="../assets/img/icons/user-icon.svg" alt="">
 								</div>
 							</div>
 						</div>
@@ -132,7 +104,7 @@ require_once('includes/sidebar.php');
                             <div class="card-body">
                                 <div class="activity-top">
 									<div class="activity-boxs comman-flex-center">
-										<img src="assets/img/icons/dep-icon-01.svg" alt="">
+										<img src="../assets/img/icons/dep-icon-01.svg" alt="">
 									</div>
 									<div class="departments-list">
 										<h4>General Physician</h4>
@@ -141,7 +113,7 @@ require_once('includes/sidebar.php');
 								</div>
 								<div class="activity-top">
 									<div class="activity-boxs comman-flex-center">
-										<img src="assets/img/icons/dep-icon-02.svg" alt="">
+										<img src="../assets/img/icons/dep-icon-02.svg" alt="">
 									</div>
 									<div class="departments-list">
 										<h4>Dentist</h4>
@@ -150,7 +122,7 @@ require_once('includes/sidebar.php');
 								</div>
 								<div class="activity-top">
 									<div class="activity-boxs comman-flex-center">
-										<img src="assets/img/icons/dep-icon-03.svg" alt="">
+										<img src="../assets/img/icons/dep-icon-03.svg" alt="">
 									</div>
 									<div class="departments-list">
 										<h4>ENT</h4>
@@ -159,7 +131,7 @@ require_once('includes/sidebar.php');
 								</div>
 								<div class="activity-top">
 									<div class="activity-boxs comman-flex-center">
-										<img src="assets/img/icons/dep-icon-04.svg" alt="">
+										<img src="../assets/img/icons/dep-icon-04.svg" alt="">
 									</div>
 									<div class="departments-list">
 										<h4>Cardiologist</h4>
@@ -168,7 +140,7 @@ require_once('includes/sidebar.php');
 								</div>
 								<div class="activity-top mb-0">
 									<div class="activity-boxs comman-flex-center">
-										<img src="assets/img/icons/dep-icon-05.svg" alt="">
+										<img src="../assets/img/icons/dep-icon-05.svg" alt="">
 									</div>
 									<div class="departments-list">
 										<h4>Opthomology</h4>
@@ -200,39 +172,21 @@ require_once('includes/sidebar.php');
 												
 										</thead>
 										<tbody>
-										<?php
-											$query="SELECT * FROM appointment";
-											$data=mysqli_query($conn,$query);
-											$result=mysqli_num_rows($data);
-											if($result){
-                                                $sr=1;
-
-												while($row=mysqli_fetch_array($data)){
-													?>
+										
 											<tr>
 												<td>
 													<div class="form-check check-tables">
 														<input class="form-check-input" type="checkbox" value="something">
 													</div>
 												</td>
-												<td><?php echo $sr; ?></td>
-												<td><?php echo $row['name']; ?></td>
+												<td>1</td>
+												<td>axay</td>
 												<td class="table-image appoint-doctor">
 													
-													<h2><?php echo $row['doctor']; ?></h2>
+													<h2>barli</h2>
 												</td>
-												<td class="appoint-time"><?php echo $row['date']; ?></td>
-												
-												
-											</tr>
-											<?php
-                                            $sr++;
-												}	
-											}else{
-                                                echo"No Record Found" ;
-                                            }
-												?>
-											
+												<td class="appoint-time">20-02-2025</td>	
+											</tr>											
 										</tbody>
 									</table>
 								</div>
@@ -266,42 +220,21 @@ require_once('includes/sidebar.php');
 											</tr>
 										</thead>
 										<tbody>
-										<?php
-										 
-										
-										 $query="SELECT * FROM patient";
-										 $data=mysqli_query($conn,$query);
-										 $result=mysqli_num_rows($data);
-										 if($result){
-											 $sr=1;
-
-											 while($row=mysqli_fetch_array($data)){
-												 
-												 ?>
 											<tr>
 												<td>
 													<div class="form-check check-tables">
 														<input class="form-check-input" type="checkbox" value="something">
 													</div>
 												</td>
-												<td><?php echo $sr; ?></td>
+												<td>1</td>
 												<td class="table-image">
-													<h2><?php echo $row['fname']; echo " "; echo $row['lname']; ?></h2>
+													<h2>xyz xyz</h2>
 												</td>
-												<td><?php echo $row['doctor']; ?></td>
-												<td><?php echo $row['dob']; ?></td>
-												<td><?php echo $row['gender']; ?></td>
-												<td><button class="custom-badge status-green "><?php echo $row['admit']; ?></button></td>
-												<?php
-                                             $sr=$sr+1;
-												}	
-											}else{
-                                                echo"No Record Found" ;
-                                            }
-												?>
+												<td>xyz</td>
+												<td>xyz</td>
+												<td>male</td>
+												<td><button class="custom-badge status-green ">d</button></td>
 											</tr>
-											
-											
 										</tbody>
 									</table>
 								</div>
@@ -313,5 +246,7 @@ require_once('includes/sidebar.php');
             
         </div>
 <?php 
-require_once('includes/footer.php');
+
+require_once('../includes/footer.php');
+
 ?>

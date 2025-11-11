@@ -354,4 +354,45 @@ function checkdata($data, $columnname) {
     }
 }
 
+// -----------------------------------------------
+// helpers.php – Generic Helper Functions
+// -----------------------------------------------
+
+// Base URL
+function base_url($path = "")
+{
+    return rtrim($_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . "/hms/", "/") . "/" . ltrim($path, "/");
+}
+
+// Redirect
+function redirect($url)
+{
+    header("Location: " . $url);
+    exit;
+}
+
+// Format money
+function money($amt)
+{
+    return number_format((float)$amt, 2, '.', ',');
+}
+
+// UUID
+function uuid()
+{
+    return bin2hex(random_bytes(16));
+}
+
+// JSON response
+function json_response($status, $msg, $data = [])
+{
+    header('Content-Type: application/json');
+    echo json_encode([
+        "status" => $status,
+        "message" => $msg,
+        "data" => $data
+    ]);
+    exit;
+}
+
 ?>
