@@ -1,5 +1,5 @@
 <?php
-require_once('core/helpers.php');
+require_once('../core/helpers.php');
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -71,11 +71,11 @@ require_once('core/helpers.php');
 							</div>
 						</li>
 						<li class="login-popup">
-							<a class="color-white" href="login.php" data-toggle="">Login</a>
+							<a class="color-white" href="page-login.php" data-toggle="">Login</a>
 							
 						</li>
 						<li class="login-popup">
-							<a class="color-white" href="registration.php" data-toggle="">Registration</a>
+							<a class="color-white" href="page-registration.php" data-toggle="">Registration</a>
 							
 						</li>
 					

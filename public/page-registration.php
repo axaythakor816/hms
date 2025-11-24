@@ -21,13 +21,14 @@
 <link href="assets/images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
 <link href="assets/images/favicon.ico" sizes="128x128" rel="shortcut icon" />
 
-
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <style>.error{color: red;}</style>
 </head>
 <body>
 <div class="wrapper">
@@ -63,30 +64,35 @@
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <div class="login-box bgc-white p30 ulockd-bdr-thm">
-                        <form action="register_process.php" method="POST" class="ulockd-login-form" novalidate>
+                        <form method="POST" class="ulockd-login-form" id="registration_form" novalidate>
                             <div class="form-group text-left">
                                 <label for="name"><i class="fa fa-user text-thm"></i> Full Name</label>
+                                <span class="error" id="name_error"></span><br>
                                 <input type="text" name="name" id="name" class="form-control" placeholder="Enter your full name" required>
                             </div>
 
                             <div class="form-group text-left">
                                 <label for="email"><i class="fa fa-envelope text-thm"></i> Email Address</label>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+                                <span class="error" id="email_error"></span><br>
+                                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="username">
                             </div>
 
                             <div class="form-group text-left">
                                 <label for="phone"><i class="fa fa-phone text-thm"></i> Phone Number</label>
-                                <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your phone number" required>
+                                <span class="error" id="phone_error"></span><br>
+                                <input type="tel" name="phone" id="phone" class="form-control" placeholder="Enter your phone number" required>
                             </div>
 
                             <div class="form-group text-left">
                                 <label for="password"><i class="fa fa-lock text-thm"></i> Password</label>
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Create a password" required>
+                                <span class="error" id="password_error"></span><br>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Create a password" required autocomplete="new-password">
                             </div>
 
                             <div class="form-group text-left">
                                 <label for="confirm_password"><i class="fa fa-lock text-thm"></i> Confirm Password</label>
-                                <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm your password" required>
+                                <span class="error" id="confirm_password_error"></span><br>
+                                <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm your password" required autocomplete="new-password">
                             </div>
 
                             <div class="checkbox text-left">
@@ -113,8 +119,6 @@
     </section>
     <!-- Registration Page End -->
 
-
-
 </div>
 <!-- Wrapper End -->
 <script type="text/javascript" src="assets/js/jquery-1.12.4.js"></script>
@@ -138,3 +142,6 @@
 
 <!-- Mirrored from unlockdesizn.com/html/health-and-beauty/bclinico/index-multipage.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 26 Dec 2024 10:00:10 GMT -->
 </html>
+
+     <script src="assets/ajax/helper.js"></script>
+     <script src="assets/ajax/register.js"></script>

@@ -73,6 +73,10 @@ Tag: ambulance, beauty, clinic, cosmetic, dentist, doctor, family doctor, gyneco
 html {
   font-size: 100%; }
 
+  .error {
+    color: red;
+  }
+
 body {
   background-attachment: fixed;
   background-color: #ffffff;
@@ -4697,7 +4701,7 @@ table.shop-dashboard {
     display: -webkit-box;
     display: -ms-flexbox;
     display: block;
-    isplay: flex;
+    display: flex;
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between; }
