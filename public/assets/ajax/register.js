@@ -33,6 +33,10 @@ $(document).ready(function () {
             dataType: "json",
             processData: false, 
             contentType: false, 
+            beforeSend: function () {
+                $(".error").text("");
+                    $("button[name='register']").prop("disabled", true).text("Registering...");  
+            },
             success: function(res) {
                 if(res.status == "error") {
                     if(res.message) {

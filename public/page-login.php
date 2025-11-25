@@ -58,25 +58,27 @@
                         <form action="login_process.php" method="POST" class="ulockd-login-form" novalidate>
                             <div class="form-group text-left">
                                 <label for="email"><i class="fa fa-envelope text-thm"></i> Email Address</label>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+                                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="username">
                             </div>
 
                             <div class="form-group text-left">
                                 <label for="password"><i class="fa fa-lock text-thm"></i> Password</label>
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required autocomplete="new-password">
                             </div>
 
-                            <div class="checkbox text-left">
-                                <label><input type="checkbox" name="remember"> Remember Me</label>
-                                <a href="#" class="pull-right text-thm">Forgot Password?</a>
+                           <div class="checkbox text-left" style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="remember" id="remember" style="margin: 0;">
+                                <label for="remember" style="margin: 0; cursor: pointer;">Remember Me</label>
+                                <a href="#" class="pull-right text-thm" style="margin-left: auto; text-decoration: none;">Forgot Password?</a>
                             </div>
+
 
                             <div class="text-center mt20">
                                 <button type="submit" class="btn btn-lg ulockd-btn-thm2">Login <i class="fa fa-sign-in"></i></button>
                             </div>
 
                             <div class="text-center mt20">
-                                <p>Don't have an account? <a href="registration.php" class="text-thm">Register Now</a></p>
+                                <p>Don't have an account? <a href="page-registration.php" class="text-thm">Register Now</a></p>
                             </div>
                         </form>
                     </div>

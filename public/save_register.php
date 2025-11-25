@@ -24,6 +24,7 @@ $email = $_POST['email'];
 $phone = $_POST['phone'];
 $password = $_POST['password'];
 $confirm_password = $_POST['confirm_password'];
+$uuid = uuid();
 
 $fields = [
     'email' => $email,
@@ -37,9 +38,9 @@ if ($dup['status'] === "duplicate") {
 
 $password = password_hash($password, PASSWORD_DEFAULT);
 
-$sql = "INSERT INTO users (first_name, email, phone, password) VALUES (?,?,?,?)";
-$values = [$name, $email, $phone, $password];
-$types = "ssss";
+$sql = "INSERT INTO users (uuid, first_name, email, phone, password) VALUES (?,?,?,?,?)";
+$values = [$uuid, $name, $email, $phone, $password];
+$types = "sssss";
 $result = insert($sql, $values, $types);
 
 json_response(

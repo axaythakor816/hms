@@ -95,21 +95,22 @@
                                 <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm your password" required autocomplete="new-password">
                             </div>
 
-                            <div class="checkbox text-left">
-                                <label>
-                                    <input type="checkbox" name="agree" required> I agree to the 
+                            <div class="checkbox text-left" style="display: flex; align-items: center; gap: 6px;">
+                                <input type="checkbox" name="agree" required style="margin: 0;">
+                                <label style="margin: 0;">
+                                    I agree to the 
                                     <a href="#" class="text-thm">Terms & Conditions</a>
                                 </label>
                             </div>
 
                             <div class="text-center mt20">
-                                <button type="submit" class="btn btn-lg ulockd-btn-thm2">
+                                <button type="submit" name="register" class="btn btn-lg ulockd-btn-thm2">
                                     Register <i class="fa fa-user-plus"></i>
                                 </button>
                             </div>
 
                             <div class="text-center mt20">
-                                <p>Already have an account? <a href="login.php" class="text-thm">Login Here</a></p>
+                                <p>Already have an account? <a href="page-login.php" class="text-thm">Login Here</a></p>
                             </div>
                         </form>
                     </div>
