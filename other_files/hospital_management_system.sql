@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2025 at 06:38 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.2
+-- Generation Time: Nov 26, 2025 at 11:36 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -35,7 +34,7 @@ CREATE TABLE `activity_logs` (
   `module` varchar(100) DEFAULT NULL,
   `details` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -52,7 +51,7 @@ CREATE TABLE `admissions` (
   `admit_date` datetime DEFAULT current_timestamp(),
   `reason` text DEFAULT NULL,
   `status` enum('admitted','discharged') DEFAULT 'admitted'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -68,7 +67,7 @@ CREATE TABLE `appointments` (
   `status` enum('pending','approved','cancelled','completed') DEFAULT 'pending',
   `notes` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -81,7 +80,7 @@ CREATE TABLE `beds` (
   `room_id` int(11) DEFAULT NULL,
   `bed_number` varchar(20) DEFAULT NULL,
   `status` enum('available','occupied','cleaning') DEFAULT 'available'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -99,7 +98,7 @@ CREATE TABLE `billing` (
   `net_amount` decimal(12,2) DEFAULT NULL,
   `status` enum('unpaid','paid','cancelled') DEFAULT 'unpaid',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -109,10 +108,14 @@ CREATE TABLE `billing` (
 
 CREATE TABLE `billing_items` (
   `id` bigint(20) NOT NULL,
-  `bill_id` bigint(20) DEFAULT NULL,
+  `bill_id` bigint(20) NOT NULL,
+  `service_type` enum('consultation','room','lab','radiology','pharmacy','nursing','operation','misc') DEFAULT NULL,
+  `reference_id` bigint(20) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `qty` int(11) DEFAULT 1,
+  `rate` decimal(12,2) DEFAULT NULL,
   `amount` decimal(12,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -124,7 +127,7 @@ CREATE TABLE `departments` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -138,7 +141,7 @@ CREATE TABLE `discharge_summaries` (
   `doctor_id` int(11) DEFAULT NULL,
   `summary` text DEFAULT NULL,
   `discharge_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -176,7 +179,7 @@ CREATE TABLE `doctors` (
   `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`)),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -190,7 +193,24 @@ CREATE TABLE `doctor_rounds` (
   `doctor_id` int(11) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `visited_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctor_schedules`
+--
+
+CREATE TABLE `doctor_schedules` (
+  `id` bigint(20) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `day` enum('Mon','Tue','Wed','Thu','Fri','Sat','Sun') DEFAULT NULL,
+  `time_from` time DEFAULT NULL,
+  `time_to` time DEFAULT NULL,
+  `slot_duration` int(11) DEFAULT 15,
+  `max_patients` int(11) DEFAULT 20,
+  `status` enum('active','inactive') DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -204,7 +224,7 @@ CREATE TABLE `insurance_claims` (
   `bill_id` bigint(20) DEFAULT NULL,
   `claim_status` enum('submitted','approved','rejected') DEFAULT 'submitted',
   `notes` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -217,7 +237,7 @@ CREATE TABLE `lab_tests` (
   `name` varchar(150) DEFAULT NULL,
   `category` varchar(150) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -233,7 +253,7 @@ CREATE TABLE `lab_test_results` (
   `result_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`result_json`)),
   `report_url` varchar(500) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -247,7 +267,7 @@ CREATE TABLE `login_logs` (
   `ip_address` varchar(50) DEFAULT NULL,
   `user_agent` text DEFAULT NULL,
   `login_time` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -260,7 +280,7 @@ CREATE TABLE `medical_history` (
   `patient_id` int(11) NOT NULL,
   `description` text DEFAULT NULL,
   `recorded_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -274,7 +294,7 @@ CREATE TABLE `nurse_notes` (
   `staff_id` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `recorded_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -304,7 +324,7 @@ CREATE TABLE `patients` (
   `status` enum('active','inactive') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -318,7 +338,7 @@ CREATE TABLE `payments` (
   `amount` decimal(12,2) DEFAULT NULL,
   `method` enum('cash','card','upi','insurance') DEFAULT NULL,
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -329,7 +349,7 @@ CREATE TABLE `payments` (
 CREATE TABLE `payment_methods` (
   `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -344,7 +364,7 @@ CREATE TABLE `prescriptions` (
   `appointment_id` bigint(20) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -360,7 +380,7 @@ CREATE TABLE `prescription_items` (
   `frequency` varchar(100) DEFAULT NULL,
   `duration_days` int(11) DEFAULT NULL,
   `instructions` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -376,7 +396,7 @@ CREATE TABLE `radiology_reports` (
   `report_url` varchar(500) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -387,7 +407,7 @@ CREATE TABLE `radiology_reports` (
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `roles`
@@ -397,7 +417,8 @@ INSERT INTO `roles` (`id`, `name`) VALUES
 (1, 'admin'),
 (2, 'doctor'),
 (3, 'patient'),
-(4, 'staff');
+(4, 'staff'),
+(5, 'user');
 
 -- --------------------------------------------------------
 
@@ -413,7 +434,7 @@ CREATE TABLE `role_permissions` (
   `can_add` tinyint(1) DEFAULT 0,
   `can_edit` tinyint(1) DEFAULT 0,
   `can_delete` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `role_permissions`
@@ -450,7 +471,7 @@ CREATE TABLE `rooms` (
   `room_type` enum('general','semi_private','private','icu') DEFAULT NULL,
   `charges` decimal(10,2) DEFAULT NULL,
   `status` enum('available','occupied','maintenance') DEFAULT 'available'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -473,7 +494,43 @@ CREATE TABLE `staff` (
   `status` enum('active','inactive','suspended') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_salary`
+--
+
+CREATE TABLE `staff_salary` (
+  `id` bigint(20) NOT NULL,
+  `staff_id` int(11) NOT NULL,
+  `basic_salary` decimal(12,2) DEFAULT NULL,
+  `hra` decimal(12,2) DEFAULT NULL,
+  `da` decimal(12,2) DEFAULT NULL,
+  `allowances` decimal(12,2) DEFAULT NULL,
+  `deductions` decimal(12,2) DEFAULT NULL,
+  `pf` decimal(12,2) DEFAULT NULL,
+  `esi` decimal(12,2) DEFAULT NULL,
+  `net_salary` decimal(12,2) DEFAULT NULL,
+  `salary_month` varchar(20) DEFAULT NULL,
+  `paid_on` date DEFAULT NULL,
+  `status` enum('paid','pending') DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tax`
+--
+
+CREATE TABLE `tax` (
+  `id` bigint(20) NOT NULL,
+  `bill_id` bigint(20) NOT NULL,
+  `tax_name` varchar(100) NOT NULL,
+  `tax_percentage` decimal(5,2) NOT NULL,
+  `tax_amount` decimal(12,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -483,19 +540,35 @@ CREATE TABLE `staff` (
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `uuid` char(36) NOT NULL,
+  `uuid` varchar(36) NOT NULL DEFAULT uuid(),
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `phone` varchar(30) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `role_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL DEFAULT 5,
   `gender` enum('Male','Female','Other') DEFAULT NULL,
   `dob` date DEFAULT NULL,
   `status` enum('active','inactive','blocked') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`) VALUES
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdhd@gmail.com', '1234567891', '$2y$10$SjHGwKbDHiRfHvH9llbMtO3ByoUyOCKrryB.0n9DqQXQgy5WzyBYG', 5, NULL, NULL, 'active', '2025-11-24 13:33:21', '2025-11-24 13:33:21'),
+(2, 'b8e66ca6-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdhdk@gmail.com', '1234567892', '$2y$10$DWesSv3yyKWMvG7ZibgKBe7rW2360LR/JjQwZFUbo7MaRHNNJTvJK', 5, NULL, NULL, 'active', '2025-11-24 13:44:39', '2025-11-24 13:44:39'),
+(3, 'd9306d37-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgddhd@gmail.com', '2536956326', '$2y$10$lwzflSnWQB2cAkMmuWy9K.KM26CuqgABYWycerz7jiacu9B4A5Hna', 5, NULL, NULL, 'active', '2025-11-24 13:45:33', '2025-11-24 13:45:33'),
+(4, 'e1a77e13-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdddhd@gmail.com', '2536956325', '$2y$10$0nWrgV9WQD9DKo0baIQQhuCrFWq9suNjDNFKwPOTf93mj0zDQMT6q', 5, NULL, NULL, 'active', '2025-11-24 13:45:47', '2025-11-24 13:45:47'),
+(5, '5af31f7c-ca9a-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdghd@gmail.com', '1234567899', '$2y$10$FjpJYHB.hLaPE7j8KKWQsOUmEIGAQuf8VqAg/goWbJeXCz.JMaci.', 5, NULL, NULL, 'active', '2025-11-26 07:34:34', '2025-11-26 07:34:34'),
+(6, '4ce486de-ca9d-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hg5dhd@gmail.com', '2536959326', '$2y$10$7Rn1jMIZ0iVsxs7N9VNFSeolHg/WZDsFmW9PqBoDuLqVYRuPe8IbW', 5, NULL, NULL, 'active', '2025-11-26 07:55:39', '2025-11-26 07:55:39'),
+(7, 'cd55e9f0-ca9d-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdhsad@gmail.com', '2536956926', '$2y$10$bBzIeA7onkrcDhVT6b6DtemUbkU/9EBGgIJTG/Fgqnn3aVt5bggQq', 5, NULL, NULL, 'active', '2025-11-26 07:59:15', '2025-11-26 07:59:15'),
+(8, '490b197c-ca9e-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdhsd@gmail.com', '2536996326', '$2y$10$JiB1GyPDDgBSwJuEqSr8C.eEGRoBDhug1nfWs1rARzjJ2P1yJSfG.', 5, NULL, NULL, 'active', '2025-11-26 08:02:42', '2025-11-26 08:02:42'),
+(9, 'f7cd3072-caae-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'saa@gmail.com', '1234567861', '$2y$10$8K5Jy4vusK3kcR67YQx8uuuDDcja/Fk.EPHQ5GpPciou1ySBpbYGG', 5, NULL, NULL, 'active', '2025-11-26 10:02:06', '2025-11-26 10:02:06'),
+(10, 'ba4494c3-cab2-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdhd@sgmail.com', '9536956325', '$2y$10$z8ORfAstiWPQn05uNs1S0.UPd5XijFNjJSUPySvo7VujC.ey9vnKW', 5, NULL, NULL, 'active', '2025-11-26 10:29:01', '2025-11-26 10:29:01');
 
 -- --------------------------------------------------------
 
@@ -513,7 +586,7 @@ CREATE TABLE `vitals` (
   `temperature` decimal(4,1) DEFAULT NULL,
   `sugar_level` decimal(5,2) DEFAULT NULL,
   `recorded_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -598,6 +671,13 @@ ALTER TABLE `doctors`
 ALTER TABLE `doctor_rounds`
   ADD PRIMARY KEY (`id`),
   ADD KEY `admission_id` (`admission_id`),
+  ADD KEY `doctor_id` (`doctor_id`);
+
+--
+-- Indexes for table `doctor_schedules`
+--
+ALTER TABLE `doctor_schedules`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `doctor_id` (`doctor_id`);
 
 --
@@ -720,8 +800,21 @@ ALTER TABLE `staff`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
   ADD UNIQUE KEY `uuid` (`uuid`),
-  ADD KEY `department_id` (`department_id`),
-  ADD KEY `designation` (`designation`);
+  ADD KEY `department_id` (`department_id`);
+
+--
+-- Indexes for table `staff_salary`
+--
+ALTER TABLE `staff_salary`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `staff_id` (`staff_id`);
+
+--
+-- Indexes for table `tax`
+--
+ALTER TABLE `tax`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bill_id` (`bill_id`);
 
 --
 -- Indexes for table `users`
@@ -806,6 +899,12 @@ ALTER TABLE `doctor_rounds`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `doctor_schedules`
+--
+ALTER TABLE `doctor_schedules`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `insurance_claims`
 --
 ALTER TABLE `insurance_claims`
@@ -881,7 +980,7 @@ ALTER TABLE `radiology_reports`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `role_permissions`
@@ -902,10 +1001,22 @@ ALTER TABLE `staff`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `staff_salary`
+--
+ALTER TABLE `staff_salary`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tax`
+--
+ALTER TABLE `tax`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `vitals`
@@ -978,6 +1089,12 @@ ALTER TABLE `doctors`
 ALTER TABLE `doctor_rounds`
   ADD CONSTRAINT `doctor_rounds_ibfk_1` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`id`),
   ADD CONSTRAINT `doctor_rounds_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `doctor_schedules`
+--
+ALTER TABLE `doctor_schedules`
+  ADD CONSTRAINT `doctor_schedules_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `insurance_claims`
@@ -1058,6 +1175,18 @@ ALTER TABLE `role_permissions`
 ALTER TABLE `staff`
   ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `staff_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`);
+
+--
+-- Constraints for table `staff_salary`
+--
+ALTER TABLE `staff_salary`
+  ADD CONSTRAINT `staff_salary_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `tax`
+--
+ALTER TABLE `tax`
+  ADD CONSTRAINT `tax_ibfk_1` FOREIGN KEY (`bill_id`) REFERENCES `billing` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `users`

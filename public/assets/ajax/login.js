@@ -1,47 +1,41 @@
 $(document).ready(function () {
-//  showAlert("success", "Success alert working!");
     // showAlert("error", "Error alert working!");
-    
-   
-    $("#registration_form").submit(function (e) { 
+
+    $("#login_form").submit(function (e) { 
         e.preventDefault();
         $(".error").text(" ");
 
         let rules = {
-            name: "required|name|min:3",
-            email: "required|email",
-            phone: "required|mobile",
-            password: "required|min:6|password_strong",
-            confirm_password: "required|match:password",
+            username: "required|username",
+            password: "required",
         };
-
-        let errors = validateForm("#registration_form", rules);
+        
+        let errors = validateForm("#login_form", rules);
 
         if(Object.keys(errors).length > 0) {
-            $.each(errors, function (indexInArray, valueOfElement) {
-                $("#" + indexInArray + "_error").text(valueOfElement);              
-                 
+            $.each(errors, function (keys, values) { 
+                 $("#" + keys + "_error").text(values);
             });
             return false;
         }
 
-        var form = $("#registration_form")[0];
+        var form = $("#login_form")[0];
         var formdata = new FormData(form);
 
         $.ajax({
-            type: "POST",
-            url: "../public/save_register.php",
+            type: "post",
+            url: "../public/login.php",
             data: formdata,
             dataType: "json",
-            processData: false, 
-            contentType: false, 
+            processData: false,
+            contentType: false,
             beforeSend: function () {
                 $(".error").text("");
-                $("button[name='register']").prop("disabled", true).text("Registering...");  
+                $("button[name='login']").prop("disabled", true).text("Loggedin...");  
             },
-            success: function(res) {
-                $("button[name='register']").prop("disabled", false).text("Register");  
-                $("button[name='register']").html('Register <i class="fa fa-user-plus"></i>');  
+            success: function (res) {
+                $("button[name='login']").prop("disabled", false).text("Login");  
+                $("button[name='login']").html('Login <i class="fa fa-sign-in"></i>');  
 
                 if(res.status == "error") {
                     if(res.message) {
@@ -53,21 +47,22 @@ $(document).ready(function () {
                             } else {
                                 $("#" + field + "_error").text(messages);
                             }
-
                         });
                     }
                 } else if(res.status == "success") {
                     showAlert(res.status, res.message);
-                    $("#registration_form")[0].reset();
-                    Redirect("http://localhost/hms/public/page-login.php", 3000);                    
+                    $("#login_form")[0].reset();
+                    Redirect(res.data, 3000);                    
                 }
             },
             error: function(xhr, status, error) {
-                console.log("AJAX Error:", error);
-                console.log("Status:", status);
+                console.log("Ajax Error:", error);
+                console.log("Satus:", status);
                 console.log("Response:", xhr.responseText);
             }
-        });
 
+        });
+        
     });
+
 });

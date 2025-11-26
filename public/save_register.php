@@ -3,7 +3,6 @@ require_once '../core/config.php';
 require_once '../core/helpers.php';
 require_once '../core/db.php';
 
-
 $rules = [
     'name' => 'required|name|min:3|max:20',
     'email' => 'required|email',
@@ -18,13 +17,12 @@ if(!empty($errors)) {
     json_response("error", "", "", $errors);
 }
 
-
 $name = $_POST['name'];
 $email = $_POST['email'];
 $phone = $_POST['phone'];
 $password = $_POST['password'];
 $confirm_password = $_POST['confirm_password'];
-$uuid = uuid();
+// $uuid = uuid();
 
 $fields = [
     'email' => $email,
@@ -38,21 +36,19 @@ if ($dup['status'] === "duplicate") {
 
 $password = password_hash($password, PASSWORD_DEFAULT);
 
-$sql = "INSERT INTO users (uuid, first_name, email, phone, password) VALUES (?,?,?,?,?)";
-$values = [$uuid, $name, $email, $phone, $password];
-$types = "sssss";
+$sql = "INSERT INTO users (first_name, email, phone, password) VALUES (?,?,?,?)";
+$values = [$name, $email, $phone, $password];
+$types = "ssss";
 $result = insert($sql, $values, $types);
+
+$result['message'] = ($result['status'] === "success") 
+    ? "Registration Successful. Continue To Login..." 
+    : $result['message'];
 
 json_response(
     $result['status'],
     $result['message'],
     [],
     isset($result['error']) ? ["db_error" => $result['error']] : []
-
 );
-
-
-
-
-
 ?>

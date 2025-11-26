@@ -55,14 +55,16 @@
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <div class="login-box bgc-white p30 ulockd-bdr-thm">
-                        <form action="login_process.php" method="POST" class="ulockd-login-form" novalidate>
+                        <form id="login_form" method="POST" class="ulockd-login-form" novalidate>
                             <div class="form-group text-left">
-                                <label for="email"><i class="fa fa-envelope text-thm"></i> Email Address</label>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="username">
+                                <label for="username"><i class="fa fa-user text-thm"></i> Username</label>
+                                <span class="error" id="username_error"></span><br>
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" required autocomplete="username">
                             </div>
 
                             <div class="form-group text-left">
                                 <label for="password"><i class="fa fa-lock text-thm"></i> Password</label>
+                                <span class="error" id="password_error"></span><br>
                                 <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required autocomplete="new-password">
                             </div>
 
@@ -74,7 +76,7 @@
 
 
                             <div class="text-center mt20">
-                                <button type="submit" class="btn btn-lg ulockd-btn-thm2">Login <i class="fa fa-sign-in"></i></button>
+                                <button type="submit" name="login" class="btn btn-lg ulockd-btn-thm2">Login <i class="fa fa-sign-in"></i></button>
                             </div>
 
                             <div class="text-center mt20">
@@ -109,7 +111,10 @@
 <!-- Color Switcher script --> 
 <!-- Custom script for all pages --> 
 <script type="text/javascript" src="assets/js/script.js"></script>
+<script src="assets/ajax/helper.js"></script>
+<script src="assets/ajax/login.js"></script>
 </body>
 
 <!-- Mirrored from unlockdesizn.com/html/health-and-beauty/bclinico/index-multipage.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 26 Dec 2024 10:00:10 GMT -->
 </html>
+

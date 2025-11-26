@@ -19,16 +19,6 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/permissions.php';
 require_once __DIR__ . '/middleware.php';
 
-
-// 4. Load All Core Files
-require_once __DIR__ . '/helpers.php';
-
-require_once __DIR__ . '/response.php';
-require_once __DIR__ . '/crud.php';
-require_once __DIR__ . '/auth.php';
-require_once __DIR__ . '/middleware.php';
-require_once __DIR__ . '/permissions.php';
-
 // 5. Timezone
 date_default_timezone_set('Asia/Kolkata');
 

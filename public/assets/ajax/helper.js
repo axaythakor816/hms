@@ -8,146 +8,141 @@ function validateForm(formSelector, rules) {
         let ruleArray = ruleString.split('|');
         let value = $.trim(form.find("[name='" + field + "']").val() || '');
 
-        ruleArray.forEach(function(rule) {
+        ruleArray.some(function(rule) {
 
-            // -------------------------
             // required
-            // -------------------------
             if (rule === "required" && value === "") {
-                addError(field, field + " is required.");
-
+                addError(field, capitalize(field) + " is required.");
+                return true;
             }
 
-            // -------------------------
             // email
-            // -------------------------
             if (rule === "email" && value !== "" &&
                 !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                 addError(field, "Invalid email format.");
-                
+                return true;
             }
 
-            // -------------------------
-            // name (only letters)
-            // -------------------------
+            // name (letters only)
             if (rule === "name" && value !== "" &&
                 !/^[A-Za-z ]+$/.test(value)) {
                 addError(field, "Name must contain only letters.");
+                return true;
             }
 
-            // -------------------------
-            // username (letters, numbers, _)
-            // -------------------------
-            if (rule === "username" && value !== "" &&
-                !/^[A-Za-z0-9_]{3,20}$/.test(value)) {
-                addError(field, "Invalid username format.");
+            // username
+           
+            if (rule === "username" && value !== "") {
+
+                let isUsername = /^[A-Za-z0-9_]{3,20}$/.test(value);
+                let isMobile   = /^[0-9]{10}$/.test(value);
+                let isEmail    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+                if (!isUsername && !isMobile && !isEmail) {
+                    addError(field, "Invalid UserName");
+                    return true;
+                }
             }
 
-            // -------------------------
-            // mobile 10 digits
-            // -------------------------
+
+            // mobile
             if (rule === "mobile" && value !== "" &&
                 !/^[0-9]{10}$/.test(value)) {
                 addError(field, "Invalid mobile number (10 digits required).");
+                return true;
             }
 
-            // -------------------------
             // numeric
-            // -------------------------
-            if (rule === "numeric" && value !== "" &&
-                isNaN(value)) {
-                addError(field, field + " must be numeric.");
+            if (rule === "numeric" && value !== "" && isNaN(value)) {
+                addError(field, capitalize(field) + " must be numeric.");
+                return true;
             }
 
-            // -------------------------
             // digits:x
-            // -------------------------
             if (rule.startsWith("digits:")) {
                 let digit = rule.split(":")[1];
-                let regex = new RegExp("^\\d{" + digit + "}$");
-                if (!regex.test(value)) {
-                    addError(field, field + " must be " + digit + " digits.");
+                if (!new RegExp("^\\d{" + digit + "}$").test(value)) {
+                    addError(field, capitalize(field) + " must be " + digit + " digits.");
+                    return true;
                 }
             }
 
-            // -------------------------
-            // strong password
-            // -------------------------
+            // password_strong
             if (rule === "password_strong" && value !== "" &&
                 !/(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*\W).{6,}/.test(value)) {
+
                 addError(field, "Password must contain uppercase, lowercase, digit & special char.");
+                return true;
             }
 
-            // -------------------------
             // match:field
-            // -------------------------
             if (rule.startsWith("match:")) {
                 let matchField = rule.split(":")[1];
                 let matchValue = $.trim(form.find("[name='" + matchField + "']").val() || '');
+
                 if (value !== matchValue) {
-                    addError(field, field + " must match " + matchField + ".");
+                    addError(field, capitalize(field) + " must match " + capitalize(matchField) + ".");
+                    return true;
                 }
             }
 
-            // -------------------------
-            // date (YYYY-MM-DD)
-            // -------------------------
+            // date
             if (rule === "date" && value !== "" &&
                 !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+
                 addError(field, "Invalid date format (YYYY-MM-DD).");
+                return true;
             }
 
-            // -------------------------
-            // min length
-            // -------------------------
+            // min:x
             if (rule.startsWith("min:")) {
-                let min = rule.split(":")[1];
+                let min = parseInt(rule.split(":")[1]);
                 if (value.length < min) {
-                    addError(field, field + " must be at least " + min + " characters.");
+                    addError(field, capitalize(field) + " must be at least " + min + " characters.");
+                    return true;
                 }
             }
 
-            // -------------------------
-            // max length
-            // -------------------------
+            // max:x
             if (rule.startsWith("max:")) {
-                let max = rule.split(":")[1];
+                let max = parseInt(rule.split(":")[1]);
                 if (value.length > max) {
-                    addError(field, field + " must not exceed " + max + " characters.");
+                    addError(field, capitalize(field) + " must not exceed " + max + " characters.");
+                    return true;
                 }
             }
 
-            // -------------------------
-            // min_value
-            // -------------------------
+            // min_value:x
             if (rule.startsWith("min_value:") && !isNaN(value)) {
-                let min = rule.split(":")[1];
-                if (parseFloat(value) < parseFloat(min)) {
-                    addError(field, field + " must be at least " + min + ".");
+                let min = parseFloat(rule.split(":")[1]);
+                if (parseFloat(value) < min) {
+                    addError(field, capitalize(field) + " must be at least " + min + ".");
+                    return true;
                 }
             }
 
-            // -------------------------
-            // max_value
-            // -------------------------
+            // max_value:x
             if (rule.startsWith("max_value:") && !isNaN(value)) {
-                let max = rule.split(":")[1];
-                if (parseFloat(value) > parseFloat(max)) {
-                    addError(field, field + " must not exceed " + max + ".");
+                let max = parseFloat(rule.split(":")[1]);
+                if (parseFloat(value) > max) {
+                    addError(field, capitalize(field) + " must not exceed " + max + ".");
+                    return true;
                 }
             }
 
-            // -------------------------
             // regex:/pattern/
-            // -------------------------
             if (rule.startsWith("regex:")) {
                 let pattern = rule.replace("regex:", "");
-                let regex = new RegExp(pattern.slice(1, -1)); 
+                pattern = pattern.slice(1, -1); // remove slashes: /pattern/
+                let regex = new RegExp(pattern);
+
                 if (!regex.test(value)) {
-                    addError(field, field + " format is invalid.");
+                    addError(field, capitalize(field) + " format is invalid.");
+                    return true;
                 }
             }
 
+            return false;
         });
     });
 
@@ -156,58 +151,61 @@ function validateForm(formSelector, rules) {
         errors[field].push(msg);
     }
 
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     return errors;
 }
 
 
-function remAlert(){
-  document.getElementsByClassName('alert')[0].remove();
-}
+function showAlert(type = "success", msg = "Message", position = "top-center") {
 
+    let alertClass = (type === "success") ? "alert-success" : "alert-danger";
 
-function setActive() {
-  // Get the navbar container (adjust ID if needed)
-  let navbar = document.getElementById('navbar-menu');
-  if (!navbar) return; // Safety check
+    // Remove old alert if exists
+    $(".custom-alert-wrapper").remove();
 
-  // Get all anchor tags inside the navbar
-  let a_tags = navbar.getElementsByTagName('a');
-
-  // Get current page filename (e.g. "page-about2.php")
-  let currentFile = window.location.pathname.split("/").pop();
-
-  for (let i = 0; i < a_tags.length; i++) {
-    let file = a_tags[i].getAttribute("href").split("/").pop();
-
-    // Match the current file name with the link href
-    if (file === currentFile) {
-      a_tags[i].classList.add("active");
-    } else {
-      a_tags[i].classList.remove("active");
-    }
-  }
-}
-
-document.addEventListener("DOMContentLoaded", setActive);
-
-
-function alert(type, msg,position='body') {
-    let bs_class = (type == "success") ? 'alert-success' : 'alert-danger';
-    let element = document.createElement('div');
-    element.innerHTML = `
-         <div class="alert ${bs_class}  alert-dismissible fade show" role="alert">
-      <strong class="me-3">${msg}</strong> 
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-        `;
+    // Position classes
+    let positions = {
+        "top-left": "top:20px; left:20px;",
+        "top-center": "top:20px; left:50%; transform:translateX(-50%);",
+        "top-right": "top:20px; right:20px;",
         
-      if(position=='body'){
-        document.body.append(element);
-        element.classList.add('custom-alert');
-      }
-      else{
-        document.getElementById(position).appendChild(element);
-      }
-        
-        setTimeout(remAlert,2000);
+        "bottom-left": "bottom:20px; left:20px;",
+        "bottom-center": "bottom:20px; left:50%; transform:translateX(-50%);",
+        "bottom-right": "bottom:20px; right:20px;"
+    };
+
+    let posStyle = positions[position] || positions["top-center"];
+
+    let element = $(`
+        <div class="custom-alert-wrapper" style="position:fixed; z-index:9999; ${posStyle}">
+            <div class="alert ${alertClass} alert-dismissible fade in text-center"
+                 role="alert"
+                 style="min-width: 350px; padding:20px; font-size:16px;">
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                        style="position:absolute; top:8px; right:10px;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+                <strong>${msg}</strong>
+            </div>
+        </div>
+    `);
+
+    $("body").append(element);
+
+    // Auto close after 5 seconds
+    setTimeout(() => {
+        element.fadeOut(300, function () { $(this).remove(); });
+    }, 3000);
 }
+
+function Redirect(url, delay = 0) {
+    setTimeout(() => {
+        window.location.href = url;
+    }, delay);
+}
+

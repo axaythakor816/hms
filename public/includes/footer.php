@@ -196,4 +196,28 @@
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
+<script>
+	function setActive() {
+    var $navbar = $('#navbar-menu');
+    if (!$navbar.length) return; // Safety check
+
+    var currentFile = window.location.pathname.split("/").pop();
+
+    $navbar.find('a').each(function() {
+        var file = $(this).attr('href').split("/").pop();
+        if (file === currentFile) {
+            $(this).addClass('active');
+        } else {
+            $(this).removeClass('active');
+        }
+    });
+}
+
+// Call setActive on DOM ready
+$(document).ready(function() {
+    setActive();
+});
+
+
+</script>
  

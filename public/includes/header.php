@@ -89,7 +89,7 @@ require_once('../core/helpers.php');
   			<div class="row">
   				<div class="col-xxs-12 col-xs-6 col-sm-6 col-md-3">
   					<div class="ulockd-welcm-hmddl tac-md">
-						<a href="index.html" class="ulockd-main-logo"><img src="assets/images/header-logo.png" alt=""></a>
+						<a href="index.php" class="ulockd-main-logo"><img src="assets/images/header-logo.png" alt=""></a>
   					</div> 
   				</div>
   				<div class="col-xxs-12 col-xs-6 col-sm-6 col-md-3">
