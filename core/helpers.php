@@ -290,11 +290,23 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
     if ($id && $table && $idcolumn) {
         $column = str_replace("edit_", "", $fileInputName);
         $id = intval($id);
-        $query = "SELECT `$column` FROM `$table` WHERE `$idcolumn` = $id LIMIT 1";
-        $result = mysqli_query($conn, $query);
-        if ($result && mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            $oldFileName = $row[$column];
+
+        // -----------------------------
+        // Prepared Statement
+        // -----------------------------
+        $sql = "SELECT `$column` FROM `$table` WHERE `$idcolumn` = ? LIMIT 1";
+        $stmt = mysqli_prepare($conn, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "i", $id);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            if ($result && mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                $oldFileName = $row[$column];
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            die("Prepare failed: " . mysqli_error($conn));
         }
     }
 
@@ -335,6 +347,7 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
     // If move failed, return old filename
     return $oldFileName;
 }
+
 
 // --------------------------------------
 // Base URL
@@ -397,7 +410,7 @@ function json_response($status, $msg, $data = [], $errors = [])
 }
 
 
-function alert($type = "success", $msg = "Message", $position = "top-center") {
+function showalert($type = "success", $msg = "Message", $position = "top-center") {
     // Determine Bootstrap class
     $bs_class = ($type === "success") ? "alert-success" : "alert-danger";
 

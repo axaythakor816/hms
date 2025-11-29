@@ -20,7 +20,7 @@ if(!login($username, $password)) {
     json_response("error", "Invalid UserName Password", "", "");
 }
 
-$role == $_SESSION['role_id'];
+$role = $_SESSION['role_id'];
 
 $data = check_role($role);
 

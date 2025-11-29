@@ -1,9 +1,5 @@
 <?php
 
-// Prevent direct access
-if (!defined('APP_START')) {
-    define('APP_START', true);
-}
 
 function clean($value)
 {

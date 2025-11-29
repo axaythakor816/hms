@@ -67,28 +67,28 @@
 		                        <a href="index.php" class="dropdown-toggle active" data-toggle="dropdown">Home</a>
 		                    </li>
 		                    <li class="">
-		                        <a href="page-about.php" class="dropdown-toggle" data-toggle="dropdown">About Us</a>
+		                        <a href="about" class="dropdown-toggle" data-toggle="dropdown">About Us</a>
 		                    </li>
 		                    <li class="">
-		                        <a href="page-service.php" class="dropdown-toggle" data-toggle="dropdown">Service</a>
+		                        <a href="service" class="dropdown-toggle" data-toggle="dropdown">Service</a>
 								
 		                    </li>
 		                    <li class="">
-		                        <a href="page-team.php" class="dropdown-toggle" data-toggle="dropdown">Team</a>
+		                        <a href="team" class="dropdown-toggle" data-toggle="dropdown">Team</a>
 								
 		                    </li>
 							
 		                    <li class="">
-		                        <a href="page-department.php" class="dropdown-toggle" data-toggle="dropdown">Department</a>
+		                        <a href="department" class="dropdown-toggle" data-toggle="dropdown">Department</a>
 	                    </li>
 		                    <li class="">
 		                        <a href="ulockd-job-apply-form.php" class="dropdown-toggle" data-toggle="dropdown">job apply</a>
 		                    </li>
 							<li class="">
-		                        <a href="page-timetable.php" class="dropdown-toggle" data-toggle="dropdown">Doctor's Timetable</a>
+		                        <a href="timetable" class="dropdown-toggle" data-toggle="dropdown">Doctor's Timetable</a>
 							</li>
 							<li class="">
-		                        <a href="page-appointment.php" class="dropdown-toggle" data-toggle="dropdown">appointment</a>
+		                        <a href="appointment" class="dropdown-toggle" data-toggle="dropdown">appointment</a>
 							</li>
 		                </ul>
 		            </div><!-- /.navbar-collapse -->

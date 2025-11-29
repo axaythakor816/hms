@@ -1,5 +1,5 @@
 <?php
-    require('config.php');
+    require_once('config.php');
     $id=$_GET['id'];
     $query="DELETE FROM appointment WHERE id='$id'";
     $data=mysqli_query($conn,$query);

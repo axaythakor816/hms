@@ -1,9 +1,9 @@
 <?php
 
 // Prevent direct access
-if (!defined('APP_START')) {
-    die("Direct access not allowed");
-}
+// if (empty($_SESSION['APP_START'])) {
+//     die("Direct access not allowed");
+// }
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

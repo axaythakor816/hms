@@ -1,0 +1,22 @@
+RewriteEngine On
+
+# --- 1. Agar file/folder actual me exist karta ho to rewrite mat karo ---
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# --- 2. Role dashboards ilman extension: /admin → portal/admin/dashboard.php ---
+# RewriteRule ^admin$ ../portal/admin/dashboard.php [L]
+# RewriteRule ^doctor$ ../portal/doctor/dashboard.php [L]
+# RewriteRule ^patient$ ../portal/patient/dashboard.php [L]
+
+# --- 3. Old Rule: Clean URL for page-*.php ---
+RewriteCond %{THE_REQUEST} \s/+(page-[^.\s]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
+
+RewriteRule ^([a-zA-Z0-9_-]+)$ page-$1.php [L]
+
+# --- 4. Home Page ---
+RewriteRule ^$ index.php [L]
+
+# --- 5. Custom 404 Page ---
+ErrorDocument 404 /hms/public/page-error.php

@@ -166,10 +166,13 @@
 			</div>
 		</div>
 	</section>
+<div id="instafeed"></div>
 
 <a class="scrollToHome" href="#"><i class="fa fa-home"></i></a>
 </div>
 <!-- Wrapper End -->
+ <script src="https://cdn.jsdelivr.net/npm/instafeed.js"></script>
+
 <script type="text/javascript" src="assets/js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/js/bootsnav.js"></script>

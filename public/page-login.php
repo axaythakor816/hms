@@ -1,7 +1,16 @@
+<?php
+require_once '../core/auth.php';
+require_once '../core/helpers.php';
+// logout();
+if (is_logged_in()) redirect(check_role($_SESSION['role_id']));
+
+?>
+
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 
 <!-- Mirrored from unlockdesizn.com/html/health-and-beauty/bclinico/index-multipage.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 26 Dec 2024 10:00:10 GMT -->
+
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
