@@ -200,6 +200,11 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
 </script>
 <script>
+	$(window).on("load", function () {
+		$("#preloader").fadeOut(600); 
+	});
+
+
 	function setActive() {
     var $navbar = $('#navbar-menu');
     if (!$navbar.length) return; // Safety check

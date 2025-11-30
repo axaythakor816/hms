@@ -6,28 +6,37 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     logout();
     exit;
 }
+
+// 🚫 redirect check should happen BEFORE header.php
+if ( !is_logged_in() ) {
+  showalert("error", "Access Denied");
+  redirect('http://localhost/hms/public/page-login.php');
+  exit;
+}
+
+// If logged in, then check role
+$baseurl = base_url($_SERVER['REQUEST_URI']);
+$url = check_role($_SESSION['role_id']);
+
+if ($baseurl != $url) {
+    redirect($url);
+    exit;
+}
+
 require_once('../includes/header.php');  // header + CSS/JS include
 
-if (is_logged_in()) { 
-
-  $baseurl = base_url($_SERVER['REQUEST_URI']);
-  $url = check_role($_SESSION['role_id']);
-  // if($baseurl != $url) {
-  //   redirect(check_role($_SESSION['role_id']));
-  // }
-
-}else{
-  showalert("error", "Access Denied");
-  redirect("http://localhost/hms/public/page-login.php");
-}
 ?>
 
 <div id="content-container">
+  
   <!-- Dynamic content yahan load hoga -->
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+console.log('<?php echo $baseurl; ?>');
+console.log('<?php echo $url; ?>');
+
 
   function loadPage(page) {
     $('#content-container').html('Loading...');

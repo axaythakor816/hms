@@ -31,13 +31,68 @@ require_once('../core/helpers.php');
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+	<style>
+	/* Fullscreen Preloader */
+#preloader {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+/* ECG line container */
+.ecg-loader {
+    width: 220px;
+    height: 60px;
+}
+
+/* ECG Line Animation */
+.ecg-loader svg polyline {
+    fill: none;
+    stroke: #0a9fd9;           /* Hospital Blue */
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: heartbeat 2s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+    0% {
+        stroke-dashoffset: 200;
+        opacity: 0.3;
+    }
+    40% {
+        stroke-dashoffset: 70;
+        opacity: 1;
+    }
+    60% {
+        stroke-dashoffset: 20;
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: -200;
+        opacity: 0.3;
+    }
+}
+
+
+	</style>
 </head>
 <body>
 <div class="wrapper">
-	<!---
-	<div id="preloader" class="preloader">
-		<div id="pre" class="preloader_container"><div class="preloader_disabler btn btn-default">Disable Preloader</div></div>
-	</div>-->
+<div id="preloader">
+    <div class="ecg-loader">
+        <svg viewBox="0 0 100 30">
+            <polyline points="0,15 20,15 30,5 40,25 50,15 70,15 100,15" />
+        </svg>
+    </div>
+</div>
+
   	<div class="header-top">
   		<div class="container">
   			<div class="row">

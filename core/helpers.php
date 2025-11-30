@@ -354,7 +354,10 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
 // --------------------------------------
 function base_url($path = "")
 {
-    return rtrim($_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . "/hms/", "/") . "/" . ltrim($path, "/");
+     $root = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'];
+
+    return rtrim($root, "/") . "/" . ltrim($path, "/");
+    // return rtrim($_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . "/hms/", "/") . "/" . ltrim($path, "/");
 }
 
 // --------------------------------------

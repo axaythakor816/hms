@@ -79,7 +79,7 @@
 						</li>
 						
                         <li>
-                            <a href="settings.php" class="nav-link"><span class="menu-side"><img src="../assets/img/icons/menu-icon-16.svg" alt=""></span> <span>Settings</span></a>
+                            <a href="settings/settings.php" class="nav-link"><span class="menu-side"><img src="../assets/img/icons/menu-icon-16.svg" alt=""></span> <span>Settings</span></a>
                         </li>
                         
                     </ul>

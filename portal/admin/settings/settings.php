@@ -1,8 +1,3 @@
-<?php
-require_once('includes/auth_check.php');
-require_once('includes/header.php');
-require_once('includes/sidebar.php');
-?>
         <div class="page-wrapper">
             	<!-- Page Content -->
                 <div class="content container-fluid">
@@ -12,7 +7,7 @@ require_once('includes/sidebar.php');
 						<div class="row">
 							<div class="col-sm-12">
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.php">Dashboard </a></li>
+									<li class="breadcrumb-item"><a class="nav-link" href="home.php">Dashboard </a></li>
 									<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 									<li class="breadcrumb-item active">Settings</li>
 								</ul>
@@ -183,6 +178,3 @@ require_once('includes/sidebar.php');
 				<!-- /Page Content -->
 			
         </div>
-<?php 
-require_once('includes/footer.php');
-?>

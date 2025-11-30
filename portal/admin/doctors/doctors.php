@@ -1,7 +1,3 @@
-<?php
-require_once('../includes/header.php');
-require_once('../includes/admin_sidebar.php');
-?>
         <div class="page-wrapper">
             <div class="content">
 			
@@ -84,7 +80,7 @@ require_once('../includes/admin_sidebar.php');
 										 
 										
 											$query="SELECT * FROM doctor";
-											$data=mysqli_query($conn,$query);
+											$data=mysqli_query($GLOBALS['conn'],$query);
 											$result=mysqli_num_rows($data);
 											if($result){
                                                 $sr=1;
@@ -358,6 +354,3 @@ require_once('../includes/admin_sidebar.php');
 			</div>
 		</div>
 
-<?php 
-require_once('includes/footer.php');
-?>
