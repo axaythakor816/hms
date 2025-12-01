@@ -1,5 +1,17 @@
 <?php
-// require_once('../includes/header.php');
+require_once '../../core/init.php';
+
+// 🚫 redirect check should happen BEFORE header.php
+if ( !is_logged_in() ) {
+  showalert("error", "Access Denied");
+  js_redirect('http://localhost/hms/public/page-login.php');
+  exit;
+}
+
+// If logged in, then check role
+$baseurl = base_url($_SERVER['REQUEST_URI']);
+$url = check_role($_SESSION['role_id']);
+
 ?>
 
         <div class="page-wrapper">
