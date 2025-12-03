@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 26, 2025 at 11:36 AM
+-- Generation Time: Dec 03, 2025 at 12:07 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -447,17 +447,21 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`
 (4, 1, 'staff', 1, 1, 1, 1),
 (5, 1, 'appointments', 1, 1, 1, 1),
 (6, 1, 'billing', 1, 1, 1, 1),
-(7, 2, 'dashboard', 1, 0, 0, 0),
-(8, 2, 'appointments', 1, 0, 1, 0),
-(9, 2, 'patients', 1, 0, 0, 0),
-(10, 2, 'prescriptions', 1, 1, 1, 0),
-(11, 2, 'vitals', 1, 1, 1, 0),
-(12, 3, 'dashboard', 1, 0, 0, 0),
-(13, 3, 'appointments', 1, 0, 0, 0),
-(14, 3, 'prescriptions', 1, 0, 0, 0),
-(15, 3, 'billing', 1, 0, 0, 0),
-(16, 4, 'patients', 1, 1, 1, 0),
-(17, 4, 'appointments', 1, 1, 1, 0);
+(7, 1, 'departments', 1, 1, 1, 1),
+(8, 2, 'dashboard', 1, 0, 0, 0),
+(9, 2, 'appointments', 1, 0, 1, 0),
+(10, 2, 'patients', 1, 0, 0, 0),
+(11, 2, 'prescriptions', 1, 1, 1, 0),
+(12, 2, 'vitals', 1, 1, 1, 0),
+(13, 2, 'departments', 1, 0, 0, 0),
+(14, 3, 'dashboard', 1, 0, 0, 0),
+(15, 3, 'appointments', 1, 0, 0, 0),
+(16, 3, 'prescriptions', 1, 0, 0, 0),
+(17, 3, 'billing', 1, 0, 0, 0),
+(18, 3, 'departments', 0, 0, 0, 0),
+(19, 4, 'patients', 1, 1, 1, 0),
+(20, 4, 'appointments', 1, 1, 1, 0),
+(21, 4, 'departments', 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -559,7 +563,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdhd@gmail.com', '1234567891', '$2y$10$SjHGwKbDHiRfHvH9llbMtO3ByoUyOCKrryB.0n9DqQXQgy5WzyBYG', 5, NULL, NULL, 'active', '2025-11-24 13:33:21', '2025-11-24 13:33:21'),
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakor@gmail.com', '1234567891', '$2y$10$SjHGwKbDHiRfHvH9llbMtO3ByoUyOCKrryB.0n9DqQXQgy5WzyBYG', 1, NULL, NULL, 'active', '2025-11-24 13:33:21', '2025-12-03 09:59:04'),
 (2, 'b8e66ca6-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdhdk@gmail.com', '1234567892', '$2y$10$DWesSv3yyKWMvG7ZibgKBe7rW2360LR/JjQwZFUbo7MaRHNNJTvJK', 5, NULL, NULL, 'active', '2025-11-24 13:44:39', '2025-11-24 13:44:39'),
 (3, 'd9306d37-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgddhd@gmail.com', '2536956326', '$2y$10$lwzflSnWQB2cAkMmuWy9K.KM26CuqgABYWycerz7jiacu9B4A5Hna', 5, NULL, NULL, 'active', '2025-11-24 13:45:33', '2025-11-24 13:45:33'),
 (4, 'e1a77e13-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdddhd@gmail.com', '2536956325', '$2y$10$0nWrgV9WQD9DKo0baIQQhuCrFWq9suNjDNFKwPOTf93mj0zDQMT6q', 5, NULL, NULL, 'active', '2025-11-24 13:45:47', '2025-11-24 13:45:47'),
@@ -986,7 +990,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `rooms`

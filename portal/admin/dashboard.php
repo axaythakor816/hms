@@ -23,6 +23,12 @@ if ($baseurl != $url) {
     exit;
 }
 
+if (!has_permission('dashboard', 'can_view')) {
+  showalert("error", "Access Denied");
+  // redirect('http://localhost/hms/public/page-login.php');
+  exit;
+}
+
 require_once('../includes/header.php');  // header + CSS/JS include
 
 ?>
@@ -32,11 +38,14 @@ require_once('../includes/header.php');  // header + CSS/JS include
   <!-- Dynamic content yahan load hoga -->
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-console.log('<?php echo $baseurl; ?>');
-console.log('<?php echo $url; ?>');
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
+<?php
+require_once('../includes/footer.php');
+?>
+<script>
+  console.log('<?php echo $baseurl; ?>');
+  console.log('<?php echo $url; ?>');
 
   function loadPage(page) {
     $('#content-container').html('Loading...');
@@ -68,7 +77,7 @@ console.log('<?php echo $url; ?>');
     }
 
     // Sidebar links
-    $('.nav-link').click(function(e) {
+    $(document).on('click', '.nav-link', function(e) {
       e.preventDefault();
 
       let href = $(this).attr('href'); // e.g. doctors/doctors.php
@@ -79,6 +88,3 @@ console.log('<?php echo $url; ?>');
 
   });
 </script>
-<?php
-require_once('../includes/footer.php');
-?>

@@ -12,8 +12,12 @@ if ( !is_logged_in() ) {
 $baseurl = base_url($_SERVER['REQUEST_URI']);
 $url = check_role($_SESSION['role_id']);
 
-?>
+if (!has_permission('dashboard','can_view')) {
+    echo "<h3 style='color:red'>Access Denied</h3>";
+    exit;
+}
 
+?>
         <div class="page-wrapper">
             <div class="content">
 			
@@ -22,7 +26,7 @@ $url = check_role($_SESSION['role_id']);
 					<div class="row">
 						<div class="col-sm-12">
 							<ul class="breadcrumb">
-								<li class="breadcrumb-item"><a href="dashboard.php">Dashboard </a></li>
+								<li class="breadcrumb-item"><a href="home.php" class="nav-link">Dashboard </a></li>
 								<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 								<li class="breadcrumb-item active">Admin Dashboard</li>
 							</ul>
@@ -35,7 +39,7 @@ $url = check_role($_SESSION['role_id']);
 					<div class="row">
 						<div class="col-md-6">
 							<div class="morning-user">
-								<h2>Good Morning, <span>axay</span></h2>
+								<h2>Good Morning, <span><?php echo ucwords($_SESSION['first_name'] . " " . $_SESSION['last_name']); ?></span></h2>
 								<p>Have a nice day at work</p>
 							</div>
 						</div>
@@ -165,7 +169,7 @@ $url = check_role($_SESSION['role_id']);
 					<div class="col-12 col-md-12  col-xl-8">
 						<div class="card">
 							<div class="card-header">
-								<h4 class="card-title d-inline-block">Upcoming Appointments</h4> <a href="appointments.php" class="patient-views float-end">Show all</a>
+								<h4 class="card-title d-inline-block">Upcoming Appointments</h4> <a href="appointments/appointments.php" class="patient-views float-end nav-link">Show all</a>
 							</div>
 							<div class="card-body p-0 table-dash">
 								<div class="table-responsive">
@@ -210,7 +214,7 @@ $url = check_role($_SESSION['role_id']);
 					<div class="col-12 col-xl-12">
 						<div class="card">
 							<div class="card-header pb-0">
-								<h4 class="card-title d-inline-block">Recent Patients </h4> <a href="patients.php" class="float-end patient-views">Show all</a>
+								<h4 class="card-title d-inline-block">Recent Patients </h4> <a href="patients/patients.php" class="float-end patient-views nav-link">Show all</a>
 							</div>
 							<div class="card-block table-dash">
 									<div class="table-responsive">

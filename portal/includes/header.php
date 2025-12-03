@@ -35,7 +35,7 @@
     <div class="main-wrapper">
         <div class="header">
 			<div class="header-left">
-				<a href="index.php" class="logo">
+				<a href="home.php" class="nav-link logo">
 					<img src="../assets/img/logo.png" width="35" height="35" alt=""> <span>Karn Hospital</span>
 				</a>
 			</div>
@@ -48,11 +48,10 @@
 				</form>
 			</div>
             <ul class="nav user-menu float-end">
-    
 				<li class="nav-item dropdown has-arrow user-profile-list">
-                    <a href="#" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
+                    <a href="settings/profile.php" class="dropdown-toggle nav-link user-link" data-bs-toggle="dropdown">
 						<div class="user-names">
-							<h5>Axay</h5>
+							<h5><?php echo ucwords($_SESSION['first_name']); ?></h5>
                         	<span>Admin</span>
 						</div>
 						<span class="user-img">
@@ -62,7 +61,7 @@
 					
                 </li>
 				<li class="nav-item ">
-                    <a href="settings.php"  class="hasnotifications nav-link"><img src="../assets/img/icons/setting-icon-01.svg" alt=""> </a>
+                    <a href="settings/settings.php"  class="hasnotifications nav-link"><img src="../assets/img/icons/setting-icon-01.svg" alt=""> </a>
                 </li>
             </ul>          
         </div>

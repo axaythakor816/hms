@@ -1,9 +1,18 @@
 <?php
-require_once('includes/auth_check.php');
-require_once('includes/header.php');
-require_once('includes/sidebar.php');
+	require_once '../../../core/init.php';
+
+	if ( !is_logged_in() ) {
+	showalert("error", "Access Denied");
+	js_redirect('http://localhost/hms/public/page-login.php');
+	exit;
+	}
+
+	if (!has_permission('departments','can_add')) {
+		echo "<h3 style='color:red'>Access Denied</h3>";
+		exit;
+	} 
 ?>
-        <div class="page-wrapper">
+ <div class="page-wrapper">
             <div class="content">
 			
 				<!-- Page Header -->
@@ -11,7 +20,7 @@ require_once('includes/sidebar.php');
 					<div class="row">
 						<div class="col-sm-12">
 							<ul class="breadcrumb">
-								<li class="breadcrumb-item"><a href="departments.php">Department </a></li>
+								<li class="breadcrumb-item"><a href="departments/departments.php" class="nav-link">Department </a></li>
 								<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 								<li class="breadcrumb-item active">Add Department</li>
 							</ul>
@@ -40,7 +49,7 @@ require_once('includes/sidebar.php');
 										</div>
                                         <div class="col-12 col-md-6 col-xl-6">  
 											<div class="input-block local-forms">
-												<label >Department Head <span class="login-danger">*</span></label>
+												<label >Department Description <span class="login-danger">*</span></label>
 												<input name="head" class="form-control" type="text" >
 											</div>
 										</div>
@@ -74,6 +83,3 @@ require_once('includes/sidebar.php');
 			</div>
 			
 		</div>
-<?php 
-require_once('includes/footer.php');
-?>

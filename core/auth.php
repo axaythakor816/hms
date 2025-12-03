@@ -53,8 +53,9 @@ function login($email, $password)
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['role_id'] = $user['role_id'];
     $_SESSION['user_email'] = $user['email'];
-  
-
+    $_SESSION['first_name'] = $user['first_name'];
+    $_SESSION['last_name'] = $user['last_name'];
+    
     return true;
 }
 
@@ -81,10 +82,11 @@ function check_role($roleid)
 // --------------------
 function logout()
 {
-
     session_unset();
     session_destroy();
-    header("Location: ../../public/page-login.php");
+    echo "<script>localStorage.removeItem('currentPage');</script>";
+
+    js_redirect("../../public/page-login.php");
     exit;
 }
 

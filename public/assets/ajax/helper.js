@@ -200,7 +200,7 @@ function showAlert(type = "success", msg = "Message", position = "top-center") {
     // Auto close after 5 seconds
     setTimeout(() => {
         element.fadeOut(300, function () { $(this).remove(); });
-    }, 3000);
+    }, 2000);
 }
 
 function Redirect(url, delay = 0) {

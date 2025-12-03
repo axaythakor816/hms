@@ -6,7 +6,7 @@ session_start();
 // Access control
 // ---------------------------
 // Ensure user is logged in and is admin
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
+if (!isset($_SESSION['user_id'])) {
     // Not logged in or not admin → deny access
     http_response_code(403);
     exit("Access denied");

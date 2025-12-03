@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Session timeout (optional)
-$timeout = 60 * 60; // 1 hour
+$timeout = 30 * 60; // 30 minutes
 
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
     session_unset();

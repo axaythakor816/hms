@@ -40,6 +40,7 @@ $(document).ready(function () {
                 if(res.status == "error") {
                     if(res.message) {
                         showAlert(res.status, res.message);
+                        $("#login_form")[0].reset();
                     } else if(res.errors) {
                         $.each(res.errors, function(field, messages) {
                             if (Array.isArray(messages)) {
@@ -52,7 +53,7 @@ $(document).ready(function () {
                 } else if(res.status == "success") {
                     showAlert(res.status, res.message);
                     $("#login_form")[0].reset();
-                    Redirect(res.data, 3000);                    
+                    Redirect(res.data, 1000);                    
                 }
             },
             error: function(xhr, status, error) {
