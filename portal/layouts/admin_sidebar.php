@@ -81,7 +81,7 @@
                 <?php endif; ?>
 
                 <!-- ✅ DOCTOR SCHEDULE -->
-                <?php if (has_permission('schedule','can_view')): ?>
+                <?php if (!has_permission('schedule','can_view')): ?>
                 <li class="submenu">
                     <a href="#"><span class="menu-side"><img src="../assets/img/icons/menu-icon-05.svg"></span>
                         <span>Doctor Schedule</span> <span class="menu-arrow"></span>
@@ -127,7 +127,7 @@
                 <?php endif; ?>
 
                 <!-- ✅ PAYROLL -->
-                <?php if (has_permission('salary','can_view')): ?>
+                <?php if (!has_permission('salary','can_view')): ?>
                 <li class="submenu">
                     <a href="#"><span class="menu-side"><img src="../assets/img/icons/menu-icon-09.svg"></span>
                         <span>Payroll</span> <span class="menu-arrow"></span>
