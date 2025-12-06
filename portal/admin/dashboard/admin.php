@@ -1,5 +1,5 @@
 <?php
-require_once '../../core/init.php';
+require_once '../../../core/init.php';
 
 // 🚫 redirect check should happen BEFORE header.php
 if ( !is_logged_in() ) {
@@ -8,14 +8,12 @@ if ( !is_logged_in() ) {
   exit;
 }
 
-// If logged in, then check role
-$baseurl = base_url($_SERVER['REQUEST_URI']);
-$url = check_role($_SESSION['role_id']);
-
 if (!has_permission('dashboard','can_view')) {
     echo "<h3 style='color:red'>Access Denied</h3>";
     exit;
 }
+
+require_role([2]);
 
 ?>
         <div class="page-wrapper">
@@ -26,7 +24,7 @@ if (!has_permission('dashboard','can_view')) {
 					<div class="row">
 						<div class="col-sm-12">
 							<ul class="breadcrumb">
-								<li class="breadcrumb-item"><a href="home.php" class="nav-link">Dashboard </a></li>
+								<li class="breadcrumb-item"><a href="<?php echo 'dashboard/' . check_role($_SESSION['role_id']);?>" class="nav-link">Dashboard </a></li>
 								<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 								<li class="breadcrumb-item active">Admin Dashboard</li>
 							</ul>

@@ -1,35 +1,31 @@
 <?php
+require_once('../includes/header.php'); // CSS/JS include
 
 require_once '../../core/init.php';
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
-    logout();
-    exit;
+    logout("Logout Successfully");
 }
 
-// 🚫 redirect check should happen BEFORE header.php
-if ( !is_logged_in() ) {
-  showalert("error", "Access Denied");
-  redirect('http://localhost/hms/public/page-login.php');
-  exit;
-}
+// Check Login
+require_login();
 
 // If logged in, then check role
 $baseurl = base_url($_SERVER['REQUEST_URI']);
 $url = check_role($_SESSION['role_id']);
 
-if ($baseurl != $url) {
-    redirect($url);
-    exit;
-}
+// if ($baseurl != $url) {
+//     redirect($url);
+//     exit;
+// }
 
 if (!has_permission('dashboard', 'can_view')) {
   showalert("error", "Access Denied");
   // redirect('http://localhost/hms/public/page-login.php');
   exit;
 }
+require_once('../includes/header-bar.php');  // header + sidebar include
 
-require_once('../includes/header.php');  // header + CSS/JS include
 
 ?>
 
@@ -37,8 +33,6 @@ require_once('../includes/header.php');  // header + CSS/JS include
   
   <!-- Dynamic content yahan load hoga -->
 </div>
-
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
 <?php
 require_once('../includes/footer.php');
@@ -49,7 +43,7 @@ require_once('../includes/footer.php');
 
   function loadPage(page) {
     $('#content-container').html('Loading...');
-
+    // console.log(page);
     // Save current page (refresh ke liye)
     localStorage.setItem("currentPage", page);
 
@@ -59,7 +53,10 @@ require_once('../includes/footer.php');
       success: function(data) {
         $('#content-container').html(data);
       },
-      error: function() {
+      error: function(xhr, status, error) {
+        console.log("Ajax Error: ", error);
+        console.log("Status: ", status);
+        console.log("Response: ", xhr.responseText);
         $('#content-container').html('<p>Error loading page.</p>');
       }
     });
@@ -67,20 +64,22 @@ require_once('../includes/footer.php');
 
   $(document).ready(function() {
 
-    // 🔥 On refresh — page restore
+    // On refresh — page restore
     let savedPage = localStorage.getItem("currentPage");
 
     if (savedPage) {
       loadPage(savedPage);
     } else {
-      loadPage("home.php"); // Default
+      // loadPage("home.php"); // Default
+      loadPage("<?php echo 'dashboard/' . check_role($_SESSION['role_id']);?>");  
+
     }
 
     // Sidebar links
     $(document).on('click', '.nav-link', function(e) {
       e.preventDefault();
 
-      let href = $(this).attr('href'); // e.g. doctors/doctors.php
+      let href = $(this).attr('href'); // page url
 
       // Page load + Save to localStorage
       loadPage(href);

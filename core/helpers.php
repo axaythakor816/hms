@@ -3,8 +3,7 @@
 // --------------------------------------
 // Sanitize Input (Array + String)
 // --------------------------------------
-function filteration($data)
-{
+function filteration($data) {
     foreach ($data as $key => $value) {
         $value = trim($value);
         $value = stripslashes($value);
@@ -19,8 +18,7 @@ function filteration($data)
 // --------------------------------------
 // Advanced Input Filter
 // --------------------------------------
-function filterInput($input, $type = "string")
-{
+function filterInput($input, $type = "string") {
     if (is_array($input)) {
         $filtered = [];
         foreach ($input as $key => $value) {
@@ -352,8 +350,7 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
 // --------------------------------------
 // Base URL
 // --------------------------------------
-function base_url($path = "")
-{
+function base_url($path = ""){
      $root = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'];
 
     return rtrim($root, "/") . "/" . ltrim($path, "/");
@@ -363,8 +360,7 @@ function base_url($path = "")
 // --------------------------------------
 // Redirect (PHP Based)
 // --------------------------------------
-function redirect($url)
-{
+function redirect($url){
     header("Location: " . $url);
     exit;
 }
@@ -384,24 +380,21 @@ function js_redirect($url, $delay = 0) {
 // --------------------------------------
 // Money Format
 // --------------------------------------
-function money($amt)
-{
+function money($amt){
     return number_format((float)$amt, 2, '.', ',');
 }
 
 // --------------------------------------
 // UUID Generator
 // --------------------------------------
-function uuid()
-{
-    return bin2hex(random_bytes(16));  // 32 char UUID
+function uuid(){
+    return bin2hex(random_bytes(16));
 }
 
 // --------------------------------------
 // JSON Response Helper
 // --------------------------------------
-function json_response($status, $msg, $data = [], $errors = [])
-{
+function json_response($status, $msg, $data = [], $errors = []){
     header('Content-Type: application/json');
     echo json_encode([
         "status" => $status,
@@ -412,7 +405,9 @@ function json_response($status, $msg, $data = [], $errors = [])
     exit;
 }
 
-
+// --------------------------------------
+// Show ALert Helper
+// --------------------------------------
 function showalert($type = "success", $msg = "Message", $position = "top-center") {
     // Determine Bootstrap class
     $bs_class = ($type === "success") ? "alert-success" : "alert-danger";

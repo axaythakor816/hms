@@ -3,8 +3,7 @@
 // --------------------------------------
 // CRUD – INSERT
 // --------------------------------------
-function insert($sql, $values, $datatypes)
-{
+function insert($sql, $values, $datatypes) {
     $conn = $GLOBALS['conn'];
 
     if ($stmt = mysqli_prepare($conn, $sql)) {
@@ -27,8 +26,7 @@ function insert($sql, $values, $datatypes)
 // --------------------------------------
 // CRUD – UPDATE
 // --------------------------------------
-function update($sql, $values, $datatypes)
-{
+function update($sql, $values, $datatypes) {
     $conn = $GLOBALS['conn'];
 
     if ($stmt = mysqli_prepare($conn, $sql)) {
@@ -51,8 +49,7 @@ function update($sql, $values, $datatypes)
 // --------------------------------------
 // CRUD – SELECT
 // --------------------------------------
-function select($sql, $values = [], $datatypes = "")
-{
+function select($sql, $values = [], $datatypes = "") {
     $conn = $GLOBALS['conn'];
 
     if ($stmt = mysqli_prepare($conn, $sql)) {
@@ -86,8 +83,7 @@ function select($sql, $values = [], $datatypes = "")
 // --------------------------------------
 // CRUD – DELETE
 // --------------------------------------
-function delete($sql, $values, $datatypes)
-{
+function delete($sql, $values, $datatypes) {
     $conn = $GLOBALS['conn'];
 
     if ($stmt = mysqli_prepare($conn, $sql)) {
@@ -110,8 +106,7 @@ function delete($sql, $values, $datatypes)
 // --------------------------------------
 // Check Duplicate Email / Mobile / Username
 // --------------------------------------
-function checkDuplicateFields($table, $fields = [], $id = null)
-{
+function checkDuplicateFields($table, $fields = [], $id = null) {
     $conn = $GLOBALS['conn'];
 
     if (empty($fields)) {
@@ -167,8 +162,7 @@ function checkDuplicateFields($table, $fields = [], $id = null)
 // --------------------------------------
 // Generic Select
 // --------------------------------------
-function getselectdata($tablename)
-{
+function getselectdata($tablename) {
     $conn = $GLOBALS['conn'];
 
     $result = mysqli_query($conn, "SELECT * FROM $tablename");

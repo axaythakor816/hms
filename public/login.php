@@ -20,10 +20,12 @@ if(!login($username, $password)) {
     json_response("error", "Invalid UserName Password", "", "");
 }
 
-$role = $_SESSION['role_id'];
+// $role = $_SESSION['role_id'];
 
-$data = check_role($role);
+// $data = check_role($role);
 
-json_response("success", "Login Successfull", $data, "");
+// json_response("success", "Login Successfull", $data, "");
+json_response("success", "Login Successfull", "http://localhost/hms/portal/admin/dashboard.php", "");
+
 
 ?>

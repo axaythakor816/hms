@@ -5,22 +5,23 @@ require_once "auth.php";
 function require_login()
 {
     if (!is_logged_in()) {
-        header("Location: login.php");
+        showalert("error", "Access Denied Please Login First");
+        js_redirect('http://localhost/hms/public/page-login.php', 1500);
         exit;
     }
 }
 
-function require_role($allowed_roles = [])
-{
+function require_role($allowed_roles = []) {
     if (!is_logged_in()) {
-        header("Location: login.php");
+        redirect('http://localhost/hms/public/page-login.php');
         exit;
     }
 
     $role = $_SESSION['role_id'];
 
     if (!in_array($role, $allowed_roles)) {
-        header("Location: /403.php");
+        showalert("error", "Access Denied You Are Not Authorize persion Please ReLogin");
+        js_redirect('http://localhost/hms/portal/admin/dashboard.php?action=logout', 1500);
         exit();
     }
 }

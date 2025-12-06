@@ -85,13 +85,13 @@ require_once('../core/helpers.php');
 </head>
 <body>
 <div class="wrapper">
-<div id="preloader">
-    <div class="ecg-loader">
-        <svg viewBox="0 0 100 30">
-            <polyline points="0,15 20,15 30,5 40,25 50,15 70,15 100,15" />
-        </svg>
-    </div>
-</div>
+	<div id="preloader">
+		<div class="ecg-loader">
+			<svg viewBox="0 0 100 30">
+				<polyline points="0,15 20,15 30,5 40,25 50,15 70,15 100,15" />
+			</svg>
+		</div>
+	</div>
 
   	<div class="header-top">
   		<div class="container">

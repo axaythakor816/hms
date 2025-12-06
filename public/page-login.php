@@ -2,7 +2,8 @@
 require_once '../core/auth.php';
 require_once '../core/helpers.php';
 // logout();
-if (is_logged_in()) redirect(check_role($_SESSION['role_id']));
+// if (is_logged_in()) redirect(check_role($_SESSION['role_id']));
+if (is_logged_in()) redirect("http://localhost/hms/portal/admin/dashboard.php");
 
 ?>
 
@@ -29,10 +30,65 @@ if (is_logged_in()) redirect(check_role($_SESSION['role_id']));
 <!-- Favicon -->
 <link href="assets/images/favicon.ico" sizes="128x128" rel="shortcut icon" type="image/x-icon" />
 <link href="assets/images/favicon.ico" sizes="128x128" rel="shortcut icon" />
+<style>
+    #preloader {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
 
+/* ECG line container */
+.ecg-loader {
+    width: 220px;
+    height: 60px;
+}
+
+/* ECG Line Animation */
+.ecg-loader svg polyline {
+    fill: none;
+    stroke: #0a9fd9;           /* Hospital Blue */
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: heartbeat 2s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+    0% {
+        stroke-dashoffset: 200;
+        opacity: 0.3;
+    }
+    40% {
+        stroke-dashoffset: 70;
+        opacity: 1;
+    }
+    60% {
+        stroke-dashoffset: 20;
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: -200;
+        opacity: 0.3;
+    }
+}
+</style>
 </head>
 <body>
 <div class="wrapper">
+    <div id="preloader">
+		<div class="ecg-loader">
+			<svg viewBox="0 0 100 30">
+				<polyline points="0,15 20,15 30,5 40,25 50,15 70,15 100,15" />
+			</svg>
+		</div>
+	</div>
+
     <div class="ulockd-inner-page">
         <div class="container">
             <div class="row">
@@ -122,6 +178,11 @@ if (is_logged_in()) redirect(check_role($_SESSION['role_id']));
 <script type="text/javascript" src="assets/js/script.js"></script>
 <script src="assets/ajax/helper.js"></script>
 <script src="assets/ajax/login.js"></script>
+<script>
+    $(window).on("load", function () {
+		$("#preloader").fadeOut(600); 
+	});
+</script>
 </body>
 
 <!-- Mirrored from unlockdesizn.com/html/health-and-beauty/bclinico/index-multipage.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 26 Dec 2024 10:00:10 GMT -->
