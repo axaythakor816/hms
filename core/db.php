@@ -20,7 +20,7 @@ function insert($sql, $values, $datatypes) {
         }
     }
 
-    return ["status" => "error", "message" => "Query preparation failed", "error" => mysqli_error($conn)];
+    return ["status" => "error", "message" => "Query preparation failed" . mysqli_error($conn)];
 }
 
 // --------------------------------------

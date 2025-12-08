@@ -10,12 +10,10 @@ function require_login()
         exit;
     }
 }
-
+    
 function require_role($allowed_roles = []) {
-    if (!is_logged_in()) {
-        redirect('http://localhost/hms/public/page-login.php');
-        exit;
-    }
+   
+    require_login();
 
     $role = $_SESSION['role_id'];
 

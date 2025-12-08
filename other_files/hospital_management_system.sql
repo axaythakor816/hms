@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2025 at 12:07 PM
+-- Generation Time: Dec 08, 2025 at 11:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `activity_logs` (
-  `id` bigint(20) NOT NULL,
+  `log_id` bigint(20) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `action` varchar(255) DEFAULT NULL,
+  `log_action` varchar(255) DEFAULT NULL,
   `module` varchar(100) DEFAULT NULL,
-  `details` text DEFAULT NULL,
+  `log_details` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -43,14 +43,16 @@ CREATE TABLE `activity_logs` (
 --
 
 CREATE TABLE `admissions` (
-  `id` bigint(20) NOT NULL,
+  `admission_id` bigint(20) NOT NULL,
   `patient_id` int(11) NOT NULL,
   `doctor_id` int(11) DEFAULT NULL,
   `room_id` int(11) DEFAULT NULL,
   `bed_id` int(11) DEFAULT NULL,
   `admit_date` datetime DEFAULT current_timestamp(),
-  `reason` text DEFAULT NULL,
-  `status` enum('admitted','discharged') DEFAULT 'admitted'
+  `admission_reason` text DEFAULT NULL,
+  `admission_status` enum('admitted','discharged') DEFAULT 'admitted',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -60,13 +62,14 @@ CREATE TABLE `admissions` (
 --
 
 CREATE TABLE `appointments` (
-  `id` bigint(20) NOT NULL,
+  `appointment_id` bigint(20) NOT NULL,
   `doctor_id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
   `appointment_date` datetime NOT NULL,
-  `status` enum('pending','approved','cancelled','completed') DEFAULT 'pending',
-  `notes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `appointment_status` enum('pending','approved','cancelled','completed') DEFAULT 'pending',
+  `appointment_notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -79,7 +82,9 @@ CREATE TABLE `beds` (
   `id` int(11) NOT NULL,
   `room_id` int(11) DEFAULT NULL,
   `bed_number` varchar(20) DEFAULT NULL,
-  `status` enum('available','occupied','cleaning') DEFAULT 'available'
+  `bed_status` enum('available','occupied','cleaning') DEFAULT 'available',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -96,8 +101,9 @@ CREATE TABLE `billing` (
   `tax_amount` decimal(12,2) DEFAULT NULL,
   `discount` decimal(12,2) DEFAULT NULL,
   `net_amount` decimal(12,2) DEFAULT NULL,
-  `status` enum('unpaid','paid','cancelled') DEFAULT 'unpaid',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `billing_status` enum('unpaid','paid','cancelled') DEFAULT 'unpaid',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -107,14 +113,16 @@ CREATE TABLE `billing` (
 --
 
 CREATE TABLE `billing_items` (
-  `id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
   `bill_id` bigint(20) NOT NULL,
   `service_type` enum('consultation','room','lab','radiology','pharmacy','nursing','operation','misc') DEFAULT NULL,
   `reference_id` bigint(20) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `qty` int(11) DEFAULT 1,
   `rate` decimal(12,2) DEFAULT NULL,
-  `amount` decimal(12,2) DEFAULT NULL
+  `amount` decimal(12,2) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -124,9 +132,12 @@ CREATE TABLE `billing_items` (
 --
 
 CREATE TABLE `departments` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL
+  `department_id` int(11) NOT NULL,
+  `department_name` varchar(100) NOT NULL,
+  `department_description` text DEFAULT NULL,
+  `department_head_id` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -140,7 +151,9 @@ CREATE TABLE `discharge_summaries` (
   `admission_id` bigint(20) NOT NULL,
   `doctor_id` int(11) DEFAULT NULL,
   `summary` text DEFAULT NULL,
-  `discharge_date` datetime DEFAULT NULL
+  `discharge_date` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -150,7 +163,7 @@ CREATE TABLE `discharge_summaries` (
 --
 
 CREATE TABLE `doctors` (
-  `id` bigint(20) NOT NULL,
+  `doctor_id` bigint(20) NOT NULL,
   `user_id` int(11) NOT NULL,
   `uuid` char(36) NOT NULL,
   `display_name` varchar(150) DEFAULT NULL,
@@ -188,11 +201,13 @@ CREATE TABLE `doctors` (
 --
 
 CREATE TABLE `doctor_rounds` (
-  `id` bigint(20) NOT NULL,
+  `round_id` bigint(20) NOT NULL,
   `admission_id` bigint(20) DEFAULT NULL,
   `doctor_id` int(11) DEFAULT NULL,
   `notes` text DEFAULT NULL,
-  `visited_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `visited_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -202,14 +217,16 @@ CREATE TABLE `doctor_rounds` (
 --
 
 CREATE TABLE `doctor_schedules` (
-  `id` bigint(20) NOT NULL,
+  `schedule_id` bigint(20) NOT NULL,
   `doctor_id` int(11) NOT NULL,
   `day` enum('Mon','Tue','Wed','Thu','Fri','Sat','Sun') DEFAULT NULL,
   `time_from` time DEFAULT NULL,
   `time_to` time DEFAULT NULL,
   `slot_duration` int(11) DEFAULT 15,
   `max_patients` int(11) DEFAULT 20,
-  `status` enum('active','inactive') DEFAULT 'active'
+  `schedule_status` enum('active','inactive') DEFAULT 'active',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -219,11 +236,13 @@ CREATE TABLE `doctor_schedules` (
 --
 
 CREATE TABLE `insurance_claims` (
-  `id` bigint(20) NOT NULL,
+  `insurance_id` bigint(20) NOT NULL,
   `patient_id` int(11) DEFAULT NULL,
   `bill_id` bigint(20) DEFAULT NULL,
   `claim_status` enum('submitted','approved','rejected') DEFAULT 'submitted',
-  `notes` text DEFAULT NULL
+  `notes` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -233,10 +252,12 @@ CREATE TABLE `insurance_claims` (
 --
 
 CREATE TABLE `lab_tests` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(150) DEFAULT NULL,
+  `test_id` bigint(20) NOT NULL,
+  `test_name` varchar(150) DEFAULT NULL,
   `category` varchar(150) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL
+  `price` decimal(10,2) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -246,13 +267,14 @@ CREATE TABLE `lab_tests` (
 --
 
 CREATE TABLE `lab_test_results` (
-  `id` bigint(20) NOT NULL,
+  `result_id` bigint(20) NOT NULL,
   `test_id` bigint(20) DEFAULT NULL,
   `patient_id` int(11) DEFAULT NULL,
   `doctor_id` int(11) DEFAULT NULL,
   `result_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`result_json`)),
   `report_url` varchar(500) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -262,11 +284,13 @@ CREATE TABLE `lab_test_results` (
 --
 
 CREATE TABLE `login_logs` (
-  `id` bigint(20) NOT NULL,
+  `login_id` bigint(20) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `ip_address` varchar(50) DEFAULT NULL,
   `user_agent` text DEFAULT NULL,
-  `login_time` timestamp NOT NULL DEFAULT current_timestamp()
+  `login_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -276,10 +300,12 @@ CREATE TABLE `login_logs` (
 --
 
 CREATE TABLE `medical_history` (
-  `id` bigint(20) NOT NULL,
+  `history_id` bigint(20) NOT NULL,
   `patient_id` int(11) NOT NULL,
   `description` text DEFAULT NULL,
-  `recorded_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `recorded_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -289,11 +315,13 @@ CREATE TABLE `medical_history` (
 --
 
 CREATE TABLE `nurse_notes` (
-  `id` bigint(20) NOT NULL,
+  `note_id` bigint(20) NOT NULL,
   `patient_id` int(11) NOT NULL,
   `staff_id` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
-  `recorded_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `recorded_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -303,7 +331,7 @@ CREATE TABLE `nurse_notes` (
 --
 
 CREATE TABLE `patients` (
-  `id` bigint(20) NOT NULL,
+  `patient_id` bigint(20) NOT NULL,
   `user_id` int(11) NOT NULL,
   `uuid` char(36) NOT NULL,
   `photo_url` varchar(1000) DEFAULT NULL,
@@ -321,7 +349,7 @@ CREATE TABLE `patients` (
   `insurance_number` varchar(100) DEFAULT NULL,
   `emergency_contact_name` varchar(150) DEFAULT NULL,
   `emergency_contact_phone` varchar(30) DEFAULT NULL,
-  `status` enum('active','inactive') DEFAULT 'active',
+  `patient_status` enum('active','inactive') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -333,11 +361,13 @@ CREATE TABLE `patients` (
 --
 
 CREATE TABLE `payments` (
-  `id` bigint(20) NOT NULL,
+  `payment_id` bigint(20) NOT NULL,
   `bill_id` bigint(20) DEFAULT NULL,
   `amount` decimal(12,2) DEFAULT NULL,
-  `method` enum('cash','card','upi','insurance') DEFAULT NULL,
-  `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
+  `payment_method` enum('cash','card','upi','insurance') DEFAULT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -347,8 +377,10 @@ CREATE TABLE `payments` (
 --
 
 CREATE TABLE `payment_methods` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) DEFAULT NULL
+  `method_id` int(11) NOT NULL,
+  `method_name` varchar(100) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -358,12 +390,13 @@ CREATE TABLE `payment_methods` (
 --
 
 CREATE TABLE `prescriptions` (
-  `id` bigint(20) NOT NULL,
+  `prescription_id` bigint(20) NOT NULL,
   `doctor_id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
   `appointment_id` bigint(20) DEFAULT NULL,
   `notes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -373,13 +406,15 @@ CREATE TABLE `prescriptions` (
 --
 
 CREATE TABLE `prescription_items` (
-  `id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
   `prescription_id` bigint(20) NOT NULL,
   `medicine_name` varchar(255) DEFAULT NULL,
   `dosage` varchar(100) DEFAULT NULL,
   `frequency` varchar(100) DEFAULT NULL,
   `duration_days` int(11) DEFAULT NULL,
-  `instructions` text DEFAULT NULL
+  `instructions` text DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -389,13 +424,14 @@ CREATE TABLE `prescription_items` (
 --
 
 CREATE TABLE `radiology_reports` (
-  `id` bigint(20) NOT NULL,
+  `report_id` bigint(20) NOT NULL,
   `patient_id` int(11) DEFAULT NULL,
   `doctor_id` int(11) DEFAULT NULL,
-  `type` varchar(150) DEFAULT NULL,
+  `report_type` varchar(150) DEFAULT NULL,
   `report_url` varchar(500) DEFAULT NULL,
   `notes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -406,19 +442,21 @@ CREATE TABLE `radiology_reports` (
 
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL
+  `role_name` varchar(50) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `roles`
 --
 
-INSERT INTO `roles` (`id`, `name`) VALUES
-(1, 'admin'),
-(2, 'doctor'),
-(3, 'patient'),
-(4, 'staff'),
-(5, 'user');
+INSERT INTO `roles` (`id`, `role_name`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
+(2, 'doctor', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
+(3, 'patient', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
+(4, 'staff', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
+(5, 'user', '2025-12-08 15:21:49', '2025-12-08 15:21:49');
 
 -- --------------------------------------------------------
 
@@ -433,35 +471,37 @@ CREATE TABLE `role_permissions` (
   `can_view` tinyint(1) DEFAULT 1,
   `can_add` tinyint(1) DEFAULT 0,
   `can_edit` tinyint(1) DEFAULT 0,
-  `can_delete` tinyint(1) DEFAULT 0
+  `can_delete` tinyint(1) DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `role_permissions`
 --
 
-INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`, `can_edit`, `can_delete`) VALUES
-(1, 1, 'dashboard', 1, 1, 1, 1),
-(2, 1, 'doctors', 1, 1, 1, 1),
-(3, 1, 'patients', 1, 1, 1, 1),
-(4, 1, 'staff', 1, 1, 1, 1),
-(5, 1, 'appointments', 1, 1, 1, 1),
-(6, 1, 'billing', 1, 1, 1, 1),
-(7, 1, 'departments', 1, 1, 1, 1),
-(8, 2, 'dashboard', 1, 0, 0, 0),
-(9, 2, 'appointments', 1, 0, 1, 0),
-(10, 2, 'patients', 1, 0, 0, 0),
-(11, 2, 'prescriptions', 1, 1, 1, 0),
-(12, 2, 'vitals', 1, 1, 1, 0),
-(13, 2, 'departments', 1, 0, 0, 0),
-(14, 3, 'dashboard', 1, 0, 0, 0),
-(15, 3, 'appointments', 1, 0, 0, 0),
-(16, 3, 'prescriptions', 1, 0, 0, 0),
-(17, 3, 'billing', 1, 0, 0, 0),
-(18, 3, 'departments', 0, 0, 0, 0),
-(19, 4, 'patients', 1, 1, 1, 0),
-(20, 4, 'appointments', 1, 1, 1, 0),
-(21, 4, 'departments', 1, 0, 0, 0);
+INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
+(1, 1, 'dashboard', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(2, 1, 'doctors', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(3, 1, 'patients', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(4, 1, 'staff', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(5, 1, 'appointments', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(6, 1, 'billing', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(7, 1, 'departments', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(8, 2, 'dashboard', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(9, 2, 'appointments', 1, 0, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(10, 2, 'patients', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(11, 2, 'prescriptions', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(12, 2, 'vitals', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(13, 2, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(14, 3, 'dashboard', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(15, 3, 'appointments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(16, 3, 'prescriptions', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(17, 3, 'billing', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(18, 3, 'departments', 0, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(19, 4, 'patients', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(20, 4, 'appointments', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(21, 4, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29');
 
 -- --------------------------------------------------------
 
@@ -470,11 +510,13 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`
 --
 
 CREATE TABLE `rooms` (
-  `id` int(11) NOT NULL,
+  `room_id` int(11) NOT NULL,
   `room_number` varchar(20) DEFAULT NULL,
   `room_type` enum('general','semi_private','private','icu') DEFAULT NULL,
-  `charges` decimal(10,2) DEFAULT NULL,
-  `status` enum('available','occupied','maintenance') DEFAULT 'available'
+  `room_charges` decimal(10,2) DEFAULT NULL,
+  `room_status` enum('available','occupied','maintenance') DEFAULT 'available',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -484,18 +526,18 @@ CREATE TABLE `rooms` (
 --
 
 CREATE TABLE `staff` (
-  `id` bigint(20) NOT NULL,
+  `staff_id` bigint(20) NOT NULL,
   `user_id` int(11) NOT NULL,
   `uuid` char(36) NOT NULL,
   `designation` varchar(150) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
-  `shift` enum('morning','evening','night','rotational') DEFAULT 'rotational',
+  `staff_shift` enum('morning','evening','night','rotational') DEFAULT 'rotational',
   `join_date` date DEFAULT NULL,
-  `salary` decimal(12,2) DEFAULT NULL,
+  `staff_salary` decimal(12,2) DEFAULT NULL,
   `address` text DEFAULT NULL,
   `email_verified` tinyint(1) DEFAULT 0,
   `phone_verified` tinyint(1) DEFAULT 0,
-  `status` enum('active','inactive','suspended') DEFAULT 'active',
+  `staff_status` enum('active','inactive','suspended') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -507,7 +549,7 @@ CREATE TABLE `staff` (
 --
 
 CREATE TABLE `staff_salary` (
-  `id` bigint(20) NOT NULL,
+  `salary_id` bigint(20) NOT NULL,
   `staff_id` int(11) NOT NULL,
   `basic_salary` decimal(12,2) DEFAULT NULL,
   `hra` decimal(12,2) DEFAULT NULL,
@@ -519,7 +561,9 @@ CREATE TABLE `staff_salary` (
   `net_salary` decimal(12,2) DEFAULT NULL,
   `salary_month` varchar(20) DEFAULT NULL,
   `paid_on` date DEFAULT NULL,
-  `status` enum('paid','pending') DEFAULT 'pending'
+  `salary_status` enum('paid','pending') DEFAULT 'pending',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -529,11 +573,13 @@ CREATE TABLE `staff_salary` (
 --
 
 CREATE TABLE `tax` (
-  `id` bigint(20) NOT NULL,
+  `tax_id` bigint(20) NOT NULL,
   `bill_id` bigint(20) NOT NULL,
   `tax_name` varchar(100) NOT NULL,
   `tax_percentage` decimal(5,2) NOT NULL,
-  `tax_amount` decimal(12,2) NOT NULL
+  `tax_amount` decimal(12,2) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -581,7 +627,7 @@ INSERT INTO `users` (`id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, 
 --
 
 CREATE TABLE `vitals` (
-  `id` bigint(20) NOT NULL,
+  `vital_id` bigint(20) NOT NULL,
   `patient_id` int(11) NOT NULL,
   `doctor_id` int(11) DEFAULT NULL,
   `bp` varchar(20) DEFAULT NULL,
@@ -589,7 +635,9 @@ CREATE TABLE `vitals` (
   `spo2` int(11) DEFAULT NULL,
   `temperature` decimal(4,1) DEFAULT NULL,
   `sugar_level` decimal(5,2) DEFAULT NULL,
-  `recorded_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `recorded_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -600,14 +648,14 @@ CREATE TABLE `vitals` (
 -- Indexes for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`log_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `admissions`
 --
 ALTER TABLE `admissions`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`admission_id`),
   ADD KEY `patient_id` (`patient_id`),
   ADD KEY `doctor_id` (`doctor_id`),
   ADD KEY `room_id` (`room_id`),
@@ -617,7 +665,7 @@ ALTER TABLE `admissions`
 -- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`appointment_id`),
   ADD KEY `doctor_id` (`doctor_id`),
   ADD KEY `patient_id` (`patient_id`);
 
@@ -640,14 +688,15 @@ ALTER TABLE `billing`
 -- Indexes for table `billing_items`
 --
 ALTER TABLE `billing_items`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`item_id`),
   ADD KEY `bill_id` (`bill_id`);
 
 --
 -- Indexes for table `departments`
 --
 ALTER TABLE `departments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`department_id`),
+  ADD KEY `department_head_id` (`department_head_id`);
 
 --
 -- Indexes for table `discharge_summaries`
@@ -661,7 +710,7 @@ ALTER TABLE `discharge_summaries`
 -- Indexes for table `doctors`
 --
 ALTER TABLE `doctors`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`doctor_id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
   ADD UNIQUE KEY `uuid` (`uuid`),
   ADD UNIQUE KEY `medical_license_no` (`medical_license_no`),
@@ -673,7 +722,7 @@ ALTER TABLE `doctors`
 -- Indexes for table `doctor_rounds`
 --
 ALTER TABLE `doctor_rounds`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`round_id`),
   ADD KEY `admission_id` (`admission_id`),
   ADD KEY `doctor_id` (`doctor_id`);
 
@@ -681,14 +730,14 @@ ALTER TABLE `doctor_rounds`
 -- Indexes for table `doctor_schedules`
 --
 ALTER TABLE `doctor_schedules`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`schedule_id`),
   ADD KEY `doctor_id` (`doctor_id`);
 
 --
 -- Indexes for table `insurance_claims`
 --
 ALTER TABLE `insurance_claims`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`insurance_id`),
   ADD KEY `patient_id` (`patient_id`),
   ADD KEY `bill_id` (`bill_id`);
 
@@ -696,13 +745,13 @@ ALTER TABLE `insurance_claims`
 -- Indexes for table `lab_tests`
 --
 ALTER TABLE `lab_tests`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`test_id`);
 
 --
 -- Indexes for table `lab_test_results`
 --
 ALTER TABLE `lab_test_results`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`result_id`),
   ADD KEY `test_id` (`test_id`),
   ADD KEY `patient_id` (`patient_id`),
   ADD KEY `doctor_id` (`doctor_id`);
@@ -711,21 +760,21 @@ ALTER TABLE `lab_test_results`
 -- Indexes for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`login_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `medical_history`
 --
 ALTER TABLE `medical_history`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`history_id`),
   ADD KEY `patient_id` (`patient_id`);
 
 --
 -- Indexes for table `nurse_notes`
 --
 ALTER TABLE `nurse_notes`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`note_id`),
   ADD KEY `patient_id` (`patient_id`),
   ADD KEY `staff_id` (`staff_id`);
 
@@ -733,7 +782,7 @@ ALTER TABLE `nurse_notes`
 -- Indexes for table `patients`
 --
 ALTER TABLE `patients`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`patient_id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
   ADD UNIQUE KEY `uuid` (`uuid`),
   ADD KEY `blood_group` (`blood_group`);
@@ -742,21 +791,21 @@ ALTER TABLE `patients`
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`payment_id`),
   ADD KEY `bill_id` (`bill_id`);
 
 --
 -- Indexes for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD PRIMARY KEY (`method_id`),
+  ADD UNIQUE KEY `name` (`method_name`);
 
 --
 -- Indexes for table `prescriptions`
 --
 ALTER TABLE `prescriptions`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`prescription_id`),
   ADD KEY `doctor_id` (`doctor_id`),
   ADD KEY `patient_id` (`patient_id`),
   ADD KEY `appointment_id` (`appointment_id`);
@@ -765,14 +814,14 @@ ALTER TABLE `prescriptions`
 -- Indexes for table `prescription_items`
 --
 ALTER TABLE `prescription_items`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`item_id`),
   ADD KEY `prescription_id` (`prescription_id`);
 
 --
 -- Indexes for table `radiology_reports`
 --
 ALTER TABLE `radiology_reports`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`report_id`),
   ADD KEY `patient_id` (`patient_id`),
   ADD KEY `doctor_id` (`doctor_id`);
 
@@ -781,7 +830,7 @@ ALTER TABLE `radiology_reports`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD UNIQUE KEY `name` (`role_name`);
 
 --
 -- Indexes for table `role_permissions`
@@ -794,30 +843,31 @@ ALTER TABLE `role_permissions`
 -- Indexes for table `rooms`
 --
 ALTER TABLE `rooms`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`room_id`),
   ADD UNIQUE KEY `room_number` (`room_number`);
 
 --
 -- Indexes for table `staff`
 --
 ALTER TABLE `staff`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`staff_id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
   ADD UNIQUE KEY `uuid` (`uuid`),
-  ADD KEY `department_id` (`department_id`);
+  ADD KEY `department_id` (`department_id`),
+  ADD KEY `staff_id` (`staff_id`);
 
 --
 -- Indexes for table `staff_salary`
 --
 ALTER TABLE `staff_salary`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`salary_id`),
   ADD KEY `staff_id` (`staff_id`);
 
 --
 -- Indexes for table `tax`
 --
 ALTER TABLE `tax`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`tax_id`),
   ADD KEY `bill_id` (`bill_id`);
 
 --
@@ -834,7 +884,7 @@ ALTER TABLE `users`
 -- Indexes for table `vitals`
 --
 ALTER TABLE `vitals`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`vital_id`),
   ADD KEY `patient_id` (`patient_id`),
   ADD KEY `doctor_id` (`doctor_id`);
 
@@ -846,19 +896,19 @@ ALTER TABLE `vitals`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `log_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `admissions`
 --
 ALTER TABLE `admissions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `admission_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `appointment_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `beds`
@@ -876,13 +926,13 @@ ALTER TABLE `billing`
 -- AUTO_INCREMENT for table `billing_items`
 --
 ALTER TABLE `billing_items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `discharge_summaries`
@@ -894,91 +944,91 @@ ALTER TABLE `discharge_summaries`
 -- AUTO_INCREMENT for table `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `doctor_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `doctor_rounds`
 --
 ALTER TABLE `doctor_rounds`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `round_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `doctor_schedules`
 --
 ALTER TABLE `doctor_schedules`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `schedule_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `insurance_claims`
 --
 ALTER TABLE `insurance_claims`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `insurance_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `lab_tests`
 --
 ALTER TABLE `lab_tests`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `test_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `lab_test_results`
 --
 ALTER TABLE `lab_test_results`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `result_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `login_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `medical_history`
 --
 ALTER TABLE `medical_history`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `history_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `nurse_notes`
 --
 ALTER TABLE `nurse_notes`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `note_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `patient_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `payment_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `method_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prescriptions`
 --
 ALTER TABLE `prescriptions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `prescription_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prescription_items`
 --
 ALTER TABLE `prescription_items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `radiology_reports`
 --
 ALTER TABLE `radiology_reports`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `report_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -996,25 +1046,25 @@ ALTER TABLE `role_permissions`
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `staff_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `staff_salary`
 --
 ALTER TABLE `staff_salary`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `salary_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tax`
 --
 ALTER TABLE `tax`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `tax_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1026,7 +1076,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vitals`
 --
 ALTER TABLE `vitals`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `vital_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -1044,7 +1094,7 @@ ALTER TABLE `activity_logs`
 ALTER TABLE `admissions`
   ADD CONSTRAINT `admissions_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `admissions_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `admissions_ibfk_3` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
+  ADD CONSTRAINT `admissions_ibfk_3` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`),
   ADD CONSTRAINT `admissions_ibfk_4` FOREIGN KEY (`bed_id`) REFERENCES `beds` (`id`);
 
 --
@@ -1058,14 +1108,14 @@ ALTER TABLE `appointments`
 -- Constraints for table `beds`
 --
 ALTER TABLE `beds`
-  ADD CONSTRAINT `beds_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`);
+  ADD CONSTRAINT `beds_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`);
 
 --
 -- Constraints for table `billing`
 --
 ALTER TABLE `billing`
   ADD CONSTRAINT `billing_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `billing_ibfk_2` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`id`);
+  ADD CONSTRAINT `billing_ibfk_2` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`admission_id`);
 
 --
 -- Constraints for table `billing_items`
@@ -1074,10 +1124,16 @@ ALTER TABLE `billing_items`
   ADD CONSTRAINT `billing_items_ibfk_1` FOREIGN KEY (`bill_id`) REFERENCES `billing` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `departments`
+--
+ALTER TABLE `departments`
+  ADD CONSTRAINT `fk_department_head` FOREIGN KEY (`department_head_id`) REFERENCES `staff` (`staff_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
 -- Constraints for table `discharge_summaries`
 --
 ALTER TABLE `discharge_summaries`
-  ADD CONSTRAINT `discharge_summaries_ibfk_1` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`id`),
+  ADD CONSTRAINT `discharge_summaries_ibfk_1` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`admission_id`),
   ADD CONSTRAINT `discharge_summaries_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
 
 --
@@ -1085,13 +1141,13 @@ ALTER TABLE `discharge_summaries`
 --
 ALTER TABLE `doctors`
   ADD CONSTRAINT `doctors_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `doctors_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`);
+  ADD CONSTRAINT `doctors_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
 
 --
 -- Constraints for table `doctor_rounds`
 --
 ALTER TABLE `doctor_rounds`
-  ADD CONSTRAINT `doctor_rounds_ibfk_1` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`id`),
+  ADD CONSTRAINT `doctor_rounds_ibfk_1` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`admission_id`),
   ADD CONSTRAINT `doctor_rounds_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
 
 --
@@ -1111,7 +1167,7 @@ ALTER TABLE `insurance_claims`
 -- Constraints for table `lab_test_results`
 --
 ALTER TABLE `lab_test_results`
-  ADD CONSTRAINT `lab_test_results_ibfk_1` FOREIGN KEY (`test_id`) REFERENCES `lab_tests` (`id`),
+  ADD CONSTRAINT `lab_test_results_ibfk_1` FOREIGN KEY (`test_id`) REFERENCES `lab_tests` (`test_id`),
   ADD CONSTRAINT `lab_test_results_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `lab_test_results_ibfk_3` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
 
@@ -1152,13 +1208,13 @@ ALTER TABLE `payments`
 ALTER TABLE `prescriptions`
   ADD CONSTRAINT `prescriptions_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `prescriptions_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `prescriptions_ibfk_3` FOREIGN KEY (`appointment_id`) REFERENCES `appointments` (`id`);
+  ADD CONSTRAINT `prescriptions_ibfk_3` FOREIGN KEY (`appointment_id`) REFERENCES `appointments` (`appointment_id`);
 
 --
 -- Constraints for table `prescription_items`
 --
 ALTER TABLE `prescription_items`
-  ADD CONSTRAINT `prescription_items_ibfk_1` FOREIGN KEY (`prescription_id`) REFERENCES `prescriptions` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `prescription_items_ibfk_1` FOREIGN KEY (`prescription_id`) REFERENCES `prescriptions` (`prescription_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `radiology_reports`
@@ -1178,7 +1234,7 @@ ALTER TABLE `role_permissions`
 --
 ALTER TABLE `staff`
   ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `staff_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`);
+  ADD CONSTRAINT `staff_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
 
 --
 -- Constraints for table `staff_salary`

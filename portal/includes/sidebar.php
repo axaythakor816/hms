@@ -103,7 +103,7 @@
                         <span>Departments</span> <span class="menu-arrow"></span>
                     </a>
                     <ul>
-                        <li><a href="departments/departments.php" class="nav-link">Department List</a></li>
+                        <li><a href="departments/department_list.php" class="nav-link">Department List</a></li>
 
                         <?php if (has_permission('departments','can_add')): ?>
                         <li><a href="departments/add-department.php" class="nav-link">Add Department</a></li>

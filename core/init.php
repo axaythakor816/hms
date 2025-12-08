@@ -34,7 +34,7 @@ if (ENV_MODE === "dev") {
 // ------------------------------------
 // 7. Load helper.js for logged-in admin
 // ------------------------------------
-// if (!isset($_SESSION['user_id'])) {
+// if (isset($_SESSION['user_id'])) {
 //     echo '<script src="../../public/js_loader.php"></script>';
 // }
 

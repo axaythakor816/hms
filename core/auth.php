@@ -53,6 +53,7 @@ function login($email, $password) {
     $_SESSION['user_email'] = $user['email'];
     $_SESSION['first_name'] = $user['first_name'];
     $_SESSION['last_name'] = $user['last_name'];
+    csrf_token();
     
     return true;
 }
@@ -75,8 +76,10 @@ function login($email, $password) {
 //     }
 // }
 
-function check_role($roleid)
-{
+// --------------------
+// ROLE REDIRECT FUNCTION
+// --------------------
+function check_role($roleid) {
     if ($roleid == '1') {
         return "admin.php";
     } elseif ($roleid == '2') {

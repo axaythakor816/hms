@@ -45,10 +45,5 @@ $result['message'] = ($result['status'] === "success")
     ? "Registration Successful. Continue To Login..." 
     : $result['message'];
 
-json_response(
-    $result['status'],
-    $result['message'],
-    [],
-    isset($result['error']) ? ["db_error" => $result['error']] : []
-);
+json_response($result['status'], $result['message'], "", "");
 ?>

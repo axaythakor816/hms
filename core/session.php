@@ -1,10 +1,5 @@
 <?php
 
-// Prevent direct access
-// if (empty($_SESSION['APP_START'])) {
-//     die("Direct access not allowed");
-// }
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -12,9 +7,12 @@ if (session_status() === PHP_SESSION_NONE) {
 // Session timeout (optional)
 $timeout = 30 * 60; // 30 minutes
 
+
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
     session_unset();
     session_destroy();
+    echo "<script>localStorage.removeItem('currentPage');</script>";
+
 }
 
 $_SESSION['LAST_ACTIVITY'] = time();

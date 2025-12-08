@@ -1,15 +1,23 @@
 <?php
-require_once 'add-department-model.php';
+require_once '../../../core/init.php';
+
+require_login();
+
+if(!has_permission('departments', 'can_view')) {
+    showalert("error", "Access Denied You Are Not Authorize Persion");	
+	exit;
+}
+
+require_role([1, 2, 4]);
 ?>
 <div class="page-wrapper">
 	<div class="content">
-	
 		<!-- Page Header -->
 		<div class="page-header">
 			<div class="row">
 				<div class="col-sm-12">
 					<ul class="breadcrumb">
-						<li class="breadcrumb-item"><a href="departments.php">Department </a></li>
+						<li class="breadcrumb-item"><a href="departments/department_list.php" class="nav-link">Department </a></li>
 						<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 						<li class="breadcrumb-item active">Department List</li>
 					</ul>
@@ -38,7 +46,9 @@ require_once 'add-department-model.php';
 												</form>
 											</div>
 											<div class="add-group">
+											<?php if(has_permission('departments', 'can_add')) { ?>
 												<a href="add-department.php" data-bs-toggle="modal" data-bs-target="#addDepatmentModal" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
+											<?php } ?>
 												<a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
 											</div>
 										</div>
@@ -115,4 +125,10 @@ require_once 'add-department-model.php';
 	</div>
 </div>
 
+<?php
+if(has_permission('departments', 'can_add')) {
+	require_once 'add_department_model.php';
+}
+?>
 
+<script src="../assets/ajax/departments.js"></script>

@@ -1,4 +1,10 @@
 <?php
+
+// Prevent direct access
+// if (empty($_SESSION['APP_START'])) {
+//     die("Direct access not allowed");
+// }
+
 function clean($value) {
     return htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
 }

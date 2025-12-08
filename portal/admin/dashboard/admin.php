@@ -2,19 +2,13 @@
 require_once '../../../core/init.php';
 
 // 🚫 redirect check should happen BEFORE header.php
-if ( !is_logged_in() ) {
-  showalert("error", "Access Denied");
-  js_redirect('http://localhost/hms/public/page-login.php');
-  exit;
-}
+require_login();
 
 if (!has_permission('dashboard','can_view')) {
-    echo "<h3 style='color:red'>Access Denied</h3>";
+    showalert("error", "Access Denied");
     exit;
 }
-
-require_role([2]);
-
+require_role([1]);
 ?>
         <div class="page-wrapper">
             <div class="content">

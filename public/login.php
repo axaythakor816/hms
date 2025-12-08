@@ -3,7 +3,7 @@ require_once '../core/helpers.php';
 require_once '../core/auth.php';
 
 $rules = [
-    'username' => 'required|username',
+    'username' => ' |username',
     'password' => 'required|min:6',
 ];
 
@@ -17,7 +17,7 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 if(!login($username, $password)) {
-    json_response("error", "Invalid UserName Password", "", "");
+    json_response("error", "Invalid UserName Password", "", "");    
 }
 
 // $role = $_SESSION['role_id'];

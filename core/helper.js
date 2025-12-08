@@ -164,6 +164,7 @@ function showAlert(type = "success", msg = "Message", position = "top-center") {
     let alertClass = (type === "success") ? "alert-success" : "alert-danger";
 
     // Remove old alert if exists
+    
     $(".custom-alert-wrapper").remove();
 
     // Position classes
