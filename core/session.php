@@ -8,10 +8,11 @@ if (session_status() === PHP_SESSION_NONE) {
 $timeout = 30 * 60; // 30 minutes
 
 
+
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
+    echo "<script>localStorage.removeItem('currentPage');</script>";
     session_unset();
     session_destroy();
-    echo "<script>localStorage.removeItem('currentPage');</script>";
 
 }
 

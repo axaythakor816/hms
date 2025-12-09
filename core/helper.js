@@ -158,13 +158,11 @@ function validateForm(formSelector, rules) {
     return errors;
 }
 
-
 function showAlert(type = "success", msg = "Message", position = "top-center") {
 
     let alertClass = (type === "success") ? "alert-success" : "alert-danger";
 
-    // Remove old alert if exists
-    
+    // Remove old alert
     $(".custom-alert-wrapper").remove();
 
     // Position classes
@@ -181,32 +179,84 @@ function showAlert(type = "success", msg = "Message", position = "top-center") {
     let posStyle = positions[position] || positions["top-center"];
 
     let element = $(`
-        <div class="custom-alert-wrapper" style="position:fixed; z-index:9999; ${posStyle}">
-            <div class="alert ${alertClass} alert-dismissible fade in text-center"
+        <div class="custom-alert-wrapper" 
+             style="position:fixed; z-index:9999; ${posStyle}">
+             
+            <div class="alert ${alertClass} alert-dismissible fade show text-center"
                  role="alert"
-                 style="min-width: 350px; padding:20px; font-size:16px;">
+                 style="min-width:350px; padding:20px; font-size:16px;">
 
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
-                        style="position:absolute; top:8px; right:10px;">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" 
+                        class="btn-close" 
+                        data-bs-dismiss="alert" 
+                        aria-label="Close"
+                        style="position:absolute; top:-15px; right:-12px; transform: scale(0.7);">
                 </button>
 
-                <strong>${msg}</strong>
+                <strong class="me-3">${msg}</strong>
+
             </div>
         </div>
     `);
 
     $("body").append(element);
 
-    // Auto close after 5 seconds
+    // Auto close after 2 seconds
     setTimeout(() => {
         element.fadeOut(300, function () { $(this).remove(); });
-    }, 3000);
+    }, 2000);
 }
 
 function Redirect(url, delay = 0) {
     setTimeout(() => {
         window.location.href = url;
     }, delay);
+}
+
+function generatePagination(currentPage, totalPages) {
+
+    let paginationHtml = "";
+
+    paginationHtml += `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link" data-page="${currentPage - 1}">← Prev</a>
+        </li>
+    `;
+
+    if (currentPage > 3) {
+        paginationHtml += `
+            <li class="page-item">
+                <a class="page-link" data-page="1">1</a>
+            </li>
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+        `;
+    }
+
+    for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+        if (i > 0 && i <= totalPages) {
+            paginationHtml += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" data-page="${i}">${i}</a>
+                </li>
+            `;
+        }
+    }
+
+    if (currentPage < totalPages - 2) {
+        paginationHtml += `
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            <li class="page-item">
+                <a class="page-link" data-page="${totalPages}">${totalPages}</a>
+            </li>
+        `;
+    }
+
+    paginationHtml += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link" data-page="${currentPage + 1}">Next →</a>
+        </li>
+    `;
+
+    return paginationHtml;
 }
 

@@ -47,7 +47,7 @@ function filterInput($input, $type = "string") {
             return filter_var($input, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         case "string":
-            return filter_var($input, FILTER_SANITIZE_STRING);
+            return filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         case "text":
             return filter_var($input, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -428,10 +428,21 @@ function showalert($type = "success", $msg = "Message", $position = "top-center"
     <div class="custom-alert-wrapper" style="position:fixed; z-index:9999; $posStyle">
         <div class="alert $bs_class alert-dismissible fade show text-center" role="alert" style="min-width:350px; padding:20px; font-size:16px;">
             <strong class="me-3">$msg</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position:absolute; top:8px; right:10px;"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position:absolute; top:-15px; right:-12px; transform: scale(0.7);"></button>
         </div>
     </div>
     ALERT;
+}
+
+get_label($fiend_field, $table, $column, $id) {
+
+    $sql = "SELECT $fiend_field FROM $table WHERE $column = ?";
+    $type = "i";
+    $value = $id;
+
+    $result = select($sql, $value, $type);
+
+    return $result[$fiend_field];
 }
 
 

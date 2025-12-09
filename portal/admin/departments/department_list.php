@@ -4,12 +4,13 @@ require_once '../../../core/init.php';
 require_login();
 
 if(!has_permission('departments', 'can_view')) {
-    showalert("error", "Access Denied You Are Not Authorize Persion");	
+	showalert("error", "Access Denied You Are Not Authorize Persion");	
 	exit;
 }
 
 require_role([1, 2, 4]);
 ?>
+
 <div class="page-wrapper">
 	<div class="content">
 		<!-- Page Header -->
@@ -41,7 +42,7 @@ require_role([1, 2, 4]);
 										<div class="doctor-search-blk">
 											<div class="top-nav-search table-search-blk">
 												<form>
-													<input type="text" class="form-control" placeholder="Search here">
+													<input type="text" class="form-control" placeholder="Search here" id="searchInput">
 													<a class="btn"><img src="../assets/img/icons/search-normal.svg" alt=""></a>
 												</form>
 											</div>
@@ -50,6 +51,14 @@ require_role([1, 2, 4]);
 												<a href="add-department.php" data-bs-toggle="modal" data-bs-target="#addDepatmentModal" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
 											<?php } ?>
 												<a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
+												<select id="RecordsPerPage" class="form-select form-select-sm w-auto ms-2">
+													<option value="10"></option>
+													<option value="5">5</option>
+													<option value="10">10</option>
+													<option value="25">25</option>
+													<option value="50">50</option>
+													<option value="100">100</option>
+												</select>
 											</div>
 										</div>
 									</div>
@@ -66,7 +75,9 @@ require_role([1, 2, 4]);
 						<!-- /Table Header -->
 						
 						<div class="table-responsive">
-							<table class="table border-0 custom-table comman-table datatable mb-0">
+							<input type="hidden" id="department_csrf_token" value="<?php echo csrf_token(); ?>">
+
+							<table class="table border-0 custom-table comman-table datatable mb-0" id="department_table">
 								<thead>
 									<tr>
 										<th>
@@ -74,15 +85,18 @@ require_role([1, 2, 4]);
 												<input class="form-check-input" type="checkbox" value="something">
 											</div>
 										</th>
-										<th>Sr_No</th>
-										<th>Department</th>
-										<th>Department Head</th>
+										<th data-column="department_id">Sr_No</th>
+										<th data-column="department_name">Department</th>
+										<th data-column="department_head_id">Department Head</th>
+										<th>Department Description</th>
+										<th data-column="created_at">Ceated Date</th>
+										<th data-column="updated_at">Updated Date</th>
 										<th colspan="2" class="text-center">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 
-									<tr>
+									<!-- <tr>
 										<td>
 											<div class="form-check check-tables">
 												<input class="form-check-input" type="checkbox" value="something">
@@ -100,16 +114,29 @@ require_role([1, 2, 4]);
 										<a class="dropdown-item" onclick="return confirm('Are You sure, you want to delete?')" href="delete-department.php"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
 													
 										</td>
-									</tr>
+									</tr> -->
 								</tbody>
 							</table>
 						</div>
+						<div class="row align-items-center px-2 py-2">
+							<div class="col-sm mt-2 text-muted" id="Department_InfoText" style="font-size:13px;">
+								<!-- Auto text load here -->
+							</div>
+
+							<div class="col-sm-auto">
+								<ul class="pagination my-2" id="department_Pagination">
+									
+								</ul>
+							</div>
+
+						</div>
+
 					</div>
 				</div>							
 			</div>					
 		</div>
 	</div>
-
+	
 </div>
 <div id="delete_patient" class="modal fade delete-modal" role="dialog">
 	<div class="modal-dialog modal-dialog-centered">
@@ -129,6 +156,11 @@ require_role([1, 2, 4]);
 if(has_permission('departments', 'can_add')) {
 	require_once 'add_department_model.php';
 }
+
+if(has_permission('departments', 'can_add')) {
+	require_once 'edit_department_model.php';
+}
+
 ?>
 
 <script src="../assets/ajax/departments.js"></script>

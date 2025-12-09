@@ -8,19 +8,23 @@ function insert($sql, $values, $datatypes) {
 
     if ($stmt = mysqli_prepare($conn, $sql)) {
 
-        mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
+        if (!mysqli_stmt_bind_param($stmt, $datatypes, ...$values)) {
+            $error = mysqli_stmt_error($stmt);
+            mysqli_stmt_close($stmt);
+            return ["status" => "error", "message" => "Parameter binding failed : " . $error];
+        }
 
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
             return ["status" => "success", "message" => "Record inserted successfully"];
         } else {
-            $error = mysqli_error($conn);
+            $error = mysqli_stmt_error($stmt);
             mysqli_stmt_close($stmt);
             return ["status" => "error", "message" => "Query execution failed" . $error];
         }
+    }else{
+        return ["status" => "error", "message" => "Query preparation failed : " . mysqli_error($conn)];
     }
-
-    return ["status" => "error", "message" => "Query preparation failed" . mysqli_error($conn)];
 }
 
 // --------------------------------------
