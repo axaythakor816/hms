@@ -35,7 +35,11 @@ function update($sql, $values, $datatypes) {
 
     if ($stmt = mysqli_prepare($conn, $sql)) {
 
-        mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
+        if (!mysqli_stmt_bind_param($stmt, $datatypes, ...$values)) {
+            $error = mysqli_stmt_error($stmt);
+            mysqli_stmt_close($stmt);
+            return ["status" => "error", "message" => "Parameter binding failed : " . $error];
+        }
 
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
@@ -45,9 +49,10 @@ function update($sql, $values, $datatypes) {
             mysqli_stmt_close($stmt);
             return ["status" => "error", "message" => "Query execution failed", "error" => $error];
         }
-    }
 
-    return ["status" => "error", "message" => "Query preparation failed", "error" => mysqli_error($conn)];
+    }else{
+        return ["status" => "error", "message" => "Query preparation failed", "error" => mysqli_error($conn)];
+    }
 }
 
 // --------------------------------------
@@ -79,9 +84,9 @@ function select($sql, $values = [], $datatypes = "") {
                 "data"   => $data
             ];
         }
+    }else{
+        return ["status" => "error", "message" => "Query failed", "error" => mysqli_error($conn)];
     }
-
-    return ["status" => "error", "message" => "Query failed", "error" => mysqli_error($conn)];
 }
 
 // --------------------------------------
@@ -92,7 +97,11 @@ function delete($sql, $values, $datatypes) {
 
     if ($stmt = mysqli_prepare($conn, $sql)) {
 
-        mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
+        if (!mysqli_stmt_bind_param($stmt, $datatypes, ...$values)) {
+            $error = mysqli_stmt_error($stmt);
+            mysqli_stmt_close($stmt);
+            return ["status" => "error", "message" => "Parameter binding failed : " . $error];
+        }
 
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
@@ -102,9 +111,9 @@ function delete($sql, $values, $datatypes) {
             mysqli_stmt_close($stmt);
             return ["status" => "error", "message" => "Query failed", "error" => $error];
         }
+    }else{
+        return ["status" => "error", "message" => "Query preparation failed", "error" => mysqli_error($conn)];
     }
-
-    return ["status" => "error", "message" => "Query preparation failed", "error" => mysqli_error($conn)];
 }
 
 // --------------------------------------

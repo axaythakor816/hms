@@ -106,7 +106,7 @@
                         <li><a href="departments/department_list.php" class="nav-link">Department List</a></li>
 
                         <?php if (has_permission('departments','can_add')): ?>
-                        <li><a href="departments/add-department.php" class="nav-link">Add Department</a></li>
+                        <li><a href="departments/department_add.php" class="nav-link">Add Department</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>

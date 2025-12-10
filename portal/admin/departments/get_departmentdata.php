@@ -34,10 +34,10 @@ $whereValues = [];
 $searchType  = "";
 
 if (!empty($search)) {
-    $sql .= " AND (department_name LIKE ? OR department_description LIKE ?)";
+    $sql .= " AND (department_name LIKE ? OR department_description LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
     $searchParam = "%$search%";
-    $whereValues = [$searchParam, $searchParam];
-    $searchType  = "ss";
+    $whereValues = [$searchParam, $searchParam, $searchParam, $searchParam];
+    $searchType  = "ssss";
 }
 
 $totalSql = $sql;
@@ -64,21 +64,27 @@ $sr_no = $offset + 1;
 
 foreach ($result['data'] as $row) {
 
-    $department_head_name = get_label("display_name", "doctors", "doctor_id", "id");
+    $department_head_name = get_label("display_name", "doctors", "doctor_id", $row['department_head_id']);
+    // <td>{$sr_no}</td>
+    $created_at =  format_datetime($row['created_at']);
+    $updated_at =  format_datetime($row['updated_at']
+    // ,"Y-m-d H:i:s"
+    );
 
     $html .= "
         <tr>
             <td>
                 <div class='form-check check-tables'>
-                    <input class='form-check-input' type='checkbox' value='something'>
+                    <input class='form-check-input row-check' type='checkbox' value='{$row['department_id']}'>
                 </div>
             </td>
-            <td>{$sr_no}</td>
+            <td>{$row['department_id']}</td>
+
             <td>{$row['department_name']}</td>
             <td>{$department_head_name}</td>
             <td>{$row['department_description']}</td>
-            <td>{$row['created_at']}</td>
-            <td>{$row['updated_at']}</td>
+            <td>{$created_at}</td>
+            <td>{$updated_at}</td>
 
             <td class='text-end'>
                 <a class='dropdown-item edit-btn' href='#'
@@ -91,8 +97,9 @@ foreach ($result['data'] as $row) {
             </td>
 
             <td class='text-end'>
-                <a class='dropdown-item' onclick='return confirm(\"Delete?\")'
-                   href='#' data-id='{$row['department_id']}'>
+                <a class='dropdown-item delete-btn' href='#' 
+                data-id='{$row['department_id']}'
+                data-name='{$row['department_name']}'>
                     <i class='fa fa-trash'></i> Delete
                 </a>
             </td>

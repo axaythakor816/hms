@@ -69,7 +69,7 @@ if(!has_permission('departments', 'can_edit')) {
 					
 					<div class="col-12">
 						<div class="doctor-submit text-end">
-							<button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+							<button type="button" class="btn btn-secondary cancel-form me-2" data-bs-dismiss="modal">Cancel</button>
 							<button name="update_department" type="submit" class="btn btn-primary">Update Department</button>
 						</div>
 					</div>

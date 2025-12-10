@@ -434,16 +434,31 @@ function showalert($type = "success", $msg = "Message", $position = "top-center"
     ALERT;
 }
 
-get_label($fiend_field, $table, $column, $id) {
+function get_label($fiend_field, $table, $column, $id) {
 
     $sql = "SELECT $fiend_field FROM $table WHERE $column = ?";
     $type = "i";
-    $value = $id;
+    $value = [$id];
 
     $result = select($sql, $value, $type);
-
-    return $result[$fiend_field];
+    
+    return $result[$fiend_field] ?? "No Select Department Head";
 }
+
+function format_datetime($datetime, $format = "d-m-Y h:i:s A") {
+    if (empty($datetime) || $datetime == "0000-00-00 00:00:00") {
+        return "-";
+    }
+
+    $timestamp = strtotime($datetime);
+
+    if ($timestamp === false) {
+        return $datetime;
+    }
+
+    return date($format, $timestamp);
+}
+
 
 
 ?>

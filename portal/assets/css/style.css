@@ -6257,12 +6257,12 @@ a.btn.add-links:hover {
 .show-entire .dataTables_length {
 	display: none;
 }
-.doctor-table-blk h3 {
+.doctor-table-blk h3, .department-table-blk h3 {
 	font-size: 18px;
 	font-weight: 600;
 	margin-bottom: 0;
 }
-.doctor-table-blk {
+.doctor-table-blk, .department-table-blk {
 	display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -6271,7 +6271,7 @@ a.btn.add-links:hover {
 	align-items: center;
 	flex-wrap: wrap;
 }
-.doctor-search-blk {
+.doctor-search-blk, .department-search-blk {
 	display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -6280,10 +6280,10 @@ a.btn.add-links:hover {
 	align-items: center;
 	flex-wrap: wrap;
 }
-.doctor-search-blk .top-nav-search {
+.doctor-search-blk .top-nav-search, .department-search-blk .top-nav-search {
 	margin-left: 15px;
 }
-.doctor-search-blk .top-nav-search form {
+.doctor-search-blk .top-nav-search form, .department-search-blk .top-nav-search form {
 	margin: 0px;
 }
 .add-group {
@@ -12535,10 +12535,10 @@ button.swal2-cancel {
 	.compose-btn button {
 		padding: 0.365rem 0.5rem;
 	}
-	.doctor-search-blk .add-group{
+	.doctor-search-blk .add-group, .department-search-blk .add-group{
 		margin-top: 10px;
 	}
-	.doctor-search-blk .top-nav-search {
+	.doctor-search-blk .top-nav-search, .department-search-blk .top-nav-search {
 		margin-left: 0;
 	}
 	.attachments li {

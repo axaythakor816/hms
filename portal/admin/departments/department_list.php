@@ -37,9 +37,9 @@ require_role([1, 2, 4]);
 						<div class="page-table-header mb-2">
 							<div class="row align-items-center">
 								<div class="col">
-									<div class="doctor-table-blk">
+									<div class="department-table-blk">
 										<h3>Department List</h3>
-										<div class="doctor-search-blk">
+										<div class="department-search-blk">
 											<div class="top-nav-search table-search-blk">
 												<form>
 													<input type="text" class="form-control" placeholder="Search here" id="searchInput">
@@ -50,7 +50,10 @@ require_role([1, 2, 4]);
 											<?php if(has_permission('departments', 'can_add')) { ?>
 												<a href="add-department.php" data-bs-toggle="modal" data-bs-target="#addDepatmentModal" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
 											<?php } ?>
-												<a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
+												<a href="javascript:;" class="btn btn-primary department-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
+											<?php if(has_permission('departments', 'can_delete')) { ?>
+												<a href="javascript:;" id="deleteSelected" class="btn btn-primary department-delete ms-2 disabled"><img src="../assets/img/icons/trash.svg" alt=""></a>
+											<?php } ?>
 												<select id="RecordsPerPage" class="form-select form-select-sm w-auto ms-2">
 													<option value="10"></option>
 													<option value="5">5</option>
@@ -68,7 +71,7 @@ require_role([1, 2, 4]);
 									<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-02.svg" alt=""></a>
 									<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-03.svg" alt=""></a>
 									<a href="javascript:;" ><img src="../assets/img/icons/pdf-icon-04.svg" alt=""></a>
-									
+
 								</div>
 							</div>
 						</div>
@@ -82,7 +85,7 @@ require_role([1, 2, 4]);
 									<tr>
 										<th>
 											<div class="form-check check-tables">
-												<input class="form-check-input" type="checkbox" value="something">
+												<input class="form-check-input" type="checkbox" id="checkAll" value="something">
 											</div>
 										</th>
 										<th data-column="department_id">Sr_No</th>
@@ -95,37 +98,18 @@ require_role([1, 2, 4]);
 									</tr>
 								</thead>
 								<tbody>
-
-									<!-- <tr>
-										<td>
-											<div class="form-check check-tables">
-												<input class="form-check-input" type="checkbox" value="something">
-											</div>
-										</td>
-
-										<td>1</td>
-										<td>pycast</td>
-										<td>dr.xyz</td>
-										
-										<td class="text-end">
-											<a class="dropdown-item" href="edit-department.php"><i class="fa-solid fa-pen-to-square m-r-5"></i> Edit</a>
-										</td>
-										<td class="text-end">
-										<a class="dropdown-item" onclick="return confirm('Are You sure, you want to delete?')" href="delete-department.php"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-													
-										</td>
-									</tr> -->
+									<!-- data inserted dynemically -->
 								</tbody>
 							</table>
 						</div>
 						<div class="row align-items-center px-2 py-2">
 							<div class="col-sm mt-2 text-muted" id="Department_InfoText" style="font-size:13px;">
-								<!-- Auto text load here -->
+								<!-- information inserted dynamically -->
 							</div>
 
 							<div class="col-sm-auto">
 								<ul class="pagination my-2" id="department_Pagination">
-									
+									<!-- pagignation inserted dynamically -->
 								</ul>
 							</div>
 
@@ -161,6 +145,13 @@ if(has_permission('departments', 'can_add')) {
 	require_once 'edit_department_model.php';
 }
 
+if(has_permission('departments', 'can_delete')) {
+	require_once 'delete_department_model.php';
+}
+
 ?>
 
 <script src="../assets/ajax/departments.js"></script>
+<script>
+	loaddata();
+</script>
