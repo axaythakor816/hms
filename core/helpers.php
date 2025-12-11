@@ -346,7 +346,6 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
     return $oldFileName;
 }
 
-
 // --------------------------------------
 // Base URL
 // --------------------------------------
@@ -366,7 +365,7 @@ function redirect($url){
 }
 
 // --------------------------------------
-// Redirect JS Based (Optional)
+// Redirect JS Based
 // --------------------------------------
 function js_redirect($url, $delay = 0) {
     echo "<script>
@@ -392,7 +391,7 @@ function uuid(){
 }
 
 // --------------------------------------
-// JSON Response Helper
+// JSON Response 
 // --------------------------------------
 function json_response($status, $msg, $data = [], $errors = []){
     header('Content-Type: application/json');
@@ -406,7 +405,7 @@ function json_response($status, $msg, $data = [], $errors = []){
 }
 
 // --------------------------------------
-// Show ALert Helper
+// Show ALert 
 // --------------------------------------
 function showalert($type = "success", $msg = "Message", $position = "top-center") {
     // Determine Bootstrap class
@@ -434,6 +433,9 @@ function showalert($type = "success", $msg = "Message", $position = "top-center"
     ALERT;
 }
 
+// --------------------------------------
+// CSV Get ID To This Name 
+// --------------------------------------
 function get_label($fiend_field, $table, $column, $id) {
 
     $sql = "SELECT $fiend_field FROM $table WHERE $column = ?";
@@ -445,6 +447,9 @@ function get_label($fiend_field, $table, $column, $id) {
     return $result[$fiend_field] ?? "No Select Department Head";
 }
 
+// --------------------------------------
+// Date and Time Formate
+// --------------------------------------
 function format_datetime($datetime, $format = "d-m-Y h:i:s A") {
     if (empty($datetime) || $datetime == "0000-00-00 00:00:00") {
         return "-";
@@ -459,7 +464,91 @@ function format_datetime($datetime, $format = "d-m-Y h:i:s A") {
     return date($format, $timestamp);
 }
 
+// --------------------------------------
+// TXT File Export
+// --------------------------------------
+function exportTXT($data, $filename = "data.txt") {
 
+    header("Content-Type: text/plain");
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+
+    foreach ($data as $row) {
+        echo implode(" - ", $row) . "\n";
+    }
+    exit;
+}
+
+// --------------------------------------
+// CSV File Export
+// --------------------------------------
+function exportCSV($data, $filename = "data.csv") {
+
+    header("Content-Type: text/csv");
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+
+    $output = fopen("php://output", "w");
+
+    fputcsv($output, array_keys($data[0]));
+
+    foreach ($data as $row) {
+        fputcsv($output, $row);
+    }
+
+    fclose($output);
+    exit;
+}
+
+// --------------------------------------
+// PDF File Export
+// --------------------------------------
+function exportPDF($data, $filename = "data.pdf") {
+
+    $pdf = new FPDF();
+    $pdf->AddPage();
+    $pdf->SetFont("Arial", "", 12);
+
+    foreach ($data as $row) {
+        $pdf->Cell(0, 10, implode(" - ", $row), 0, 1);
+    }
+
+    $pdf->Output("D", $filename);
+    exit;
+
+}
+
+// --------------------------------------
+// XLSX File Export
+// --------------------------------------
+function exportXLSX($data, $filename = "data.xlsx") {
+
+    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    $headers = array_keys($data[0]);
+    $col = 'A';
+    foreach ($headers as $header) {
+        $sheet->setCellValue($col . '1', $header);
+        $col++;
+    }
+
+    $rowNum = 2;
+    foreach ($data as $row) {
+        $col = 'A';
+        foreach ($row as $cell) {
+            $sheet->setCellValue($col . $rowNum, $cell);
+            $col++;
+        }
+        $rowNum++;
+    }
+
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+    $writer->save("php://output");
+    exit;
+}
 
 ?>
 

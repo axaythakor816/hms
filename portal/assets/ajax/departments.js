@@ -361,6 +361,47 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(".exportdata").click(function (e) {
+        e.preventDefault();
+
+        const { page, perPage, search, sortColumn, sortOrder } = state;
+        const type = $(this).data("type");
+        const csrf = $(this).data("csrf");
+
+        let iframe = $('<iframe>', {
+            name: 'exportFrame',
+            style: 'display:none;'
+        });
+
+        $("body").append(iframe);
+
+        let form = $('<form>', {
+            method: "POST",
+            action: "departments/export_data.php",
+            target: 'exportFrame'
+        });
+
+        form.append(
+            $('<input>', {type:'hidden', name:'page', value:page}),
+            $('<input>', {type:'hidden', name:'perPage', value:perPage}),
+            $('<input>', {type:'hidden', name:'search', value:search}),
+            $('<input>', {type:'hidden', name:'sortColumn', value:sortColumn}),
+            $('<input>', {type:'hidden', name:'sortOrder', value:sortOrder}),
+            $('<input>', {type:'hidden', name:'type', value:type}),
+            $('<input>', {type:'hidden', name:'csrf_token', value:csrf})
+        );
+
+        $("body").append(form);
+
+        form.submit(); 
+
+        setTimeout(() => {
+            form.remove();
+            iframe.remove();
+        }, 2000);
+    });
+
 });
 
 function updateDeleteButtonState() {

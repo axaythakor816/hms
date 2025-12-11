@@ -94,6 +94,9 @@ h6 {
 .table-responsive {
 	overflow-x: auto;
 }
+.page-link{
+	cursor: pointer;
+}
 
 h1,
 .h1 {

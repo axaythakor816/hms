@@ -7,13 +7,11 @@ if (session_status() === PHP_SESSION_NONE) {
 // Session timeout (optional)
 $timeout = 30 * 60; // 30 minutes
 
-
-
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
     echo "<script>localStorage.removeItem('currentPage');</script>";
     session_unset();
     session_destroy();
-
+    js_redirect("http://localhost/hms/public/page-login.php");
 }
 
 $_SESSION['LAST_ACTIVITY'] = time();

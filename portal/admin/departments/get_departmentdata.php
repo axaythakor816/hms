@@ -56,7 +56,7 @@ $datatypes = $searchType . "ii";
 $result = select($sql, $values, $datatypes);
 
 if ($result['status'] == "error") {
-    json_response("error", "Query failed", "", $result['error']);
+    json_response("error", "Query failed" . $result['error'], "", "");
 }
 
 $html = "";

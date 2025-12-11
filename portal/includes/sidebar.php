@@ -16,6 +16,18 @@
                 </li>
                 <?php endif; ?>
 
+                <!-- ✅ management -->
+                <li class="submenu">
+                    <a href="#"><span class="menu-side"><img src="../assets/img/icons/menu-icon-15.svg"></span>
+                        <span>Manages</span> <span class="menu-arrow"></span>
+                    </a>
+                    <ul>
+                        <li><a href="permissions/permission_list.php" class="nav-link">Pemissions</a></li>
+
+                        <li><a href="permissions/permission_list.php" class="nav-link">Roles</a></li>
+                    </ul>
+                </li>
+
                 <!-- ✅ DOCTORS -->
                 <?php if (has_permission('doctors','can_view')): ?>
                 <li class="submenu">
@@ -23,7 +35,7 @@
                         <span>Doctors</span> <span class="menu-arrow"></span>
                     </a>
                     <ul>
-                        <li><a href="doctors/doctors.php" class="nav-link">Doctor List</a></li>
+                        <li><a href="doctors/doctor_list.php" class="nav-link">Doctor List</a></li>
 
                         <?php if (has_permission('doctors','can_add')): ?>
                         <li><a href="doctors/add-doctor.php" class="nav-link">Add Doctor</a></li>

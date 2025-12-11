@@ -67,11 +67,10 @@ require_role([1, 2, 4]);
 									</div>
 								</div>
 								<div class="col-auto text-end float-end ms-auto download-grp">
-									<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-01.svg" alt=""></a>
-									<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-02.svg" alt=""></a>
-									<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-03.svg" alt=""></a>
-									<a href="javascript:;" ><img src="../assets/img/icons/pdf-icon-04.svg" alt=""></a>
-
+									<a href="javascript:;" class=" me-2 exportdata" data-type="pdf" data-csrf="<?php echo csrf_token(); ?>"><img src="../assets/img/icons/pdf-icon-01.svg" alt=""></a>
+									<a href="javascript:;" class=" me-2 exportdata" data-type="txt" data-csrf="<?php echo csrf_token(); ?>"><img src="../assets/img/icons/pdf-icon-02.svg" alt=""></a>
+									<a href="javascript:;" class=" me-2 exportdata" data-type="csv" data-csrf="<?php echo csrf_token(); ?>"><img src="../assets/img/icons/pdf-icon-03.svg" alt=""></a>
+									<a href="javascript:;" class="exportdata" data-type="xlsx" data-csrf="<?php echo csrf_token(); ?>"><img src="../assets/img/icons/pdf-icon-04.svg" alt=""></a>
 								</div>
 							</div>
 						</div>
