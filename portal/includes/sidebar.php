@@ -16,7 +16,7 @@
                 </li>
                 <?php endif; ?>
 
-                <!-- ✅ management -->
+                <!-- ✅ management
                 <li class="submenu">
                     <a href="#"><span class="menu-side"><img src="../assets/img/icons/menu-icon-15.svg"></span>
                         <span>Manages</span> <span class="menu-arrow"></span>
@@ -26,7 +26,7 @@
 
                         <li><a href="permissions/permission_list.php" class="nav-link">Roles</a></li>
                     </ul>
-                </li>
+                </li> -->
 
                 <!-- ✅ DOCTORS -->
                 <?php if (has_permission('doctors','can_view')): ?>

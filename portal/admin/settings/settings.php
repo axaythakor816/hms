@@ -23,13 +23,12 @@
 							</li>
                             <li class="nav-item">
 								<a class="nav-link" href="profile.php">My Profile</a>
-							</li>
-							
-							
-					
-							
+							</li>							
 							<li class="nav-item">
 								<a class="nav-link" href="change-password.php">Change Password</a>
+							</li>
+							<li class="nav-item active">
+								<a class="nav-link" href="settings/permissions/permission_list.php">Permission Settings</a>
 							</li>
                            
 							
@@ -59,7 +58,7 @@
 												</div>
 												<h6 class="settings-size">Recommended image size is <span>150px x 150px</span></h6>
 												<div class="upload-images">
-													<img src="assets/img/logo-dark.png" alt="Image">
+													<img src="../assets/img/logo-dark.png" alt="Image">
 													<a href="javascript:void(0);" class="btn-icon logo-hide-btn">
 														<i class="feather-x-circle"></i>
 													</a>
@@ -78,7 +77,7 @@
 												</h6>
 												<h6 class="settings-size mt-1">Accepted formats: only png and ico</h6>
 												<div class="upload-images upload-size">
-													<img src="assets/img/favicon.png" alt="Image">
+													<img src="../assets/img/favicon.png" alt="Image">
 													<a href="javascript:void(0);" class="btn-icon logo-hide-btn">
 														<i class="feather-x-circle"></i>
 													</a>

@@ -1,7 +1,12 @@
 <?php
-require_once '../../../core/init.php';
+require_once '../../../../core/init.php';
 
 require_login();
+
+if(!has_permission('permissions', 'can_view')) {
+	showalert("error", "Access Denine");
+	exit;
+}
 
 require_role([1]);
 ?>
@@ -13,7 +18,7 @@ require_role([1]);
 			<div class="row">
 				<div class="col-sm-12">
 					<ul class="breadcrumb">
-						<li class="breadcrumb-item"><a href="permissions/permission_list.php" class="nav-link">Permission </a></li>
+						<li class="breadcrumb-item"><a href="settings/permissions/permission_list.php" class="nav-link">Permission </a></li>
 						<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 						<li class="breadcrumb-item active">Permission List</li>
 					</ul>

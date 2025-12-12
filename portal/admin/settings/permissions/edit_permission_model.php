@@ -1,23 +1,22 @@
 <?php
-require_once '../../../core/init.php';
-
-
+require_once '../../../../core/init.php';
 ?>
-<div class="modal fade" id="addpermissionModal" tabindex="-1" aria-hidden="true">
+
+<div class="modal fade" id="editpermissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Add / Edit Permission</h5>
+                <h5 class="modal-title">Edit Permission</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
 
-                <form id="addpermission_form">
+                <form id="editpermission_form">
 
-					<input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
-                    <!-- <input type="hidden" name="permission_id" id="permission_id"> -->
+                    <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
+                    <input type="hidden" name="permission_id" id="edit_permission_id">
 
                     <div class="row">
 
@@ -25,10 +24,10 @@ require_once '../../../core/init.php';
                         <div class="col-md-6">
                             <div class="input-block local-forms">
                                 <label>Role <span class="login-danger">*</span></label>
-                                <select class="form-select form-control" name="role_id" id="role_id">
-                                    <!-- options insert dynamically -->
+                                <select class="form-select form-control" name="role_id" id="edit_role_id">
+                                    <!-- Edit options dynamically -->
                                 </select>
-                                <span class="error" id="role_id_error"></span>
+                                <span class="error" id="edit_role_id_error"></span>
                             </div>
                         </div>
 
@@ -36,8 +35,8 @@ require_once '../../../core/init.php';
                         <div class="col-md-6">
                             <div class="input-block local-forms">
                                 <label>Module <span class="login-danger">*</span></label>
-                                <input type="text" name="module" id="module" class="form-control" placeholder="module name e.g. departments">
-                                <span class="error" id="module_error"></span>
+                                <input type="text" name="module" id="edit_module" class="form-control" placeholder="module name">
+                                <span class="error" id="edit_module_error"></span>
                             </div>
                         </div>
 
@@ -47,22 +46,22 @@ require_once '../../../core/init.php';
                             <div class="d-flex gap-4 mt-1">
 
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="can_view" id="can_view" value="1" checked>
+                                    <input class="form-check-input" type="checkbox" name="can_view" id="edit_can_view" value="1">
                                     <label class="form-check-label">Can View</label>
                                 </div>
 
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="can_add" id="can_add" value="1">
+                                    <input class="form-check-input" type="checkbox" name="can_add" id="edit_can_add" value="1">
                                     <label class="form-check-label">Can Add</label>
                                 </div>
 
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="can_edit" id="can_edit" value="1">
+                                    <input class="form-check-input" type="checkbox" name="can_edit" id="edit_can_edit" value="1">
                                     <label class="form-check-label">Can Edit</label>
                                 </div>
 
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="can_delete" id="can_delete" value="1">
+                                    <input class="form-check-input" type="checkbox" name="can_delete" id="edit_can_delete" value="1">
                                     <label class="form-check-label">Can Delete</label>
                                 </div>
 
@@ -73,7 +72,7 @@ require_once '../../../core/init.php';
 
                     <div class="text-end mt-4">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" name="save_permission" class="btn btn-primary">Create Permission</button>
+                        <button type="submit" name="update_permission" class="btn btn-primary">Update Permission</button>
                     </div>
 
                 </form>

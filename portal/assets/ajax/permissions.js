@@ -104,7 +104,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "permissions/save_permission.php",
+            url: "settings/permissions/save_permission.php",
             data: formdata,
             dataType: "json",
             processData: false,
@@ -138,7 +138,7 @@ $(document).ready(function () {
                         $("#addpermissionModal").modal("hide");
                         loadpagedata();
                     }else{
-                        loadPage("permissions/permission_list.php")
+                        loadPage("settings/permissions/permission_list.php")
                     }
                 }              
             },
@@ -204,7 +204,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "permissions/edit_permissions.php",
+            url: "settings/permissions/edit_permissions.php",
             data: formdata,
             processData: false,
             contentType: false,
@@ -282,7 +282,7 @@ $(document).ready(function () {
         
         $.ajax({
             type: "POST",
-            url: "permissions/delete_permission.php",
+            url: "settings/permissions/delete_permission.php",
             data: formdata,
             processData: false,
             contentType: false,
@@ -332,7 +332,7 @@ $(document).ready(function () {
 
         let form = $('<form>', {
             method: "POST",
-            action: "permissions/export_permissiondata.php",
+            action: "settings/permissions/export_permissiondata.php",
             target: 'exportFrame'
         });
 
@@ -364,7 +364,7 @@ function get_roles(callback) {
     
     $.ajax({
         type: "POST",
-        url: "permissions/loadoptions.php",
+        url: "settings/permissions/loadoptions.php",
         data: {
             csrf_token: csrf_token
         },
@@ -390,7 +390,7 @@ function loadpagedata() {
 
     $.ajax({
         type: "POST",
-        url: "permissions/get_permissiondata.php",
+        url: "settings/permissions/get_permissiondata.php",
         data: {
             page: page,
             perPage: perPage,
