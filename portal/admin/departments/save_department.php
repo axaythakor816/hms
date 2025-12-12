@@ -33,6 +33,12 @@ if(!verify_csrf($_POST['csrf_token'])) {
 $department_name = $_POST['department_name'];
 $department_description = $_POST['department_description'];
 
+$dup = checkDuplicateFields("departments", ["department_name" => $department_name, "department_description" => $department_description], null, "AND");
+
+if($dup['status'] === "duplicate") {
+    json_response("error", "", "", $dup['errors']);
+}
+
 $query = "INSERT INTO departments (department_name, department_description) VALUES (?, ?)";
 $types = "ss";
 $values = [$department_name, $department_description];

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2025 at 11:37 AM
+-- Generation Time: Dec 12, 2025 at 01:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -139,6 +139,22 @@ CREATE TABLE `departments` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `departments`
+--
+
+INSERT INTO `departments` (`department_id`, `department_name`, `department_description`, `department_head_id`, `created_at`, `updated_at`) VALUES
+(1, 'General Medicine', 'Provides comprehensive primary healthcare for adults, focusing on diagnosing and managing common illnesses and long-term conditions. Offers preventive care, regular checkups, routine screenings, and guidance for maintaining overall health.', NULL, '2025-12-10 17:53:20', '2025-12-10 17:53:20'),
+(2, 'Cardiology', 'Specializes in diagnosing and treating heart and vascular disorders. Offers ECG, echo, stress tests, and cardiac evaluations. Manages conditions like heart attacks, arrhythmias, and heart failure, providing both emergency and long-term cardiac care.', NULL, '2025-12-10 17:53:39', '2025-12-10 17:53:39'),
+(3, 'Orthopedics', 'Focuses on conditions of the bones, joints, spine, and muscles. Treats fractures, arthritis, and sports injuries, and offers joint replacements and orthopedic surgeries. Provides rehabilitation support to help patients regain mobility and strength.', NULL, '2025-12-10 17:53:55', '2025-12-10 17:53:55'),
+(4, 'Pediatrics', 'Provides complete medical care for infants, children, and adolescents. Covers vaccinations, growth and development monitoring, common illnesses, nutrition guidance, and chronic condition management to support overall child health.', NULL, '2025-12-10 17:54:30', '2025-12-10 17:54:30'),
+(5, 'Gynecology &amp; Obstetrics', 'Offers women’s reproductive and pregnancy care, including antenatal checkups, delivery management, fertility assessments, menstrual disorder treatment, and postoperative care. Supports both routine and high-risk pregnancies with specialized attention.', NULL, '2025-12-10 17:54:53', '2025-12-10 17:54:53'),
+(6, 'Neurology', 'Treats brain, nerve, and spinal disorders such as epilepsy, stroke, migraines, neuropathies, and movement disorders. Provides diagnostic tests and long-term management plans to help patients maintain neurological stability.', NULL, '2025-12-10 17:55:12', '2025-12-10 17:55:12'),
+(7, 'Dermatology', 'Diagnoses and treats skin, hair, and nail diseases including acne, allergies, eczema, infections, and pigmentation issues. Also offers cosmetic dermatology services such as peels, laser treatments, and skin rejuvenation procedures.', NULL, '2025-12-10 17:55:31', '2025-12-10 17:55:31'),
+(8, 'Emergency Medicine', 'Provides 24/7 urgent medical care for life-threatening conditions including trauma, accidents, cardiac emergencies, poisoning, strokes, and severe respiratory issues. Focuses on rapid stabilization and critical intervention.', NULL, '2025-12-10 17:55:52', '2025-12-10 17:55:52'),
+(9, 'Radiology', 'Delivers diagnostic imaging services like X-ray, CT, MRI, and ultrasound to identify internal injuries, organ diseases, tumors, and abnormalities. Supports clinical decision-making through accurate image interpretation.', NULL, '2025-12-10 17:56:09', '2025-12-10 17:56:09'),
+(10, 'Pathology', 'Conducts essential laboratory tests including blood work, urine analysis, biopsies, and microbiology cultures. Helps diagnose infections, cancers, metabolic issues, and other diseases through detailed sample examination.', NULL, '2025-12-10 17:56:22', '2025-12-10 17:56:22');
 
 -- --------------------------------------------------------
 
@@ -465,7 +481,7 @@ INSERT INTO `roles` (`id`, `role_name`, `created_at`, `updated_at`) VALUES
 --
 
 CREATE TABLE `role_permissions` (
-  `id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `module` varchar(100) NOT NULL,
   `can_view` tinyint(1) DEFAULT 1,
@@ -480,7 +496,7 @@ CREATE TABLE `role_permissions` (
 -- Dumping data for table `role_permissions`
 --
 
-INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
+INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
 (1, 1, 'dashboard', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (2, 1, 'doctors', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (3, 1, 'patients', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
@@ -501,7 +517,8 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`
 (18, 3, 'departments', 0, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (19, 4, 'patients', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (20, 4, 'appointments', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(21, 4, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29');
+(21, 4, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(22, 1, 'permission', 1, 1, 1, 1, '2025-12-12 18:29:12', '2025-12-12 18:29:12');
 
 -- --------------------------------------------------------
 
@@ -609,16 +626,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakor@gmail.com', '1234567891', '$2y$10$SjHGwKbDHiRfHvH9llbMtO3ByoUyOCKrryB.0n9DqQXQgy5WzyBYG', 1, NULL, NULL, 'active', '2025-11-24 13:33:21', '2025-12-03 09:59:04'),
-(2, 'b8e66ca6-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdhdk@gmail.com', '1234567892', '$2y$10$DWesSv3yyKWMvG7ZibgKBe7rW2360LR/JjQwZFUbo7MaRHNNJTvJK', 5, NULL, NULL, 'active', '2025-11-24 13:44:39', '2025-11-24 13:44:39'),
-(3, 'd9306d37-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgddhd@gmail.com', '2536956326', '$2y$10$lwzflSnWQB2cAkMmuWy9K.KM26CuqgABYWycerz7jiacu9B4A5Hna', 5, NULL, NULL, 'active', '2025-11-24 13:45:33', '2025-11-24 13:45:33'),
-(4, 'e1a77e13-c93b-11f0-894f-d89ef3933eb9', 'axay', NULL, 'hgdddhd@gmail.com', '2536956325', '$2y$10$0nWrgV9WQD9DKo0baIQQhuCrFWq9suNjDNFKwPOTf93mj0zDQMT6q', 5, NULL, NULL, 'active', '2025-11-24 13:45:47', '2025-11-24 13:45:47'),
-(5, '5af31f7c-ca9a-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdghd@gmail.com', '1234567899', '$2y$10$FjpJYHB.hLaPE7j8KKWQsOUmEIGAQuf8VqAg/goWbJeXCz.JMaci.', 5, NULL, NULL, 'active', '2025-11-26 07:34:34', '2025-11-26 07:34:34'),
-(6, '4ce486de-ca9d-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hg5dhd@gmail.com', '2536959326', '$2y$10$7Rn1jMIZ0iVsxs7N9VNFSeolHg/WZDsFmW9PqBoDuLqVYRuPe8IbW', 5, NULL, NULL, 'active', '2025-11-26 07:55:39', '2025-11-26 07:55:39'),
-(7, 'cd55e9f0-ca9d-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdhsad@gmail.com', '2536956926', '$2y$10$bBzIeA7onkrcDhVT6b6DtemUbkU/9EBGgIJTG/Fgqnn3aVt5bggQq', 5, NULL, NULL, 'active', '2025-11-26 07:59:15', '2025-11-26 07:59:15'),
-(8, '490b197c-ca9e-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdhsd@gmail.com', '2536996326', '$2y$10$JiB1GyPDDgBSwJuEqSr8C.eEGRoBDhug1nfWs1rARzjJ2P1yJSfG.', 5, NULL, NULL, 'active', '2025-11-26 08:02:42', '2025-11-26 08:02:42'),
-(9, 'f7cd3072-caae-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'saa@gmail.com', '1234567861', '$2y$10$8K5Jy4vusK3kcR67YQx8uuuDDcja/Fk.EPHQ5GpPciou1ySBpbYGG', 5, NULL, NULL, 'active', '2025-11-26 10:02:06', '2025-11-26 10:02:06'),
-(10, 'ba4494c3-cab2-11f0-84d8-d89ef3933eb9', 'axay', NULL, 'hgdhd@sgmail.com', '9536956325', '$2y$10$z8ORfAstiWPQn05uNs1S0.UPd5XijFNjJSUPySvo7VujC.ey9vnKW', 5, NULL, NULL, 'active', '2025-11-26 10:29:01', '2025-11-26 10:29:01');
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakor@gmail.com', '1234567891', '$2y$10$SjHGwKbDHiRfHvH9llbMtO3ByoUyOCKrryB.0n9DqQXQgy5WzyBYG', 1, NULL, NULL, 'active', '2025-11-24 13:33:21', '2025-12-03 09:59:04');
 
 -- --------------------------------------------------------
 
@@ -836,7 +844,7 @@ ALTER TABLE `roles`
 -- Indexes for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`permission_id`),
   ADD KEY `role_id` (`role_id`);
 
 --
@@ -932,7 +940,7 @@ ALTER TABLE `billing_items`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `discharge_summaries`
@@ -1040,7 +1048,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -1070,7 +1078,7 @@ ALTER TABLE `tax`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `vitals`

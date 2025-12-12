@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2025 at 01:27 PM
+-- Generation Time: Dec 12, 2025 at 01:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -481,7 +481,7 @@ INSERT INTO `roles` (`id`, `role_name`, `created_at`, `updated_at`) VALUES
 --
 
 CREATE TABLE `role_permissions` (
-  `id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `module` varchar(100) NOT NULL,
   `can_view` tinyint(1) DEFAULT 1,
@@ -496,7 +496,7 @@ CREATE TABLE `role_permissions` (
 -- Dumping data for table `role_permissions`
 --
 
-INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
+INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
 (1, 1, 'dashboard', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (2, 1, 'doctors', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (3, 1, 'patients', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
@@ -517,7 +517,8 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `module`, `can_view`, `can_add`
 (18, 3, 'departments', 0, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (19, 4, 'patients', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (20, 4, 'appointments', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(21, 4, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29');
+(21, 4, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
+(22, 1, 'permission', 1, 1, 1, 1, '2025-12-12 18:29:12', '2025-12-12 18:29:12');
 
 -- --------------------------------------------------------
 
@@ -843,7 +844,7 @@ ALTER TABLE `roles`
 -- Indexes for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`permission_id`),
   ADD KEY `role_id` (`role_id`);
 
 --
@@ -1047,7 +1048,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `rooms`

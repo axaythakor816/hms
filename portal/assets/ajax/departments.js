@@ -2,13 +2,13 @@
 //     page: 1, perPage: 10, search: "", sortColumn: "department_id", sortOrder: "DESC" 
 // };
 
-var state = window.state || {
-    page: 1,
-    perPage: 10,
-    search: "",
-    sortColumn: "department_id",
-    sortOrder: "ASC"
-};
+    var state = window.state || {
+        page: 1,
+        perPage: 10,
+        search: "",
+        sortColumn: "department_id",
+        sortOrder: "ASC"
+    };
 
 $(document).ready(function () {
  

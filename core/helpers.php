@@ -436,15 +436,16 @@ function showalert($type = "success", $msg = "Message", $position = "top-center"
 // --------------------------------------
 // CSV Get ID To This Name 
 // --------------------------------------
-function get_label($fiend_field, $table, $column, $id) {
+function get_label($field, $table, $column, $id) {
 
-    $sql = "SELECT $fiend_field FROM $table WHERE $column = ?";
-    $type = "i";
-    $value = [$id];
+    $sql = "SELECT $field FROM $table WHERE $column = ?";
+    $result = select($sql, [$id], "i");
 
-    $result = select($sql, $value, $type);
-    
-    return $result[$fiend_field] ?? "No Select Department Head";
+    if ($result['status'] === 'success' && $result['rows'] > 0) {
+        return $result['data'][0][$field] ?? "";
+    }
+
+    return "";
 }
 
 // --------------------------------------
@@ -549,6 +550,33 @@ function exportXLSX($data, $filename = "data.xlsx") {
     $writer->save("php://output");
     exit;
 }
+
+// --------------------------------------
+// check options data
+// --------------------------------------
+function checkselectdata($data, $column) {
+    if (isset($data['status']) && $data['status'] === 'error') {
+        return ['status' => $data['status'], 'message' => $data['message'] . $data['error']];
+    } elseif (empty($data['data'])) {
+        return ['status' => 'success', 'data' => '<option>No data found</option>'];
+    } else { 
+        $html = '';
+        $html .= '<option value="">Select</option>';
+        foreach ($data['data'] as $row) {
+            $html .= '<option value="' . $row[$column['column_id']] . '">' . ucfirst($row[$column['column_name']]) . '</option>';
+        }
+        return ['status' => $data['status'], 'message' => $data['message'], 'data' => $html];
+    }
+    
+}
+
+// --------------------------------------
+// get the text yes or no
+// --------------------------------------
+function getYesNoLabel($value) {
+    return ($value == 1) ? "Yes" : "No";
+}
+
 
 ?>
 

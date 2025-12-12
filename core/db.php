@@ -80,6 +80,7 @@ function select($sql, $values = [], $datatypes = "") {
 
             return [
                 "status" => "success",
+                "message" => "Query executed successfully",
                 "rows"   => count($data),
                 "data"   => $data
             ];
@@ -119,57 +120,66 @@ function delete($sql, $values, $datatypes) {
 // --------------------------------------
 // Check Duplicate Email / Mobile / Username
 // --------------------------------------
-function checkDuplicateFields($table, $fields = [], $id = null) {
-    $conn = $GLOBALS['conn'];
+function checkDuplicateFields($table, $fields = [], $id = [], $operator = "OR") {
 
     if (empty($fields)) {
         return ["status" => "error", "message" => "No fields provided"];
     }
 
-    $placeholders = [];
+    $conditions = [];
     $values = [];
     $types = "";
 
     foreach ($fields as $field => $value) {
-        $placeholders[] = "$field=?";
+        $conditions[] = "$field = ?";
         $values[] = $value;
-        $types .= "s";
-    }
-
-    $query = "SELECT * FROM $table WHERE (" . implode(" OR ", $placeholders) . ")";
-
-    if ($id) {
-        $query .= " AND id<>?";
-        $values[] = $id;
-        $types .= "i";
-    }
-
-    if ($stmt = mysqli_prepare($conn, $query)) {
-
-        mysqli_stmt_bind_param($stmt, $types, ...$values);
-
-        if (mysqli_stmt_execute($stmt)) {
-
-            $result = mysqli_stmt_get_result($stmt);
-            $errors = [];
-
-            while ($row = mysqli_fetch_assoc($result)) {
-                foreach ($fields as $field => $value) {
-                    if ($row[$field] == $value) {
-                        $errors[$field] = ucfirst($field) . " already exists";
-                    }
-                }
-            }
-
-            mysqli_stmt_close($stmt);
-
-            return empty($errors)
-                ? ["status" => "unique"]
-                : ["status" => "duplicate", "errors" => $errors];
+        if (is_int($value)) {
+            $types .= "i";
+        } elseif (is_float($value)) {
+            $types .= "d";
+        } elseif (is_null($value)) {
+            $types .= "s"; 
+        } elseif (is_bool($value)) {
+            $types .= "i"; 
+        } else {
+            $types .= "s";
         }
     }
 
-    return ["status" => "error", "message" => mysqli_error($conn)];
+    $where = "(" . implode(" $operator ", $conditions) . ")";
+
+    if (!empty($id)) {
+        foreach ($id as $col => $val) {
+            $where .= " AND $col <> ?";
+            $values[] = $val;
+
+            $types .= is_int($val) ? "i" : (is_float($val) ? "d" : "s");
+        }
+    }
+
+    $sql = "SELECT * FROM $table WHERE $where";
+
+    $result = select($sql, $values, $types);
+
+    if ($result['status'] !== "success") {
+        return ["status" => "error", "message" => $result['message']];
+    }
+
+    $errors = [];
+
+    if ($result['rows'] > 0) {
+        foreach ($result['data'] as $row) {
+            foreach ($fields as $field => $value) {
+                if (strtolower($row[$field]) == strtolower($value)) {
+                    $errors[$field] = ucfirst($field) . " already exists";
+                }
+            }
+        }
+    }
+
+    return empty($errors)
+        ? ["status" => "unique"]
+        : ["status" => "duplicate", "errors" => $errors];
 }
 
 // --------------------------------------

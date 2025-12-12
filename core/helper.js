@@ -161,7 +161,7 @@ function validateForm(formSelector, rules) {
 function showAlert(type = "success", msg = "Message", position = "top-center") {
 
     let alertClass = (type === "success") ? "alert-success" : "alert-danger";
-    console.log("function message", msg);
+    // console.log("function message", msg);
     // Remove old alert
     $(".custom-alert-wrapper").remove();
 
