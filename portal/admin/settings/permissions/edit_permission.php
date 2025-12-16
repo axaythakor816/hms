@@ -3,13 +3,12 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-if(!has_permission('permissions', 'can_add')) {
+if(!has_permission('permissions', 'can_edit')) {
 	showalert("error", "Access Denine");
 	exit;
 }
 
 require_role([1]);
-
 $_POST = filteration($_POST);
 
 $rules = [
@@ -27,28 +26,38 @@ if(!verify_csrf($_POST['csrf_token'])) {
     json_response("error", "Invalid CSRF Token", "", "");
 }
 
-$role = $_POST['role_id'];
+$permision_id = $_POST['permission_id'];
+$role_id = $_POST['role_id'];
 $module = strtolower($_POST['module']);
-$can_view   = isset($_POST['can_view']) ? 1 : 0;
-$can_add    = isset($_POST['can_add']) ? 1 : 0;
-$can_edit   = isset($_POST['can_edit']) ? 1 : 0;
+$can_view = isset($_POST['can_view']) ? 1 : 0;
+$can_add = isset($_POST['can_add']) ? 1 : 0;
+$can_edit = isset($_POST['can_edit']) ? 1 : 0;
 $can_delete = isset($_POST['can_delete']) ? 1 : 0;
 
-$dup = checkDuplicateFields("role_permissions", ["role_id" => $role, "module" => $module], '', "AND");
+$dup = checkDuplicateFields("role_permissions", ["role_id" => $role_id, "module" => $module], ["permission_id" => $permision_id], "AND");
 
 if($dup['status'] === "duplicate") {
     json_response("error", "", "", $dup['errors']);
 }
 
-$query = "INSERT INTO role_permissions (role_id , module, can_view, can_add, can_edit, can_delete) VALUES (?, ?, ?, ?, ?, ?)";
-$types = "isiiii";
-$values = [$role, $module, $can_view, $can_add, $can_edit, $can_delete];
+$sql = "UPDATE role_permissions SET 
+    role_id  = ?,
+    module = ?,
+    can_view = ?,
+    can_add = ?,
+    can_edit = ?,
+    can_delete = ?
+    WHERE permission_id  = ?";
 
-$result = insert($query, $values, $types);
+$values = [$role_id, $module, $can_view, $can_add, $can_edit, $can_delete, $permision_id];
+$type = "isiiiii";
+
+$result = update($sql, $values, $type);
 
 $result['message'] = ($result['status'] === "success") 
-    ? "Permision Created Successfully." 
+    ? "Permission Updated Successfully." 
     : $result['message'];
 
 json_response($result['status'], $result['message'], "", "");
+
 ?>

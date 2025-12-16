@@ -7,7 +7,7 @@
 
 	<div class="header">
 		<div class="header-left">
-			<a href="home.php" class="nav-link logo">
+			<a href="dashboard/<?php echo check_role($_SESSION['role_id']); ?>" class="nav-link logo">
 				<img src="../assets/img/logo.png" width="35" height="35" alt=""> <span>Karn Hospital</span>
 			</a>
 		</div>

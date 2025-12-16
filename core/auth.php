@@ -48,11 +48,15 @@ function login($email, $password) {
     $_SESSION['APP_START'] = true;  // session variable
 
     // Store login session
-    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['role_id'] = $user['role_id'];
     $_SESSION['user_email'] = $user['email'];
     $_SESSION['first_name'] = $user['first_name'];
     $_SESSION['last_name'] = $user['last_name'];
+    $_SESSION['mobile_number'] = $user['phone'];
+    $_SESSION['email_id'] = $user['email'];
+    $_SESSION['dob'] = $user['dob'];
+    $_SESSION['gender'] = $user['gender'];
     csrf_token();
     
     return true;

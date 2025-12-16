@@ -53,10 +53,9 @@
             from { background-position: 200px 0; }
             to   { background-position: 0 0; }
         }
-
+    
 </style>
 
-     
 </head>
 
 <body>

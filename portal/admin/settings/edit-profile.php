@@ -1,8 +1,3 @@
-<?php
-require_once('includes/auth_check.php');
-require_once('includes/header.php');
-require_once('includes/sidebar.php');
-?>
         <div class="page-wrapper">
             <div class="content">
                 <!-- Page Header -->
@@ -17,14 +12,7 @@ require_once('includes/sidebar.php');
 						</div>
 					</div>
 				</div>
-                <?php 
-    		
-				$id=$_GET['id'];
-				$select="SELECT * FROM admin WHERE id='$id'";
-				$data=mysqli_query($conn,$select);
-				$row=mysqli_fetch_array($data);
-
-				?>
+              
 				<!-- /Page Header -->
                 <form action="#" method="POST">
                     <div class="card-box">

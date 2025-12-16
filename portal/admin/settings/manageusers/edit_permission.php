@@ -3,10 +3,12 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-// if(!has_permission("departments", "can_edit")) {
-//     json_response("error", "Access Denine");
-// }
+if(!has_permission('permissions', 'can_edit')) {
+	showalert("error", "Access Denine");
+	exit;
+}
 
+require_role([1]);
 $_POST = filteration($_POST);
 
 $rules = [
@@ -26,12 +28,11 @@ if(!verify_csrf($_POST['csrf_token'])) {
 
 $permision_id = $_POST['permission_id'];
 $role_id = $_POST['role_id'];
-$module = $_POST['module'];
+$module = strtolower($_POST['module']);
 $can_view = isset($_POST['can_view']) ? 1 : 0;
 $can_add = isset($_POST['can_add']) ? 1 : 0;
 $can_edit = isset($_POST['can_edit']) ? 1 : 0;
 $can_delete = isset($_POST['can_delete']) ? 1 : 0;
-
 
 $dup = checkDuplicateFields("role_permissions", ["role_id" => $role_id, "module" => $module], ["permission_id" => $permision_id], "AND");
 
@@ -54,10 +55,9 @@ $type = "isiiiii";
 $result = update($sql, $values, $type);
 
 $result['message'] = ($result['status'] === "success") 
-    ? "Department Updated Successfully." 
+    ? "Permission Updated Successfully." 
     : $result['message'];
 
 json_response($result['status'], $result['message'], "", "");
-
 
 ?>

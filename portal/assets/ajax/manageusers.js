@@ -1,8 +1,8 @@
-var state = window.state || {
+var state = {
     page: 1,
     perPage: 10,
     search: "",
-    sortColumn: "permission_id",
+    sortColumn: "user_id",
     sortOrder: "ASC"
 };
 
@@ -14,17 +14,17 @@ $(document).ready(function () {
         loadpagedata();
     });
 
-    $(document).on("click", ".permission-refresh", function () {
+    $(document).on("click", ".user-refresh", function () {
         state.page = 1;
         state.perPage = 10;
         state.search = "";
-        state.sortColumn = "department_id";
+        state.sortColumn = "user_id";
         state.sortOrder = "ASC";
 
         $("#RecordsPerPage").val("10").trigger("change");
         $("#searchInput").val("");
         $(".row-check, #checkAll").prop("checked", false);
-        $(".permission-delete").addClass("disabled")
+        $(".user-delete").addClass("disabled")
         loadpagedata();
     });
 
@@ -70,7 +70,7 @@ $(document).ready(function () {
         updateDeleteButtonState();
     });
     
-    $("#addpermissionModal").on("show.bs.modal", function() {
+    $("#addUserModal").on("show.bs.modal", function() {
         get_roles();
     });
 
@@ -358,7 +358,7 @@ function get_roles(callback) {
     
     $.ajax({
         type: "POST",
-        url: "settings/permissions/loadoptions.php",
+        url: "settings/manageusers/loadoptions.php",
         data: {
             csrf_token: csrf_token
         },
@@ -380,28 +380,29 @@ function get_roles(callback) {
 
 function loadpagedata() {
     const { page, perPage, search, sortColumn, sortOrder} = state;
-    const token = $("#permission_csrf_token").val();
-
+    const csrf_token = $("#user_csrf_token").val();
+    
     $.ajax({
         type: "POST",
-        url: "settings/permissions/get_permissiondata.php",
+        url: "settings/manageusers/get_userdata.php",
         data: {
+            csrf_token: csrf_token,
             page: page,
             perPage: perPage,
             search: search,
             sortColumn: sortColumn,
-            sortOrder: sortOrder,
-            csrf_token: token
+            sortOrder: sortOrder
         },
-        dataType: 'json',
+        dataType: "json",
         success: function (res) {
+
             if(res.status == "error") {
                 showAlert(res.status, res.message);
             }else if(res.status == "success") {
-                
-                const tbody = "#permission_table tbody";
-                const pagination = "#permission_Pagination";
-                const infotext = "#permission_InfoText";
+
+                const tbody = "#user_table tbody";
+                const pagination = "#user_Pagination";
+                const infotext = "#user_InfoText";
 
                 $(tbody).html(res.data.html);
 
@@ -413,22 +414,17 @@ function loadpagedata() {
 
                 $(infotext).text(`Showing ${start} to ${end} of ${totalRecords} entries`);
                 $(pagination).html(generatePagination(page, totalPages));
-
             }
             
-        },
-        error: function(xhr, status, error) {
-            console.log("Ajax Error: ", error);
-            console.log("Status: ", status);
-            console.log("Response: ", xhr.responseText);
         }
     });
+
 }
 
 function updateDeleteButtonState() {
     if ($(".row-check:checked").length > 0) {
-        $(".permission-delete").removeClass("disabled");
+        $(".user-delete").removeClass("disabled");
     } else {
-        $(".permission-delete").addClass("disabled");
+        $(".user-delete").addClass("disabled");
     }
 }

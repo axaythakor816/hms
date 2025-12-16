@@ -2,7 +2,7 @@ var state = window.state || {
     page: 1,
     perPage: 10,
     search: "",
-    sortColumn: "permission_id",
+    sortColumn: "id",
     sortOrder: "ASC"
 };
 
@@ -14,17 +14,17 @@ $(document).ready(function () {
         loadpagedata();
     });
 
-    $(document).on("click", ".permission-refresh", function () {
+    $(document).on("click", ".role-refresh", function () {
         state.page = 1;
         state.perPage = 10;
         state.search = "";
-        state.sortColumn = "department_id";
+        state.sortColumn = "id";
         state.sortOrder = "ASC";
 
         $("#RecordsPerPage").val("10").trigger("change");
         $("#searchInput").val("");
         $(".row-check, #checkAll").prop("checked", false);
-        $(".permission-delete").addClass("disabled")
+        $(".role-delete").addClass("disabled")
         loadpagedata();
     });
 
@@ -69,27 +69,22 @@ $(document).ready(function () {
 
         updateDeleteButtonState();
     });
-    
-    $("#addpermissionModal").on("show.bs.modal", function() {
-        get_roles();
-    });
 
-    $("#addpermissionModal").on("hide.bs.modal", function () {
-        $("#addpermission_form")[0].reset();
-        $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
+    $("#addRoleModal").on("hide.bs.modal", function () {
+        $("#addrole_form")[0].reset();
+        $("button[name='save_role']").prop("disabled", false).text("Create Role");  
         $(".error").text("");
     });
 
-    $("#addpermission_form").submit(function(e) {
+    $("#addrole_form").submit(function(e) {
         e.preventDefault();
         $(".error").text("");
 
         let rules = {
-            role_id: "required",
-            module: "required",
+            role_name: "required",
         };
 
-        let errors = validateForm("#addpermission_form", rules);
+        let errors = validateForm("#addrole_form", rules);
 
         if(Object.keys(errors).length > 0) {
             $.each(errors, function (index, value) {
@@ -98,22 +93,22 @@ $(document).ready(function () {
             return false;
         }
 
-        var form = $("#addpermission_form")[0];
+        var form = $("#addrole_form")[0];
         var formdata = new FormData(form);
 
         $.ajax({
             type: "POST",
-            url: "settings/permissions/save_permission.php",
+            url: "settings/roles/save_role.php",
             data: formdata,
             dataType: "json",
             processData: false,
             contentType: false,
             beforeSend: function() {
                 $(".error").text("");
-                $("button[name='save_permission']").prop("disabled", true).text("Creating...");
+                $("button[name='save_role']").prop("disabled", true).text("Creating...");
             },
             success: function (res) {
-                $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
+                $("button[name='save_role']").prop("disabled", false).text("Create Role");  
                 if(res.status == "error") {
                     if(res.message) {
                         showAlert(res.status, res.message);
@@ -128,11 +123,10 @@ $(document).ready(function () {
                     }
                 } else if (res.status == "success") {
                     showAlert(res.status, res.message);
-                    $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
-                    $("#addpermission_form")[0].reset();
-                    $("#desc_count").text(0);  
-                    $(".error").text("");
-                    $("#addpermissionModal").modal("hide");
+                    $("button[name='save_role']").prop("disabled", false).text("Create Role");  
+                    $("#addrole_form")[0].reset();
+                    $(".error").text("");                
+                    $("#addRoleModal").modal("hide");
                     loadpagedata();
                 }              
             },
@@ -144,10 +138,10 @@ $(document).ready(function () {
         });
     });
 
-    $("#editpermissionModal").on("hide.bs.modal", function () {
-        $("#editpermission_form")[0].reset();
+    $("#editRoleModal").on("hide.bs.modal", function () {
+        $("#editrole_form")[0].reset();
         $(".error").text("");
-        $("button[name='update_permission']").prop("disabled", false).text("Update Permission");  
+        $("button[name='update_role']").prop("disabled", false).text("Update Role");  
 
     });
 
@@ -155,36 +149,23 @@ $(document).ready(function () {
 
         let id = $(this).data("id");
         let role = $(this).data("role");
-        let module = $(this).data("module");
-        let can_view = $(this).data("can_view");
-        let can_add = $(this).data("can_add");
-        let can_edit = $(this).data("can_edit");
-        let can_delete = $(this).data("can_delete");
 
-        $("#edit_permission_id").val(id);
-        get_roles(function() {
-            $("#edit_role_id").val(role).trigger("change");
-        });
+        $("#edit_role_id").val(id);
 
-        $("#edit_module").val(module);
-        $("#edit_can_view").prop("checked", can_view == 1);
-        $("#edit_can_add").prop("checked", can_add == 1);
-        $("#edit_can_edit").prop("checked", can_edit == 1);
-        $("#edit_can_delete").prop("checked", can_delete == 1);
-
-        $("#editpermissionModal").modal("show");
+        $("#edit_role_name").val(role);
+      
+        $("#editRoleModal").modal("show");
     });
 
-    $("#editpermission_form").submit(function(e) {
+    $("#editrole_form").submit(function(e) {
        e.preventDefault();
         $(".error").text("");
        
         let rules = {
-            role_id: "required",
-            module: "required",
+            role_name: "required",
         };
 
-        let errors = validateForm("#editpermission_form", rules);
+        let errors = validateForm("#editrole_form", rules);
 
         if(Object.keys(errors).length > 0) {
             $.each(errors, function (index, value) {
@@ -193,21 +174,21 @@ $(document).ready(function () {
             return false;
         }
 
-        var form = $("#editpermission_form")[0];
+        var form = $("#editrole_form")[0];
         var formdata = new FormData(form);
 
         $.ajax({
             type: "POST",
-            url: "settings/permissions/edit_permission.php",
+            url: "settings/roles/edit_role.php",
             data: formdata,
             processData: false,
             contentType: false,
             beforeSend: function() {
                 $(".error").text("");
-                $("button[name='update_permission']").prop("disabled", true).text("Updating...");
+                $("button[name='update_role]").prop("disabled", true).text("Updating...");
             }, 
             success: function(res) {
-                $("button[name='update_permission']").prop("disabled", false).text("Update permissions"); 
+                $("button[name='update_role']").prop("disabled", false).text("Update Role"); 
                 if(res.status == "error") {
                     if(res.message) {
                         showAlert(res.status, res.message);
@@ -222,8 +203,8 @@ $(document).ready(function () {
                     }
                 }else if(res.status == "success") {
                     showAlert(res.status, res.message);
-                    $("#editpermissionModal").modal("hide");
-                    $("#editpermission_form")[0].reset();
+                    $("#editRoleModal").modal("hide");
+                    $("#editrole_form")[0].reset();
                     loadpagedata();
                 }
             },
@@ -235,18 +216,18 @@ $(document).ready(function () {
         });
     });
 
-    $("#deletePermissionModal").on("hide.bs.modal", function () {
-        $("#delete_permission_form")[0].reset();
-        $("button[name='delete_permission']").prop("disabled", false).text("Delete");
+    $("#deleteRoleModal").on("hide.bs.modal", function () {
+        $("#delete_role_form")[0].reset();
+        $("button[name='delete_role']").prop("disabled", false).text("Delete");
     });
 
     $(document).on("click", ".delete-btn", function () {
         let id = $(this).data("id");
         let name = $(this).data("name");
         // console.log("id: ",id);
-        $("#delete_permission_id").val(id);
-        $("#delete_permission_name_text").text("Permission Name : " + name.toUpperCase());
-        $("#deletePermissionModal").modal("show");
+        $("#delete_role_id").val(id);
+        $("#delete_role_name_text").text("Role Name : " + name.toUpperCase());
+        $("#deleteRoleModal").modal("show");
     }); 
 
     $(document).on("click", "#deleteSelected", function () {
@@ -262,43 +243,43 @@ $(document).ready(function () {
             return;
         }
         // console.log(ids);
-        $("#delete_permission_id").val(ids);  
-        $("#delete_permission_name_text").text("Delete " + ids.length + " Selected Departments?");
+        $("#delete_role_id").val(ids);  
+        $("#delete_role_name_text").text("Delete " + ids.length + " Selected Roles?");
         
-        $("#deletePermissionModal").modal("show");
+        $("#deleteRoleModal").modal("show");
     });
 
-    $("#delete_permission_form").submit(function(e) {
+    $("#delete_role_form").submit(function(e) {
         e.preventDefault();
         
-        var form = $("#delete_permission_form")[0];
+        var form = $("#delete_role_form")[0];
         var formdata = new FormData(form);
         
         $.ajax({
             type: "POST",
-            url: "settings/permissions/delete_permission.php",
+            url: "settings/roles/delete_role.php",
             data: formdata,
             processData: false,
             contentType: false,
             dataType: "json",
             beforeSend: function() {
-                $("button[name='delete_permission']").prop("disabled", true).text("Deleting...");
+                $("button[name='delete_role']").prop("disabled", true).text("Deleting...");
             },
             success: function(res) {
-                $("button[name='delete_permission']").prop("disabled", false).text("Delete");
+                $("button[name='delete_role']").prop("disabled", false).text("Delete");
                 if(res.status == "error") {
-                    $("#deletePermissionModal").modal("hide");
+                    $("#deleteRoleModal").modal("hide");
                     showAlert(res.status, res.message);
                 }else if(res.status, res.message) {
                     showAlert(res.status, res.message);
-                    $("#delete_permission_form")[0].reset();
-                    $("#deletePermissionModal").modal("hide");
-                    $("#delete_permission_name_text").text("");
+                    $("#delete_role_form")[0].reset();
+                    $("#deleteRoleModal").modal("hide");
+                    $("#delete_role_name_text").text("");
                     loadpagedata();
 
                     $("#checkAll").prop("checked", false);
                     $(".row-check").prop("checked", false);
-                    $(".permission-delete").addClass("disabled");
+                    $(".role-delete").addClass("disabled");
 
                 }
             },
@@ -326,7 +307,7 @@ $(document).ready(function () {
 
         let form = $('<form>', {
             method: "POST",
-            action: "settings/permissions/export_permissiondata.php",
+            action: "settings/roles/export_roledata.php",
             target: 'exportFrame'
         });
 
@@ -353,38 +334,13 @@ $(document).ready(function () {
 
 });
 
-function get_roles(callback) {
-    let csrf_token = $("#csrf_token").val();
-    
-    $.ajax({
-        type: "POST",
-        url: "settings/permissions/loadoptions.php",
-        data: {
-            csrf_token: csrf_token
-        },
-        dataType: "json",
-        success: function (res) {
-            $("#role_id").html(res.data);  
-            $("#edit_role_id").html(res.data);
-          
-
-            if(callback) callback();
-        },
-        error: function(xhr, status, error) {
-            console.log("Ajax Error: ", error);
-            console.log("Status: ", status);
-            console.log("Response: ", xhr.responseText);
-        }
-    });
-}
-
 function loadpagedata() {
     const { page, perPage, search, sortColumn, sortOrder} = state;
-    const token = $("#permission_csrf_token").val();
+    const token = $("#role_csrf_token").val();
 
     $.ajax({
         type: "POST",
-        url: "settings/permissions/get_permissiondata.php",
+        url: "settings/roles/get_roledata.php",
         data: {
             page: page,
             perPage: perPage,
@@ -399,9 +355,9 @@ function loadpagedata() {
                 showAlert(res.status, res.message);
             }else if(res.status == "success") {
                 
-                const tbody = "#permission_table tbody";
-                const pagination = "#permission_Pagination";
-                const infotext = "#permission_InfoText";
+                const tbody = "#role_table tbody";
+                const pagination = "#role_Pagination";
+                const infotext = "#role_InfoText";
 
                 $(tbody).html(res.data.html);
 
@@ -427,8 +383,8 @@ function loadpagedata() {
 
 function updateDeleteButtonState() {
     if ($(".row-check:checked").length > 0) {
-        $(".permission-delete").removeClass("disabled");
+        $(".role-delete").removeClass("disabled");
     } else {
-        $(".permission-delete").addClass("disabled");
+        $(".role-delete").addClass("disabled");
     }
 }

@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 12, 2025 at 01:59 PM
+-- Host: 127.0.0.1:3307
+-- Generation Time: Dec 16, 2025 at 10:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -518,7 +518,10 @@ INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module`, `can_view`
 (19, 4, 'patients', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (20, 4, 'appointments', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
 (21, 4, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(22, 1, 'permission', 1, 1, 1, 1, '2025-12-12 18:29:12', '2025-12-12 18:29:12');
+(22, 1, 'permissions', 1, 1, 1, 1, '2025-12-12 18:29:12', '2025-12-12 18:29:12'),
+(23, 1, 'settings', 1, 1, 1, 1, '2025-12-16 15:14:47', '2025-12-16 15:14:57'),
+(24, 1, 'profiles', 1, 1, 1, 1, '2025-12-16 15:15:17', '2025-12-16 15:15:17'),
+(25, 1, 'roles', 1, 1, 1, 1, '2025-12-16 15:15:36', '2025-12-16 15:15:36');
 
 -- --------------------------------------------------------
 
@@ -1048,7 +1051,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -1235,7 +1238,7 @@ ALTER TABLE `radiology_reports`
 -- Constraints for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  ADD CONSTRAINT `role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
+  ADD CONSTRAINT `role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `staff`
