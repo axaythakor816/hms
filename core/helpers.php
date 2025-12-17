@@ -167,7 +167,7 @@ function validate($data, $rules) {
             if (strpos($rule, 'match:') === 0) {
                 $matchField = explode(':', $rule)[1];
                 if ($value !== ($data[$matchField] ?? '')) {
-                    $errors[$field][] = ucfirst($field) . " must match " . ucfirst($matchField) . ".";
+                    $errors[$field][] = ucfirst($field) . " does not match the " . ucfirst($matchField) . ".";
                 break;
 
                 }

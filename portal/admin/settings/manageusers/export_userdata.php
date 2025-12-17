@@ -3,9 +3,11 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-// if(!has_permission('departments', 'can_view')) {
-//     json_response("error", "Access Denied");
-// }
+if(!has_permission('manage users', 'can_view')) {
+    json_response("error", "Access Denied");
+}
+
+require_role([1]);
 
 if(!verify_csrf($_POST['csrf_token'] ?? '')) {
     json_response("error", "Invalid CSRF Token");
@@ -14,32 +16,32 @@ if(!verify_csrf($_POST['csrf_token'] ?? '')) {
 $page       = filterInput($_POST['page'] ?? 1, "int");
 $perPage    = filterInput($_POST['perPage'] ?? 10, "int");
 $search     = filterInput($_POST['search'] ?? '', "string");
-$sortColumn = filterInput($_POST['sortColumn'] ?? 'permission_id ', "string");
+$sortColumn = filterInput($_POST['sortColumn'] ?? 'user_id ', "string");
 $sortOrder  = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
 $type       = filterInput($_POST['type'] ?? 'pdf', "string");
 
 $page    = $page ?: 1;
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
 
-$allowedCols = ['permission_id', 'role_id', 'module', 'can_view', 'can_add', 'can_edit', 'can_delete', 'created_at', 'updated_at'];
+$allowedCols = ["user_id", "uuid", "first_name", "last_name", "email", "phone", "role_id", "gender", "dob", "status", "created_at", "updated_at"];
 if (!in_array($sortColumn, $allowedCols)) {
-    $sortColumn = 'permission_id';
+    $sortColumn = 'user_id';
 }
 
 $sortOrder = ($sortOrder === "DESC") ? "DESC" : "ASC";
 
 $offset = ($page - 1) * $perPage;
 
-$sql = "SELECT * FROM role_permissions WHERE 1";
+$sql = "SELECT * FROM users WHERE 1";
 $whereValues = [];
 $searchType  = "";
 
 
 if (!empty($search)) {
-    $sql .= " AND (module LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
+    $sql .= " AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ? OR gender LIKE ? OR dob LIKE ? OR created_at LIKE ? OR updated_at like ?) ";
     $searchParam = "%$search%";
-    $whereValues = [$searchParam, $searchParam, $searchParam];
-    $searchType  = "sss";
+    $whereValues = [$searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam];
+    $searchType = "ssssssss";
 }
 
 $totalSql = $sql;
@@ -68,28 +70,21 @@ if(empty($result['data'])) {
 foreach ($result['data'] as &$row) {
 
     $row['role_id'] = get_label("role_name", "roles", "id", $row['role_id']);
-
-    $row['module'] = ucfirst(strtolower($row['module']));
-
-    $row['can_view']   = getYesNoLabel($row['can_view']);
-    $row['can_add']    = getYesNoLabel($row['can_add']);
-    $row['can_edit']   = getYesNoLabel($row['can_edit']);
-    $row['can_delete'] = getYesNoLabel($row['can_delete']);
 }
 
 
 switch ($type) {
     case 'csv':
-        exportCSV($result['data'], "Permission.csv");
+        exportCSV($result['data'], "User.csv");
         break;
     case 'txt':
-        exportTXT($result['data'], "Permission.txt");
+        exportTXT($result['data'], "User.txt");
         break;
     case 'pdf':
-        exportPDF($result['data'], "Permission.pdf");
+        exportPDF($result['data'], "User.pdf");
         break;
     case 'xlsx':
-        exportXLSX($result['data'], "Permission.xlsx");
+        exportXLSX($result['data'], "User.xlsx");
         break;
     default:
         json_response("error","Invalid export type! Use csv, txt, pdf, or xlsx.");

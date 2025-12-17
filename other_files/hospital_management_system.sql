@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 16, 2025 at 10:49 AM
+-- Generation Time: Dec 17, 2025 at 02:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -327,6 +327,39 @@ CREATE TABLE `medical_history` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `modules`
+--
+
+CREATE TABLE `modules` (
+  `module_id` int(10) UNSIGNED NOT NULL,
+  `module_name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `modules`
+--
+
+INSERT INTO `modules` (`module_id`, `module_name`, `created_at`, `updated_at`) VALUES
+(1, 'dashboard', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(2, 'doctors', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(3, 'patients', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(4, 'staff', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(5, 'appointments', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(6, 'billing', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(7, 'departments', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(8, 'prescriptions', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(9, 'vitals', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(10, 'permissions', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(11, 'settings', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(12, 'profiles', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(13, 'roles', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(14, 'manage users', '2025-12-17 12:16:47', '2025-12-17 12:16:47');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nurse_notes`
 --
 
@@ -483,7 +516,7 @@ INSERT INTO `roles` (`id`, `role_name`, `created_at`, `updated_at`) VALUES
 CREATE TABLE `role_permissions` (
   `permission_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
-  `module` varchar(100) NOT NULL,
+  `module_id` int(10) UNSIGNED NOT NULL,
   `can_view` tinyint(1) DEFAULT 1,
   `can_add` tinyint(1) DEFAULT 0,
   `can_edit` tinyint(1) DEFAULT 0,
@@ -496,32 +529,33 @@ CREATE TABLE `role_permissions` (
 -- Dumping data for table `role_permissions`
 --
 
-INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
-(1, 1, 'dashboard', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(2, 1, 'doctors', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(3, 1, 'patients', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(4, 1, 'staff', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(5, 1, 'appointments', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(6, 1, 'billing', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(7, 1, 'departments', 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(8, 2, 'dashboard', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(9, 2, 'appointments', 1, 0, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(10, 2, 'patients', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(11, 2, 'prescriptions', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(12, 2, 'vitals', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(13, 2, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(14, 3, 'dashboard', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(15, 3, 'appointments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(16, 3, 'prescriptions', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(17, 3, 'billing', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(18, 3, 'departments', 0, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(19, 4, 'patients', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(20, 4, 'appointments', 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(21, 4, 'departments', 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-08 15:22:29'),
-(22, 1, 'permissions', 1, 1, 1, 1, '2025-12-12 18:29:12', '2025-12-12 18:29:12'),
-(23, 1, 'settings', 1, 1, 1, 1, '2025-12-16 15:14:47', '2025-12-16 15:14:57'),
-(24, 1, 'profiles', 1, 1, 1, 1, '2025-12-16 15:15:17', '2025-12-16 15:15:17'),
-(25, 1, 'roles', 1, 1, 1, 1, '2025-12-16 15:15:36', '2025-12-16 15:15:36');
+INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module_id`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(2, 1, 2, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(3, 1, 3, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(4, 1, 4, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(5, 1, 5, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(6, 1, 6, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(7, 1, 7, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(8, 2, 1, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(9, 2, 5, 1, 0, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(10, 2, 3, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(11, 2, 8, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(12, 2, 9, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(13, 2, 7, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(14, 3, 1, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(15, 3, 5, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(16, 3, 8, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(17, 3, 6, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(18, 3, 7, 0, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(19, 4, 3, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(20, 4, 5, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(21, 4, 7, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(22, 1, 10, 1, 1, 1, 1, '2025-12-12 18:29:12', '2025-12-17 17:46:47'),
+(23, 1, 11, 1, 1, 1, 1, '2025-12-16 15:14:47', '2025-12-17 17:46:47'),
+(24, 1, 12, 1, 1, 1, 1, '2025-12-16 15:15:17', '2025-12-17 17:46:47'),
+(25, 1, 13, 1, 1, 1, 1, '2025-12-16 15:15:36', '2025-12-17 17:46:47'),
+(26, 1, 14, 1, 1, 1, 1, '2025-12-17 17:36:39', '2025-12-17 17:46:47');
 
 -- --------------------------------------------------------
 
@@ -609,7 +643,7 @@ CREATE TABLE `tax` (
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `uuid` varchar(36) NOT NULL DEFAULT uuid(),
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) DEFAULT NULL,
@@ -628,7 +662,7 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `users` (`user_id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`) VALUES
 (1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakor@gmail.com', '1234567891', '$2y$10$SjHGwKbDHiRfHvH9llbMtO3ByoUyOCKrryB.0n9DqQXQgy5WzyBYG', 1, NULL, NULL, 'active', '2025-11-24 13:33:21', '2025-12-03 09:59:04');
 
 -- --------------------------------------------------------
@@ -782,6 +816,13 @@ ALTER TABLE `medical_history`
   ADD KEY `patient_id` (`patient_id`);
 
 --
+-- Indexes for table `modules`
+--
+ALTER TABLE `modules`
+  ADD PRIMARY KEY (`module_id`),
+  ADD UNIQUE KEY `module_name` (`module_name`);
+
+--
 -- Indexes for table `nurse_notes`
 --
 ALTER TABLE `nurse_notes`
@@ -848,7 +889,8 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `role_permissions`
   ADD PRIMARY KEY (`permission_id`),
-  ADD KEY `role_id` (`role_id`);
+  ADD KEY `role_id` (`role_id`),
+  ADD KEY `role_permissions_module_fk` (`module_id`);
 
 --
 -- Indexes for table `rooms`
@@ -885,7 +927,7 @@ ALTER TABLE `tax`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `uuid` (`uuid`),
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `phone` (`phone`),
@@ -1000,6 +1042,12 @@ ALTER TABLE `medical_history`
   MODIFY `history_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `modules`
+--
+ALTER TABLE `modules`
+  MODIFY `module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
 -- AUTO_INCREMENT for table `nurse_notes`
 --
 ALTER TABLE `nurse_notes`
@@ -1051,7 +1099,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -1081,7 +1129,7 @@ ALTER TABLE `tax`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `vitals`
@@ -1097,14 +1145,14 @@ ALTER TABLE `vitals`
 -- Constraints for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  ADD CONSTRAINT `activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `admissions`
 --
 ALTER TABLE `admissions`
-  ADD CONSTRAINT `admissions_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `admissions_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `admissions_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `admissions_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `admissions_ibfk_3` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`),
   ADD CONSTRAINT `admissions_ibfk_4` FOREIGN KEY (`bed_id`) REFERENCES `beds` (`id`);
 
@@ -1112,8 +1160,8 @@ ALTER TABLE `admissions`
 -- Constraints for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `beds`
@@ -1125,7 +1173,7 @@ ALTER TABLE `beds`
 -- Constraints for table `billing`
 --
 ALTER TABLE `billing`
-  ADD CONSTRAINT `billing_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `billing_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `billing_ibfk_2` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`admission_id`);
 
 --
@@ -1145,13 +1193,13 @@ ALTER TABLE `departments`
 --
 ALTER TABLE `discharge_summaries`
   ADD CONSTRAINT `discharge_summaries_ibfk_1` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`admission_id`),
-  ADD CONSTRAINT `discharge_summaries_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `discharge_summaries_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `doctors`
 --
 ALTER TABLE `doctors`
-  ADD CONSTRAINT `doctors_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `doctors_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `doctors_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
 
 --
@@ -1159,19 +1207,19 @@ ALTER TABLE `doctors`
 --
 ALTER TABLE `doctor_rounds`
   ADD CONSTRAINT `doctor_rounds_ibfk_1` FOREIGN KEY (`admission_id`) REFERENCES `admissions` (`admission_id`),
-  ADD CONSTRAINT `doctor_rounds_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `doctor_rounds_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `doctor_schedules`
 --
 ALTER TABLE `doctor_schedules`
-  ADD CONSTRAINT `doctor_schedules_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `doctor_schedules_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `insurance_claims`
 --
 ALTER TABLE `insurance_claims`
-  ADD CONSTRAINT `insurance_claims_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `insurance_claims_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `insurance_claims_ibfk_2` FOREIGN KEY (`bill_id`) REFERENCES `billing` (`id`);
 
 --
@@ -1179,33 +1227,33 @@ ALTER TABLE `insurance_claims`
 --
 ALTER TABLE `lab_test_results`
   ADD CONSTRAINT `lab_test_results_ibfk_1` FOREIGN KEY (`test_id`) REFERENCES `lab_tests` (`test_id`),
-  ADD CONSTRAINT `lab_test_results_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `lab_test_results_ibfk_3` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `lab_test_results_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `lab_test_results_ibfk_3` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `login_logs`
 --
 ALTER TABLE `login_logs`
-  ADD CONSTRAINT `login_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `login_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `medical_history`
 --
 ALTER TABLE `medical_history`
-  ADD CONSTRAINT `medical_history_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `medical_history_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `nurse_notes`
 --
 ALTER TABLE `nurse_notes`
-  ADD CONSTRAINT `nurse_notes_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `nurse_notes_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `nurse_notes_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `nurse_notes_ibfk_2` FOREIGN KEY (`staff_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `patients`
 --
 ALTER TABLE `patients`
-  ADD CONSTRAINT `patients_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `patients_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `payments`
@@ -1217,8 +1265,8 @@ ALTER TABLE `payments`
 -- Constraints for table `prescriptions`
 --
 ALTER TABLE `prescriptions`
-  ADD CONSTRAINT `prescriptions_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `prescriptions_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `prescriptions_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `prescriptions_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `prescriptions_ibfk_3` FOREIGN KEY (`appointment_id`) REFERENCES `appointments` (`appointment_id`);
 
 --
@@ -1231,27 +1279,28 @@ ALTER TABLE `prescription_items`
 -- Constraints for table `radiology_reports`
 --
 ALTER TABLE `radiology_reports`
-  ADD CONSTRAINT `radiology_reports_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `radiology_reports_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `radiology_reports_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `radiology_reports_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  ADD CONSTRAINT `role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `role_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `role_permissions_module_fk` FOREIGN KEY (`module_id`) REFERENCES `modules` (`module_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `staff`
 --
 ALTER TABLE `staff`
-  ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `staff_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
 
 --
 -- Constraints for table `staff_salary`
 --
 ALTER TABLE `staff_salary`
-  ADD CONSTRAINT `staff_salary_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `staff_salary_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `tax`
@@ -1269,8 +1318,8 @@ ALTER TABLE `users`
 -- Constraints for table `vitals`
 --
 ALTER TABLE `vitals`
-  ADD CONSTRAINT `vitals_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `vitals_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `vitals_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `vitals_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

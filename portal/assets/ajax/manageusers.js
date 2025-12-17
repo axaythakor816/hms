@@ -1,4 +1,4 @@
-var state = {
+var state = window.state || {
     page: 1,
     perPage: 10,
     search: "",
@@ -28,7 +28,7 @@ $(document).ready(function () {
         loadpagedata();
     });
 
-    $(document).on("click", ".page-link", function () {
+    $(document).on("click", "#user_Pagination .page-link", function () {
         const page = parseInt($(this).data("page"));
         state.page = page;
         loadpagedata();
@@ -74,22 +74,30 @@ $(document).ready(function () {
         get_roles();
     });
 
-    $("#addpermissionModal").on("hide.bs.modal", function () {
-        $("#addpermission_form")[0].reset();
-        $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
+    $("#addUserModal").on("hide.bs.modal", function () {
+        $("#adduser_form")[0].reset();
+        $("button[name='save_user']").prop("disabled", false).text("Create User");  
         $(".error").text("");
     });
 
-    $("#addpermission_form").submit(function(e) {
+    $("#adduser_form").submit(function(e) {
         e.preventDefault();
         $(".error").text("");
 
         let rules = {
+            first_name: "required|name|max:10",
+            last_name: "required|name|max:10",
+            email: "required|email",
+            phone: "required|mobile",
+            password: "required|password_strong",
+            confirm_password: "required|match:password",
             role_id: "required",
-            module: "required",
+            gender: "required",
+            dob: "required|date",
+            status: "required",
         };
 
-        let errors = validateForm("#addpermission_form", rules);
+        let errors = validateForm("#adduser_form", rules);
 
         if(Object.keys(errors).length > 0) {
             $.each(errors, function (index, value) {
@@ -98,22 +106,22 @@ $(document).ready(function () {
             return false;
         }
 
-        var form = $("#addpermission_form")[0];
+        var form = $("#adduser_form")[0];
         var formdata = new FormData(form);
 
         $.ajax({
             type: "POST",
-            url: "settings/permissions/save_permission.php",
+            url: "settings/manageusers/save_user.php",
             data: formdata,
             dataType: "json",
             processData: false,
             contentType: false,
             beforeSend: function() {
                 $(".error").text("");
-                $("button[name='save_permission']").prop("disabled", true).text("Creating...");
+                $("button[name='save_user']").prop("disabled", true).text("Creating...");
             },
             success: function (res) {
-                $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
+                $("button[name='save_user']").prop("disabled", false).text("Create User");  
                 if(res.status == "error") {
                     if(res.message) {
                         showAlert(res.status, res.message);
@@ -128,11 +136,10 @@ $(document).ready(function () {
                     }
                 } else if (res.status == "success") {
                     showAlert(res.status, res.message);
-                    $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
-                    $("#addpermission_form")[0].reset();
-                    $("#desc_count").text(0);  
+                    $("button[name='save_user']").prop("disabled", false).text("Create user");  
+                    $("#adduser_form")[0].reset();
                     $(".error").text("");
-                    $("#addpermissionModal").modal("hide");
+                    $("#addUserModal").modal("hide");
                     loadpagedata();
                 }              
             },
@@ -144,47 +151,61 @@ $(document).ready(function () {
         });
     });
 
-    $("#editpermissionModal").on("hide.bs.modal", function () {
-        $("#editpermission_form")[0].reset();
+    $("#editUserModal").on("hide.bs.modal", function () {
+        $("#edituser_form")[0].reset();
         $(".error").text("");
-        $("button[name='update_permission']").prop("disabled", false).text("Update Permission");  
+        $("button[name='update_user']").prop("disabled", false).text("Update User");  
 
     });
 
     $(document).on("click", ".edit-btn", function () {
 
         let id = $(this).data("id");
+        let first_name = $(this).data("first_name");
+        let last_name = $(this).data("last_name");
+        let email = $(this).data("email");
+        let phone = $(this).data("phone");
         let role = $(this).data("role");
-        let module = $(this).data("module");
-        let can_view = $(this).data("can_view");
-        let can_add = $(this).data("can_add");
-        let can_edit = $(this).data("can_edit");
-        let can_delete = $(this).data("can_delete");
+        let dob = $(this).data("dob");
+        let status = $(this).data("status");
+        let gender = $(this).data("gender");
 
-        $("#edit_permission_id").val(id);
+
+        $("#edit_user_id").val(id);
         get_roles(function() {
             $("#edit_role_id").val(role).trigger("change");
         });
 
-        $("#edit_module").val(module);
-        $("#edit_can_view").prop("checked", can_view == 1);
-        $("#edit_can_add").prop("checked", can_add == 1);
-        $("#edit_can_edit").prop("checked", can_edit == 1);
-        $("#edit_can_delete").prop("checked", can_delete == 1);
+        $("input[name='gender'][value='" + gender + "']").prop("checked", true);
 
-        $("#editpermissionModal").modal("show");
+        $("#edit_first_name").val(first_name);
+        $("#edit_last_name").val(last_name);
+        $("#edit_email").val(email);
+        $("#edit_phone").val(phone);
+        $("#edit_dob").val(dob);
+        $("#edit_status").val(status);
+
+        $("#editUserModal").modal("show");
     });
 
-    $("#editpermission_form").submit(function(e) {
+    $("#edituser_form").submit(function(e) {
        e.preventDefault();
         $(".error").text("");
        
         let rules = {
+            first_name: "required|name|max:10",
+            last_name: "required|name|max:10",
+            email: "required|email",
+            phone: "required|mobile",
+            password: "required|password_strong",
+            confirm_password: "required|match:password",
             role_id: "required",
-            module: "required",
+            gender: "required",
+            dob: "required|date",
+            status: "required",
         };
 
-        let errors = validateForm("#editpermission_form", rules);
+        let errors = validateForm("#edituser_form", rules);
 
         if(Object.keys(errors).length > 0) {
             $.each(errors, function (index, value) {
@@ -193,21 +214,21 @@ $(document).ready(function () {
             return false;
         }
 
-        var form = $("#editpermission_form")[0];
+        var form = $("#edituser_form")[0];
         var formdata = new FormData(form);
 
         $.ajax({
             type: "POST",
-            url: "settings/permissions/edit_permission.php",
+            url: "settings/manageusers/edit_user.php",
             data: formdata,
             processData: false,
             contentType: false,
             beforeSend: function() {
                 $(".error").text("");
-                $("button[name='update_permission']").prop("disabled", true).text("Updating...");
+                $("button[name='update_user']").prop("disabled", true).text("Updating...");
             }, 
             success: function(res) {
-                $("button[name='update_permission']").prop("disabled", false).text("Update permissions"); 
+                $("button[name='update_user']").prop("disabled", false).text("Update User"); 
                 if(res.status == "error") {
                     if(res.message) {
                         showAlert(res.status, res.message);
@@ -222,8 +243,8 @@ $(document).ready(function () {
                     }
                 }else if(res.status == "success") {
                     showAlert(res.status, res.message);
-                    $("#editpermissionModal").modal("hide");
-                    $("#editpermission_form")[0].reset();
+                    $("#editUserModal").modal("hide");
+                    $("#edituser_form")[0].reset();
                     loadpagedata();
                 }
             },
@@ -235,18 +256,18 @@ $(document).ready(function () {
         });
     });
 
-    $("#deletePermissionModal").on("hide.bs.modal", function () {
-        $("#delete_permission_form")[0].reset();
-        $("button[name='delete_permission']").prop("disabled", false).text("Delete");
+    $("#deleteUserModal").on("hide.bs.modal", function () {
+        $("#delete_user_form")[0].reset();
+        $("button[name='delete_user']").prop("disabled", false).text("Delete");
     });
 
     $(document).on("click", ".delete-btn", function () {
         let id = $(this).data("id");
         let name = $(this).data("name");
         // console.log("id: ",id);
-        $("#delete_permission_id").val(id);
-        $("#delete_permission_name_text").text("Permission Name : " + name.toUpperCase());
-        $("#deletePermissionModal").modal("show");
+        $("#delete_user_id").val(id);
+        $("#delete_user_name_text").text("User Name : " + name.toUpperCase());
+        $("#deleteUserModal").modal("show");
     }); 
 
     $(document).on("click", "#deleteSelected", function () {
@@ -262,43 +283,43 @@ $(document).ready(function () {
             return;
         }
         // console.log(ids);
-        $("#delete_permission_id").val(ids);  
-        $("#delete_permission_name_text").text("Delete " + ids.length + " Selected Departments?");
+        $("#delete_user_id").val(ids);  
+        $("#delete_user_name_text").text("Delete " + ids.length + " Selected Users?");
         
-        $("#deletePermissionModal").modal("show");
+        $("#deleteUserModal").modal("show");
     });
 
-    $("#delete_permission_form").submit(function(e) {
+    $("#delete_user_form").submit(function(e) {
         e.preventDefault();
         
-        var form = $("#delete_permission_form")[0];
+        var form = $("#delete_user_form")[0];
         var formdata = new FormData(form);
         
         $.ajax({
             type: "POST",
-            url: "settings/permissions/delete_permission.php",
+            url: "settings/manageusers/delete_user.php",
             data: formdata,
             processData: false,
             contentType: false,
             dataType: "json",
             beforeSend: function() {
-                $("button[name='delete_permission']").prop("disabled", true).text("Deleting...");
+                $("button[name='delete_user']").prop("disabled", true).text("Deleting...");
             },
             success: function(res) {
-                $("button[name='delete_permission']").prop("disabled", false).text("Delete");
+                $("button[name='delete_user']").prop("disabled", false).text("Delete");
                 if(res.status == "error") {
-                    $("#deletePermissionModal").modal("hide");
+                    $("#deleteUserModal").modal("hide");
                     showAlert(res.status, res.message);
                 }else if(res.status, res.message) {
                     showAlert(res.status, res.message);
-                    $("#delete_permission_form")[0].reset();
-                    $("#deletePermissionModal").modal("hide");
-                    $("#delete_permission_name_text").text("");
+                    $("#delete_user_form")[0].reset();
+                    $("#deleteUserModal").modal("hide");
+                    $("#delete_user_name_text").text("");
                     loadpagedata();
 
                     $("#checkAll").prop("checked", false);
                     $(".row-check").prop("checked", false);
-                    $(".permission-delete").addClass("disabled");
+                    $(".user-delete").addClass("disabled");
 
                 }
             },
@@ -326,7 +347,7 @@ $(document).ready(function () {
 
         let form = $('<form>', {
             method: "POST",
-            action: "settings/permissions/export_permissiondata.php",
+            action: "settings/manageusers/export_userdata.php",
             target: 'exportFrame'
         });
 

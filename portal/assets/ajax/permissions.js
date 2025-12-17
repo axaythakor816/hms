@@ -72,6 +72,7 @@ $(document).ready(function () {
     
     $("#addpermissionModal").on("show.bs.modal", function() {
         get_roles();
+        get_modules();
     });
 
     $("#addpermissionModal").on("hide.bs.modal", function () {
@@ -86,7 +87,7 @@ $(document).ready(function () {
 
         let rules = {
             role_id: "required",
-            module: "required",
+            module_id: "required",
         };
 
         let errors = validateForm("#addpermission_form", rules);
@@ -130,7 +131,6 @@ $(document).ready(function () {
                     showAlert(res.status, res.message);
                     $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
                     $("#addpermission_form")[0].reset();
-                    $("#desc_count").text(0);  
                     $(".error").text("");
                     $("#addpermissionModal").modal("hide");
                     loadpagedata();
@@ -165,6 +165,9 @@ $(document).ready(function () {
         get_roles(function() {
             $("#edit_role_id").val(role).trigger("change");
         });
+        get_modules(function() {
+            $("#edit_module_id").val(module).trigger("change");
+        })
 
         $("#edit_module").val(module);
         $("#edit_can_view").prop("checked", can_view == 1);
@@ -181,7 +184,7 @@ $(document).ready(function () {
        
         let rules = {
             role_id: "required",
-            module: "required",
+            module_id: "required",
         };
 
         let errors = validateForm("#editpermission_form", rules);
@@ -263,7 +266,7 @@ $(document).ready(function () {
         }
         // console.log(ids);
         $("#delete_permission_id").val(ids);  
-        $("#delete_permission_name_text").text("Delete " + ids.length + " Selected Departments?");
+        $("#delete_permission_name_text").text("Delete " + ids.length + " Selected Permission?");
         
         $("#deletePermissionModal").modal("show");
     });
@@ -360,6 +363,7 @@ function get_roles(callback) {
         type: "POST",
         url: "settings/permissions/loadoptions.php",
         data: {
+            action: "roles",
             csrf_token: csrf_token
         },
         dataType: "json",
@@ -368,6 +372,32 @@ function get_roles(callback) {
             $("#edit_role_id").html(res.data);
           
 
+            if(callback) callback();
+        },
+        error: function(xhr, status, error) {
+            console.log("Ajax Error: ", error);
+            console.log("Status: ", status);
+            console.log("Response: ", xhr.responseText);
+        }
+    });
+}
+
+
+function get_modules(callback) {
+    let csrf_token = $("#csrf_token").val();
+    
+    $.ajax({
+        type: "POST",
+        url: "settings/permissions/loadoptions.php",
+        data: {
+            action: "modules",
+            csrf_token: csrf_token
+        },
+        dataType: "json",
+        success: function (res) {
+            $("#module_id").html(res.data);  
+            $("#edit_module_id").html(res.data);
+          
             if(callback) callback();
         },
         error: function(xhr, status, error) {

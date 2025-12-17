@@ -1,28 +1,64 @@
 <?php
+function is_active() {
+    if (!isset($_SESSION['user_id'])) {
+        return [
+            "active" => false,
+            "status" => "no_user"
+        ];
+    }
 
-require_once __DIR__ . '/config.php';
+    $user_id = $_SESSION['user_id'];
+    $sql = "SELECT status FROM users WHERE user_id = ? LIMIT 1";
+    $result = select($sql, [$user_id], "i");
 
-function has_permission($module, $action = 'can_view') {
-    global $conn;
+    if ($result['status'] === 'success' && $result['rows'] > 0) {
+        $status = $result['data'][0]['status'];
+        return [
+            "active" => $status === 'active',
+            "status" => $status
+        ];
+    }
+
+    return [
+        "active" => false,
+        "status" => "not_found"
+    ];
+}
+function has_permission($module_name, $action = 'can_view') {
 
     if (!isset($_SESSION['role_id'])) {
         return false;
     }
 
-    $role = $_SESSION['role_id'];
-
-    $sql = "SELECT $action FROM role_permissions WHERE role_id = ? AND module = ? LIMIT 1";
-    $stmt = mysqli_prepare($conn, $sql);
-    if (!$stmt) {
+    $user = is_active();
+    if (!$user['active']) {
         return false;
     }
 
-    mysqli_stmt_bind_param($stmt, "is", $role, $module);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $permission);
-    $result = mysqli_stmt_fetch($stmt);
-    mysqli_stmt_close($stmt);
+    $role_id = $_SESSION['role_id'];
 
-    return ($result && $permission == 1);
+    $moduleSql = "SELECT module_id FROM modules WHERE module_name = ? LIMIT 1";
+    $moduleRes = select($moduleSql, [$module_name], "s");
+
+    if ($moduleRes['status'] !== 'success' || $moduleRes['rows'] == 0) {
+        return false;
+    }
+
+    $module_id = $moduleRes['data'][0]['module_id'];
+
+    $sql = "SELECT $action 
+            FROM role_permissions 
+            WHERE role_id = ? AND module_id = ? 
+            LIMIT 1";
+
+    $result = select($sql, [$role_id, $module_id], "ii");
+
+    if ($result['status'] === 'success' && $result['rows'] > 0) {
+        return ($result['data'][0][$action] == 1);
+    }
+
+    return false;
 }
+
+
 ?>

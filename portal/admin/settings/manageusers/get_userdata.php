@@ -68,7 +68,7 @@ foreach($result['data'] as $row) {
 
     $created_at = format_datetime($row['created_at']);
     $updated_at = format_datetime($row['updated_at']);
-    $dob = format_datetime($row['dob']);
+    $dob = format_datetime($row['dob'], 'd M Y');
 
     // Status color
     $statusClass = strtolower($row['status']) === 'active' ? 'status-green' :
@@ -104,6 +104,7 @@ foreach($result['data'] as $row) {
                 data-phone='{$row['phone']}'
                 data-role='{$row['role_id']}'
                 data-dob='{$row['dob']}'
+                data-gender='{$row['gender']}'
                 data-status='{$row['status']}'>
                 <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit
             </a>

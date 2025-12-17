@@ -23,7 +23,7 @@ $sortOrder  = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
 $page    = $page ?: 1;  
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
 
-$allowedCols = ['permission_id', 'role_id', 'module', "can_view", "can_add", "can_edit", "can_delete", "created_at", "updated_at"];
+$allowedCols = ['permission_id', 'role_id', 'module_id', "can_view", "can_add", "can_edit", "can_delete", "created_at", "updated_at"];
 if (!in_array($sortColumn, $allowedCols)) {
     $sortColumn = 'permission_id';
 }
@@ -37,7 +37,7 @@ $whereValues = [];
 $searchType  = "";
 
 if (!empty($search)) {
-    $sql .= " AND (module LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
+    $sql .= " AND (module_id LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
     $searchParam = "%$search%";
     $whereValues = [$searchParam, $searchParam, $searchParam];
     $searchType  = "sss";
@@ -72,6 +72,7 @@ foreach ($result['data'] as $row) {
     $can_add = getYesNoLabel($row['can_add']);
     $can_edit = getYesNoLabel($row['can_edit']);
     $can_delete = getYesNoLabel($row['can_delete']);
+    $module = get_label("module_name", "modules", "module_id", $row['module_id']);
 
     $created_at =  format_datetime($row['created_at']);
     $updated_at =  format_datetime($row['updated_at']
@@ -87,7 +88,7 @@ foreach ($result['data'] as $row) {
             </td>
             <td>{$row['permission_id']}</td>
             <td>{$role_name}</td>
-            <td>" . ucwords($row['module']) . "</td>
+            <td>" . ucwords($module) . "</td>
             <td>{$can_view}</td>
             <td>{$can_add}</td>
             <td>{$can_edit}</td>
@@ -99,19 +100,19 @@ foreach ($result['data'] as $row) {
                 <a class='dropdown-item edit-btn' href='#'
                 data-id='{$row['permission_id']}'
                 data-role='{$row['role_id']}'
-                data-module='{$row['module']}'
+                data-module='{$row['module_id']}'
                 data-can_view='{$row['can_view']}'
                 data-can_add='{$row['can_add']}'
                 data-can_edit='{$row['can_edit']}'
                 data-can_delete='{$row['can_delete']}' >
-                    <i class='fa-solid fa-pen-to-square m-r-5'></i>     
+                    <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit  
                 </a>
             </td>
 
             <td class='text-end'>
                 <a class='dropdown-item delete-btn' href='#' 
                 data-id='{$row['permission_id']}'
-                data-name='{$row['module']}'>
+                data-name='{$module}'>
                     <i class='fa fa-trash'></i> Delete
                 </a>
             </td>

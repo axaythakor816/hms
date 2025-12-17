@@ -122,10 +122,18 @@ require_role([1]);
 	</div>
 </div>
 
-<?php require_once 'add_role_model.php'; ?>
-<?php require_once 'edit_role_model.php'; ?>
-<?php require_once 'delete_role_model.php'; ?>
 
+<?php
+	if(has_permission('roles', 'can_add')) {
+		require_once 'add_role_model.php';
+	}
+	if(has_permission('roles', 'can_edit')) {
+		require_once 'edit_role_model.php';
+	}
+	if(has_permission('roles', 'can_delete')) {
+		require_once 'delete_role_model.php';
+	}
+?>
 <script src="../assets/ajax/roles.js"></script>
 
 

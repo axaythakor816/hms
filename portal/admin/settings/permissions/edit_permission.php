@@ -13,7 +13,7 @@ $_POST = filteration($_POST);
 
 $rules = [
     'role_id' => 'required',
-    'module' => 'required',
+    'module_id' => 'required',
 ];
 
 $errors = validate($_POST, $rules);
@@ -28,13 +28,13 @@ if(!verify_csrf($_POST['csrf_token'])) {
 
 $permision_id = $_POST['permission_id'];
 $role_id = $_POST['role_id'];
-$module = strtolower($_POST['module']);
+$module = $_POST['module_id'];
 $can_view = isset($_POST['can_view']) ? 1 : 0;
 $can_add = isset($_POST['can_add']) ? 1 : 0;
 $can_edit = isset($_POST['can_edit']) ? 1 : 0;
 $can_delete = isset($_POST['can_delete']) ? 1 : 0;
 
-$dup = checkDuplicateFields("role_permissions", ["role_id" => $role_id, "module" => $module], ["permission_id" => $permision_id], "AND");
+$dup = checkDuplicateFields("role_permissions", ["role_id" => $role_id, "module_id" => $module], ["permission_id" => $permision_id], "AND");
 
 if($dup['status'] === "duplicate") {
     json_response("error", "", "", $dup['errors']);
@@ -42,7 +42,7 @@ if($dup['status'] === "duplicate") {
 
 $sql = "UPDATE role_permissions SET 
     role_id  = ?,
-    module = ?,
+    module_id = ?,
     can_view = ?,
     can_add = ?,
     can_edit = ?,
@@ -50,7 +50,7 @@ $sql = "UPDATE role_permissions SET
     WHERE permission_id  = ?";
 
 $values = [$role_id, $module, $can_view, $can_add, $can_edit, $can_delete, $permision_id];
-$type = "isiiiii";
+$type = "iiiiiii";
 
 $result = update($sql, $values, $type);
 

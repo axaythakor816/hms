@@ -127,9 +127,17 @@ require_role([1]);
 	</div>
 </div>
 
-<?php require_once 'add_permission_model.php'; ?>
-<?php require_once 'edit_permission_model.php'; ?>
-<?php require_once 'delete_permission_model.php'; ?>
+<?php 
+	if(has_permission('permissions', 'can_add')) {
+		require_once 'add_permission_model.php';
+	} 
+	if(has_permission('permissions', 'can_edit')) {
+		require_once 'edit_permission_model.php'; 
+	}
+	if(has_permission('permissions', 'can_delete')) {
+		require_once 'delete_permission_model.php'; 
+	}
+?>
 
 <script src="../assets/ajax/permissions.js"></script>
 

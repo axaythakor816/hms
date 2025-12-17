@@ -44,15 +44,15 @@ $sql = "UPDATE departments SET
 $values = [$department_name, $department_head_id, $department_description, $department_id];
 $type = "ssii";
 
-// $result = update($sql, $values, $type);
+$result = update($sql, $values, $type);
 
-json_response("success", "savsdhsgbc brc kbusyfvsdfctfbuf d cktc rtfg e", "", ""); //testing
+// json_response("success", "savsdhsgbc brc kbusyfvsdfctfbuf d cktc rtfg e", "", ""); //testing
 
-// $result['message'] = ($result['status'] === "success") 
-//     ? "Department Updated Successfully." 
-//     : $result['message'];
+$result['message'] = ($result['status'] === "success") 
+    ? "Department Updated Successfully." 
+    : $result['message'];
 
-// json_response($result['status'], $result['message'], "", "");
+json_response($result['status'], $result['message'], "", "");
 
 
 ?>

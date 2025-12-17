@@ -1,6 +1,5 @@
 <?php
 require_once('../includes/header.php'); // CSS/JS include
-
 require_once '../../core/init.php';
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
@@ -14,18 +13,11 @@ require_login();
 $baseurl = base_url($_SERVER['REQUEST_URI']);
 $url = check_role($_SESSION['role_id']);
 
-// if ($baseurl != $url) {
-//     redirect($url);
-//     exit;
-// }
-
 if (!has_permission('dashboard', 'can_view')) {
   showalert("error", "Access Denied");
-  // redirect('http://localhost/hms/public/page-login.php');
   exit;
 }
 require_once('../includes/header-bar.php');  // header + sidebar include
-
 
 ?>
 

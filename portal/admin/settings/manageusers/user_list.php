@@ -130,12 +130,19 @@ require_role([1]);
 	</div>
 </div>
 
-<?php require_once 'add_user_model.php'; ?>
-<?php require_once 'edit_user_model.php'; ?>
-<?php require_once 'delete_user_model.php'; ?>
+<?php 
+	if(has_permission('manage users', 'can_add')) {
+		require_once 'add_user_model.php'; 
+	}
+	if(has_permission('manage users', 'can_edit')) {
+		require_once 'edit_user_model.php';
+	}
+	if(has_permission('manage users', 'can_delete')) {
+		require_once 'delete_user_model.php';
+	}
+?>
 
 <script src="../assets/ajax/manageusers.js"></script>
-
 
 <script>
 	loadpagedata();

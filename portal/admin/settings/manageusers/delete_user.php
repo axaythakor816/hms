@@ -3,7 +3,7 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-if(!has_permission('permissions', 'can_delete')) {
+if(!has_permission('manage users', 'can_delete')) {
 	showalert("error", "Access Denine");
 	exit;
 }
@@ -16,7 +16,7 @@ if(!verify_csrf($_POST['csrf_token'])) {
     json_response("error", "Invalid CSRF Token", "", "");
 }
 
-$ids = explode(',', $_POST['permission_id']);  
+$ids = explode(',', $_POST['user_id']);  
 
 $ids = array_filter($ids);
 
@@ -27,11 +27,11 @@ if(empty($ids)) {
 $placeholders = implode(',', array_fill(0, count($ids), '?'));
 $type = str_repeat('i', count($ids));
 
-$sql = "DELETE FROM role_permissions WHERE permission_id IN ($placeholders)";
+$sql = "DELETE FROM users WHERE user_id IN ($placeholders)";
 $result = delete($sql, $ids, $type);
 
 $result['message'] = ($result['status'] == "success") ? 
-    "permission Deleted Successfully."
+    "User Deleted Successfully."
     : $result['message'];
 
 json_response($result['status'], $result['message'], "", "");

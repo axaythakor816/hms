@@ -1,23 +1,17 @@
-// const state = {
-//     page: 1, perPage: 10, search: "", sortColumn: "department_id", sortOrder: "DESC" 
-// };
-
-    var state = window.state || {
-        page: 1,
-        perPage: 10,
-        search: "",
-        sortColumn: "department_id",
-        sortOrder: "ASC"
-    };
+var state = window.state || {
+    page: 1,
+    perPage: 10,
+    search: "",
+    sortColumn: "department_id",
+    sortOrder: "ASC"
+};
 
 $(document).ready(function () {
  
-    // loaddata();
-
     $("#searchInput").on("keyup", function () {
         state.search = $(this).val();
         state.page = 1;
-        loaddata();
+        loadpagedata();
     });
 
     $(document).on("click", ".department-refresh", function () {
@@ -31,19 +25,19 @@ $(document).ready(function () {
         $("#searchInput").val("");
         $(".row-check, #checkAll").prop("checked", false);
         $(".department-delete").addClass("disabled")
-        loaddata();
+        loadpagedata();
     });
 
     $(document).on("click", ".page-link", function () {
         const page = parseInt($(this).data("page"));
         state.page = page;
-        loaddata();
+        loadpagedata();
     });
 
     $("#RecordsPerPage").on("change", function () {
         state.perPage = parseInt($(this).val());
         state.page = 1;
-        loaddata();
+        loadpagedata();
     });
 
     $(document).on("click", "th[data-column]", function () {
@@ -57,7 +51,7 @@ $(document).ready(function () {
         }
 
         state.page = 1;
-        loaddata();
+        loadpagedata();
     });
 
     $("#department_description").on("input", function() {
@@ -148,7 +142,7 @@ $(document).ready(function () {
 
                     if(isModal) {
                         $("#addDepatmentModal").modal("hide");
-                        loaddata();
+                        loadpagedata();
                     }else{
                         loadPage("departments/department_list.php")
                     }
@@ -260,7 +254,7 @@ $(document).ready(function () {
                     showAlert(res.status, res.message);
                     $("#editDepartmentModal").modal("hide");
                     $("#editdepartment_form")[0].reset();
-                    loaddata();
+                    loadpagedata();
                 }
             },
             error: function(xhr, status, error) {
@@ -346,7 +340,7 @@ $(document).ready(function () {
                     $("#deletedepartment_form")[0].reset();
                     $("#deleteDepartmentModal").modal("hide");
                     $("#delete_department_name_text").text("");
-                    loaddata();
+                    loadpagedata();
 
                     $("#checkAll").prop("checked", false);
                     $(".row-check").prop("checked", false);
@@ -412,7 +406,7 @@ function updateDeleteButtonState() {
     }
 }
 
-function loaddata() {
+function loadpagedata() {
     const { page, perPage, search, sortColumn, sortOrder } = state;
     const token = $('#department_csrf_token').val();
 

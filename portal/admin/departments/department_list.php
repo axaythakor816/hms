@@ -8,7 +8,6 @@ if(!has_permission('departments', 'can_view')) {
 	exit;
 }
 
-require_role([1, 2, 4]);
 ?>
 
 <div class="page-wrapper">
@@ -121,26 +120,13 @@ require_role([1, 2, 4]);
 	</div>
 	
 </div>
-<div id="delete_patient" class="modal fade delete-modal" role="dialog">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-body text-center">
-				<img src="../assets/img/sent.png" alt="" width="50" height="46">
-				<h3>Are you sure want to delete this ?</h3>
-				<div class="m-t-20"> <a href="#" class="btn btn-white" data-bs-dismiss="modal">Close</a>
-					<button type="submit" class="btn btn-danger">Delete</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 
 <?php
 if(has_permission('departments', 'can_add')) {
 	require_once 'add_department_model.php';
 }
 
-if(has_permission('departments', 'can_add')) {
+if(has_permission('departments', 'can_edit')) {
 	require_once 'edit_department_model.php';
 }
 
@@ -152,5 +138,5 @@ if(has_permission('departments', 'can_delete')) {
 
 <script src="../assets/ajax/departments.js"></script>
 <script>
-	loaddata();
+	loadpagedata();
 </script>

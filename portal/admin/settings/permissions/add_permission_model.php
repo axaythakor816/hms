@@ -25,7 +25,6 @@ require_role([1]);
                 <form id="addpermission_form">
 
 					<input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
-                    <!-- <input type="hidden" name="permission_id" id="permission_id"> -->
 
                     <div class="row">
 
@@ -44,8 +43,10 @@ require_role([1]);
                         <div class="col-md-6">
                             <div class="input-block local-forms">
                                 <label>Module <span class="login-danger">*</span></label>
-                                <input type="text" name="module" id="module" class="form-control" placeholder="module name e.g. departments">
-                                <span class="error" id="module_error"></span>
+                                <select name="module_id" id="module_id" class="form-select form-control">
+                                    <!-- options insert dynamically -->
+                                </select>
+                                <span class="error" id="module_id_error"></span>
                             </div>
                         </div>
 

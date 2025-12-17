@@ -45,7 +45,10 @@ require_role([1]);
                         <div class="col-md-6">
                             <div class="input-block local-forms">
                                 <label>Module <span class="login-danger">*</span></label>
-                                <input type="text" name="module" id="edit_module" class="form-control" placeholder="module name">
+                                <select name="module_id" id="edit_module_id" class="form-select form-control">
+
+                                </select>
+
                                 <span class="error" id="edit_module_error"></span>
                             </div>
                         </div>

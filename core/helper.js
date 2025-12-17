@@ -6,7 +6,24 @@ function validateForm(formSelector, rules) {
     $.each(rules, function(field, ruleString) {
 
         let ruleArray = ruleString.split('|');
-        let value = $.trim(form.find("[name='" + field + "']").val() || '');
+        let element = form.find("[name='" + field + "']");
+        let value = "";
+
+        if (element.is(":radio")) {
+            value = element.filter(":checked").val() || "";
+
+        } else if (element.is(":checkbox")) {
+
+            if (element.length > 1) {
+                value = element.filter(":checked").length ? "checked" : "";
+            } else {
+                value = element.is(":checked") ? element.val() : "";
+            }
+
+        } else {
+            value = $.trim(element.val() || "");
+        }
+
 
         ruleArray.some(function(rule) {
 
@@ -81,7 +98,7 @@ function validateForm(formSelector, rules) {
                 let matchValue = $.trim(form.find("[name='" + matchField + "']").val() || '');
 
                 if (value !== matchValue) {
-                    addError(field, capitalize(field) + " must match " + capitalize(matchField) + ".");
+                    addError(field, capitalize(field) + " does not match the " + capitalize(matchField) + ".");
                     return true;
                 }
             }

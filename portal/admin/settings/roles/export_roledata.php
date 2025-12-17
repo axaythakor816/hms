@@ -3,9 +3,9 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-// if(!has_permission('departments', 'can_view')) {
-//     json_response("error", "Access Denied");
-// }
+if(!has_permission('roles', 'can_view')) {
+    json_response("error", "Access Denied");
+}
 
 if(!verify_csrf($_POST['csrf_token'] ?? '')) {
     json_response("error", "Invalid CSRF Token");
