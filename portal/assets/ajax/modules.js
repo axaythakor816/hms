@@ -2,47 +2,45 @@ var state = {
     page: 1,
     perPage: 10,
     search: "",
-    sortColumn: "permission_id",
+    sortColumn: "module_id",
     sortOrder: "ASC"
 };
 
 $(document).ready(function () {
-
     $("#searchInput").on("keyup", function () {
         state.search = $(this).val();
         state.page = 1;
         loadpagedata();
     });
 
-    $(document).on("click", ".permission-refresh", function () {
+    $(document).on("click", ".module-refresh", function () {
         state.page = 1;
         state.perPage = 10;
         state.search = "";
-        state.sortColumn = "department_id";
+        state.sortColumn = "module_id";
         state.sortOrder = "ASC";
 
         $("#RecordsPerPage").val("10").trigger("change");
         $("#searchInput").val("");
         $(".row-check, #checkAll").prop("checked", false);
-        $(".permission-delete").addClass("disabled")
+        $(".mudule-delete").addClass("disabled")
         loadpagedata();
     });
 
-    $(document).on("click", ".page-link", function () {
+    $(document).on("click", ".page-link", function() {
         const page = parseInt($(this).data("page"));
         state.page = page;
         loadpagedata();
     });
 
-    $("#RecordsPerPage").on("change", function () {
+    $("#RecordsPerPage").on("change", function() {
         state.perPage = parseInt($(this).val());
         state.page = 1;
         loadpagedata();
     });
 
-    $(document).on("click", "th[data-column]", function () {
+    $(document).on("click", "th[data-column]", function() {
         let col = $(this).data("column");
-
         if (state.sortColumn === col) {
             state.sortOrder = (state.sortOrder === "ASC") ? "DESC" : "ASC";
         } else {
@@ -69,28 +67,22 @@ $(document).ready(function () {
 
         updateDeleteButtonState();
     });
-    
-    $("#addpermissionModal").on("show.bs.modal", function() {
-        get_roles();
-        get_modules();
-    });
 
-    $("#addpermissionModal").on("hide.bs.modal", function () {
-        $("#addpermission_form")[0].reset();
-        $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
+    $("#addModuleModal").on("hide.bs.modal", function () {
+        $("#addmodule_form")[0].reset();
+        $("button[name='save_module']").prop("disabled", false).text("Create Module");  
         $(".error").text("");
     });
 
-    $("#addpermission_form").submit(function(e) {
+    $("#addmodule_form").submit(function(e) {
         e.preventDefault();
         $(".error").text("");
 
         let rules = {
-            role_id: "required",
-            module_id: "required",
+            module_name: "required|max:20",
         };
 
-        let errors = validateForm("#addpermission_form", rules);
+        let errors = validateForm("#addmodule_form", rules);
 
         if(Object.keys(errors).length > 0) {
             $.each(errors, function (index, value) {
@@ -99,22 +91,22 @@ $(document).ready(function () {
             return false;
         }
 
-        var form = $("#addpermission_form")[0];
+        var form = $("#addmodule_form")[0];
         var formdata = new FormData(form);
 
         $.ajax({
             type: "POST",
-            url: "settings/permissions/save_permission.php",
+            url: "settings/modules/save_modules.php",
             data: formdata,
             dataType: "json",
             processData: false,
             contentType: false,
             beforeSend: function() {
                 $(".error").text("");
-                $("button[name='save_permission']").prop("disabled", true).text("Creating...");
+                $("button[name='save_module']").prop("disabled", true).text("Creating...");
             },
             success: function (res) {
-                $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
+                $("button[name='save_module']").prop("disabled", false).text("Create Module");  
                 if(res.status == "error") {
                     if(res.message) {
                         showAlert(res.status, res.message);
@@ -129,10 +121,10 @@ $(document).ready(function () {
                     }
                 } else if (res.status == "success") {
                     showAlert(res.status, res.message);
-                    $("button[name='save_permission']").prop("disabled", false).text("Create Permission");  
-                    $("#addpermission_form")[0].reset();
+                    $("button[name='save_module']").prop("disabled", false).text("Create Module");  
+                    $("#addmodule_form")[0].reset();
                     $(".error").text("");
-                    $("#addpermissionModal").modal("hide");
+                    $("#addModuleModal").modal("hide");
                     loadpagedata();
                 }              
             },
@@ -144,50 +136,32 @@ $(document).ready(function () {
         });
     });
 
-    $("#editpermissionModal").on("hide.bs.modal", function () {
-        $("#editpermission_form")[0].reset();
+    $("#editModuleModal").on("hide.bs.modal", function () {
+        $("#editmodule_form")[0].reset();
         $(".error").text("");
-        $("button[name='update_permission']").prop("disabled", false).text("Update Permission");  
+        $("button[name='update_module']").prop("disabled", false).text("Update Module");  
 
     });
 
     $(document).on("click", ".edit-btn", function () {
 
         let id = $(this).data("id");
-        let role = $(this).data("role");
         let module = $(this).data("module");
-        let can_view = $(this).data("can_view");
-        let can_add = $(this).data("can_add");
-        let can_edit = $(this).data("can_edit");
-        let can_delete = $(this).data("can_delete");
 
-        $("#edit_permission_id").val(id);
-        get_roles(function() {
-            $("#edit_role_id").val(role).trigger("change");
-        });
-        get_modules(function() {
-            $("#edit_module_id").val(module).trigger("change");
-        })
-
-        $("#edit_module").val(module);
-        $("#edit_can_view").prop("checked", can_view == 1);
-        $("#edit_can_add").prop("checked", can_add == 1);
-        $("#edit_can_edit").prop("checked", can_edit == 1);
-        $("#edit_can_delete").prop("checked", can_delete == 1);
-
-        $("#editpermissionModal").modal("show");
+        $("#edit_module_id").val(id);
+        $("#edit_module_name").val(module); 
+        $("#editModuleModal").modal("show");
     });
 
-    $("#editpermission_form").submit(function(e) {
+    $("#editmodule_form").submit(function(e) {
        e.preventDefault();
         $(".error").text("");
        
         let rules = {
-            role_id: "required",
-            module_id: "required",
+            module_name: "required|max:20",
         };
 
-        let errors = validateForm("#editpermission_form", rules);
+        let errors = validateForm("#editmodule_form", rules);
 
         if(Object.keys(errors).length > 0) {
             $.each(errors, function (index, value) {
@@ -196,21 +170,21 @@ $(document).ready(function () {
             return false;
         }
 
-        var form = $("#editpermission_form")[0];
+        var form = $("#editmodule_form")[0];
         var formdata = new FormData(form);
 
         $.ajax({
             type: "POST",
-            url: "settings/permissions/edit_permission.php",
+            url: "settings/modules/edit_module.php",
             data: formdata,
             processData: false,
             contentType: false,
             beforeSend: function() {
                 $(".error").text("");
-                $("button[name='update_permission']").prop("disabled", true).text("Updating...");
+                $("button[name='update_module']").prop("disabled", true).text("Updating...");
             }, 
             success: function(res) {
-                $("button[name='update_permission']").prop("disabled", false).text("Update permissions"); 
+                $("button[name='update_module']").prop("disabled", false).text("Update Module"); 
                 if(res.status == "error") {
                     if(res.message) {
                         showAlert(res.status, res.message);
@@ -225,8 +199,8 @@ $(document).ready(function () {
                     }
                 }else if(res.status == "success") {
                     showAlert(res.status, res.message);
-                    $("#editpermissionModal").modal("hide");
-                    $("#editpermission_form")[0].reset();
+                    $("#editModuleModal").modal("hide");
+                    $("#editmodule_form")[0].reset();
                     loadpagedata();
                 }
             },
@@ -238,18 +212,17 @@ $(document).ready(function () {
         });
     });
 
-    $("#deletePermissionModal").on("hide.bs.modal", function () {
-        $("#delete_permission_form")[0].reset();
-        $("button[name='delete_permission']").prop("disabled", false).text("Delete");
+    $("#deleteModuleModal").on("hide.bs.modal", function () {
+        $("#delete_module_form")[0].reset();
+        $("button[name='delete_module']").prop("disabled", false).text("Delete");
     });
 
     $(document).on("click", ".delete-btn", function () {
         let id = $(this).data("id");
         let name = $(this).data("name");
-        // console.log("id: ",id);
-        $("#delete_permission_id").val(id);
-        $("#delete_permission_name_text").text("Permission Name : " + name.toUpperCase());
-        $("#deletePermissionModal").modal("show");
+        $("#delete_module_id").val(id);
+        $("#delete_module_name_text").text("Module Name : " + name.toUpperCase());
+        $("#deleteModuleModal").modal("show");
     }); 
 
     $(document).on("click", "#deleteSelected", function () {
@@ -265,43 +238,43 @@ $(document).ready(function () {
             return;
         }
         // console.log(ids);
-        $("#delete_permission_id").val(ids);  
-        $("#delete_permission_name_text").text("Delete " + ids.length + " Selected Permission?");
+        $("#delete_module_id").val(ids);  
+        $("#delete_module_name_text").text("Delete " + ids.length + " Selected Module?");
         
-        $("#deletePermissionModal").modal("show");
+        $("#deleteModuleModal").modal("show");
     });
 
-    $("#delete_permission_form").submit(function(e) {
+    $("#delete_module_form").submit(function(e) {
         e.preventDefault();
         
-        var form = $("#delete_permission_form")[0];
+        var form = $("#delete_module_form")[0];
         var formdata = new FormData(form);
         
         $.ajax({
             type: "POST",
-            url: "settings/permissions/delete_permission.php",
+            url: "settings/modules/delete_module.php",
             data: formdata,
             processData: false,
             contentType: false,
             dataType: "json",
             beforeSend: function() {
-                $("button[name='delete_permission']").prop("disabled", true).text("Deleting...");
+                $("button[name='delete_module']").prop("disabled", true).text("Deleting...");
             },
             success: function(res) {
-                $("button[name='delete_permission']").prop("disabled", false).text("Delete");
+                $("button[name='delete_module']").prop("disabled", false).text("Delete");
                 if(res.status == "error") {
-                    $("#deletePermissionModal").modal("hide");
+                    $("#deleteModuleModal").modal("hide");
                     showAlert(res.status, res.message);
                 }else if(res.status, res.message) {
                     showAlert(res.status, res.message);
-                    $("#delete_permission_form")[0].reset();
-                    $("#deletePermissionModal").modal("hide");
-                    $("#delete_permission_name_text").text("");
+                    $("#delete_module_form")[0].reset();
+                    $("#deleteModuleModal").modal("hide");
+                    $("#delete_module_name_text").text("");
                     loadpagedata();
 
                     $("#checkAll").prop("checked", false);
                     $(".row-check").prop("checked", false);
-                    $(".permission-delete").addClass("disabled");
+                    $(".module-delete").addClass("disabled");
 
                 }
             },
@@ -329,7 +302,7 @@ $(document).ready(function () {
 
         let form = $('<form>', {
             method: "POST",
-            action: "settings/permissions/export_permissiondata.php",
+            action: "settings/modules/export_moduledata.php",
             target: 'exportFrame'
         });
 
@@ -353,103 +326,44 @@ $(document).ready(function () {
         }, 2000);
     });
 
-
 });
-
-function get_roles(callback) {
-    let csrf_token = $("#csrf_token").val();
-    
-    $.ajax({
-        type: "POST",
-        url: "settings/permissions/loadoptions.php",
-        data: {
-            action: "roles",
-            csrf_token: csrf_token
-        },
-        dataType: "json",
-        success: function (res) {
-            $("#role_id").html(res.data);  
-            $("#edit_role_id").html(res.data);
-          
-
-            if(callback) callback();
-        },
-        error: function(xhr, status, error) {
-            console.log("Ajax Error: ", error);
-            console.log("Status: ", status);
-            console.log("Response: ", xhr.responseText);
-        }
-    });
-}
-
-
-function get_modules(callback) {
-    let csrf_token = $("#csrf_token").val();
-    
-    $.ajax({
-        type: "POST",
-        url: "settings/permissions/loadoptions.php",
-        data: {
-            action: "modules",
-            csrf_token: csrf_token
-        },
-        dataType: "json",
-        success: function (res) {
-            $("#module_id").html(res.data);  
-            $("#edit_module_id").html(res.data);
-          
-            if(callback) callback();
-        },
-        error: function(xhr, status, error) {
-            console.log("Ajax Error: ", error);
-            console.log("Status: ", status);
-            console.log("Response: ", xhr.responseText);
-        }
-    });
-}
 
 function loadpagedata() {
     const { page, perPage, search, sortColumn, sortOrder} = state;
-    const token = $("#permission_csrf_token").val();
+    const token = $("#module_csrf_token").val();
 
     $.ajax({
         type: "POST",
-        url: "settings/permissions/get_permissiondata.php",
+        url: "settings/modules/get_moduledata.php",
         data: {
+            csrf_token: token,
             page: page,
             perPage: perPage,
             search: search,
             sortColumn: sortColumn,
-            sortOrder: sortOrder,
-            csrf_token: token
+            sortOrder: sortOrder
         },
-        dataType: 'json',
+        dataType: "json",
         success: function (res) {
-            if(res.status == "error") {
-                showAlert(res.status, res.message);
-            }else if(res.status == "success") {
-                
-                const tbody = "#permission_table tbody";
-                const pagination = "#permission_Pagination";
-                const infotext = "#permission_InfoText";
-
-                $(tbody).html(res.data.html);
-
-                const totalRecords = res.data.total;
-                const totalPages = Math.ceil(totalRecords / perPage);
-
-                let start = totalRecords === 0 ? 0 : (page - 1) * perPage + 1;
-                let end = Math.min(page  * perPage, totalRecords);
-
-                $(infotext).text(`Showing ${start} to ${end} of ${totalRecords} entries`);
-                $(pagination).html(generatePagination(page, totalPages));   
-
-            }
             
+            const tbody = "#module_table tbody";
+            const infotext = "#module_InfoText";
+            const pagination = "#module_Pagination";
+
+            $(tbody).html(res.data.html);
+
+            const totalRecords = res.data.total;
+            const totalPages = Math.ceil(totalRecords / perPage);
+
+            let start = totalRecords === 0 ? 0 : (page - 1) * perPage + 1;
+            let end = Math.min(page * perPage, totalRecords);
+
+            $(infotext).text(`Showing ${start} to ${end} of ${totalRecords} entries`);
+            $(pagination).html(generatePagination(page, totalPages));            
         },
         error: function(xhr, status, error) {
+            console.log("Status:", status);
             console.log("Ajax Error: ", error);
-            console.log("Status: ", status);
             console.log("Response: ", xhr.responseText);
         }
     });
@@ -457,8 +371,8 @@ function loadpagedata() {
 
 function updateDeleteButtonState() {
     if ($(".row-check:checked").length > 0) {
-        $(".permission-delete").removeClass("disabled");
+        $(".module-delete").removeClass("disabled");
     } else {
-        $(".permission-delete").addClass("disabled");
+        $(".module-delete").addClass("disabled");
     }
 }

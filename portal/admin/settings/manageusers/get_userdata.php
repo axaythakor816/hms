@@ -95,6 +95,7 @@ foreach($result['data'] as $row) {
         </td>
         <td>{$created_at}</td>
         <td>{$updated_at}</td>
+        " . (has_permission('manage users', 'can_edit') ? "
         <td class='text-end'>
             <a class='dropdown-item edit-btn' href='#'
                 data-id='{$row['user_id']}'
@@ -109,6 +110,9 @@ foreach($result['data'] as $row) {
                 <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit
             </a>
         </td>
+        " : "") . "
+
+        " . (has_permission('manage users', 'can_delete') ? "
         <td class='text-end'>
             <a class='dropdown-item delete-btn' href='#' 
             data-id='{$row['user_id']}'
@@ -116,6 +120,7 @@ foreach($result['data'] as $row) {
                 <i class='fa fa-trash'></i> Delete
             </a>
         </td>
+        " : "") . "
     </tr>";
 }
 

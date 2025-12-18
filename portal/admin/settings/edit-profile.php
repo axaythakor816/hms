@@ -1,3 +1,7 @@
+        <?php
+require_once '../../../core/init.php';
+        
+        ?>
         <div class="page-wrapper">
             <div class="content">
                 <!-- Page Header -->
@@ -32,20 +36,20 @@
                                         <div class="col-md-6">
                                             <div class="input-block local-forms">
                                                 <label class="focus-label">First Name</label>
-                                                <input name="admin_name" type="text" class="form-control floating" value="<?php echo $row['admin_name']?>">
+                                                <input name="admin_name" type="text" class="form-control floating" value="<?php echo $_SESSION['first_name']?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-block local-forms">
                                                 <label class="focus-label">Last Name</label>
-                                                <input name="lname" type="text" class="form-control floating" value="<?php echo $row['lname']?>">
+                                                <input name="lname" type="text" class="form-control floating" value="<?php echo $_SESSION['last_name']?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-block local-forms ">
                                                 <label class="focus-label">Birth Date</label>
                                                 <div class="cal-icon">
-                                                    <input name="dob" class="form-control floating datetimepicker" type="text" value="<?php echo $row['dob']?>">
+                                                    <input name="dob" class="form-control floating datetimepicker" type="text" value="<?php echo $_SESSION['dob']?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -70,19 +74,19 @@
                             <div class="col-md-12">
                                 <div class="input-block local-forms">
                                     <label class="focus-label">Address</label>
-                                    <input name="address" type="text" class="form-control floating" value="<?php echo $row['address']?>">
+                                    <input name="address" type="text" class="form-control floating" value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-block local-forms">
                                     <label class="focus-label">Mobile Number</label>
-                                    <input name="mnumber" type="mnumber" class="form-control floating" value="<?php echo $row['mnumber']?>">
+                                    <input name="mnumber" type="mnumber" class="form-control floating" value="<?php echo $_SESSION['mobile_number']?>">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-block local-forms">
                                     <label class="focus-label">Email</label>
-                                    <input name="email" type="text" class="form-control floating" value="<?php echo $row['email']?>">
+                                    <input name="email" type="text" class="form-control floating" value="<?php echo $_SESSION['email_id']?>">
                                 </div>
                             </div>
                             
@@ -90,44 +94,6 @@
                         <button type="submit" name="update" class="btn btn-primary submit-btn mb-4" >Save</button>
                     </div>
                 </form>
-                <?php
-                                if (isset($_POST['update']))
-                                {
-                                    $admin_name=$_POST['admin_name'];
-									$lname=$_POST['lname'];
-                                    $dob=$_POST['dob'];
-									$gender=$_POST['gender'];
-                                    $address=$_POST['address'];
-                                    $mnumber=$_POST['mnumber'];
-									$email=$_POST['email'];
-                
-
-
-                                $update="UPDATE admin SET admin_name='$admin_name',lname='$lname',dob='$dob', gender='$gender',address='$address',mnumber='$mnumber',email='$email' WHERE id='$id'";
-
-								
-                                $data=mysqli_query($conn,$update);
-                                if($data){
-                                    ?>
-                                    <script type="text/javascript">
-                                        alert("data update successfully");
-                                        window.open("profile.php","_self");
-                                    </script>
-                                    <?php
-                                }else{
-                                    ?>
-                                    <script type="text/javascript">
-                                        alert("please try again");
-                                    </script>
-                                    <?php
-                                }
-                            }
-							?>
-
-
             </div>
 
         </div>
-<?php 
-require_once('includes/footer.php');
-?>

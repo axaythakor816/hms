@@ -16,18 +16,6 @@
                 </li>
                 <?php endif; ?>
 
-                <!-- ✅ management
-                <li class="submenu">
-                    <a href="#"><span class="menu-side"><img src="../assets/img/icons/menu-icon-15.svg"></span>
-                        <span>Manages</span> <span class="menu-arrow"></span>
-                    </a>
-                    <ul>
-                        <li><a href="permissions/permission_list.php" class="nav-link">Pemissions</a></li>
-
-                        <li><a href="permissions/permission_list.php" class="nav-link">Roles</a></li>
-                    </ul>
-                </li> -->
-
                 <!-- ✅ DOCTORS -->
                 <?php if (has_permission('doctors','can_view')): ?>
                 <li class="submenu">
@@ -152,17 +140,31 @@
                 <?php endif; ?>
 
                 <!-- ✅ SETTINGS (ADMIN ONLY) -->
-                <?php if ($_SESSION['role_id'] == 1): ?>
-                <li>
-                    <a href="settings/settings.php" class="nav-link">
-                        <span class="menu-side"><img src="../assets/img/icons/menu-icon-16.svg"></span>
-                        <span>Settings</span>
+                <?php if (has_permission('settings','can_view')): ?>
+                <li class="submenu">
+                    <a href="#"><span class="menu-side"><img src="../assets/img/icons/menu-icon-16.svg"></span>
+                        <span>Settings</span> <span class="menu-arrow"></span>
                     </a>
+                    <ul>
+                        <li><a href="settings/settings.php" class="nav-link">General Setting</a></li>
+                        <li><a href="settings/profile.php" class="nav-link">My Profile</a></li>
+                        <li><a href="settings/passwords/change-password.php" class="nav-link">Change Password</a></li>
+                        <?php if(has_permission('roles', 'can_view')) : ?>
+                        <li><a href="settings/roles/role_list.php" class="nav-link">Role Settings</a></li>
+                        <?php endif;
+                        if(has_permission('permissions', 'can_view')) : ?>
+                        <li><a href="settings/permissions/permission_list.php" class="nav-link">Permission Settings</a></li>
+                        <?php endif;
+                        if(has_permission('manage users', 'can_view')) : ?>
+                        <li><a href="settings/manageusers/user_list.php" class="nav-link">Manage Users</a></li>
+                        <?php endif;
+                        if(has_permission('modules', 'can_view')) : ?>
+                        <li><a href="settings/modules/module_list.php" class="nav-link">Module Setting</a></li>
+                        <?php endif;?>
+                    </ul>
                 </li>
                 <?php endif; ?>
-
             </ul>
-
             <div class="logout-btn">
                 <a href="dashboard.php?action=logout">
                     <span class="menu-side">

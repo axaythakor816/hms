@@ -1,5 +1,5 @@
 <?php
-require_once '../../../core/init.php';
+require_once '../../../../core/init.php';
 
 require_login();
 
@@ -28,36 +28,6 @@ require_role([1]);
 				</div>
 			</div>
 			<!-- /Page Header -->
-
-			<div class="settings-menu-links">
-				<ul class="nav nav-tabs menu-tabs">
-					<?php if(has_permission('settings', 'can_view')): ?>
-					<li class="nav-item active">
-						<a class="nav-link" href="settings/settings.php">General Settings</a>
-					</li>
-					<?php endif;
-					if(has_permission('profiles', 'can_view')): ?>
-					<li class="nav-item">
-						<a class="nav-link" href="settings/profile.php">My Profile</a>
-					</li>	
-					<?php endif;
-					if(has_permission('profiles', 'can_edit')): ?>
-					<li class="nav-item">
-						<a class="nav-link" href="settings/change-password.php">Change Password</a>
-					</li>
-					<?php endif; 
-					if(has_permission('settings', 'can_view')): ?>
-					<li class="nav-item">
-						<a class="nav-link" href="settings/permissions/permission_list.php">Permission Settings</a>
-					</li>
-					<?php endif;
-					if(has_permission('roles', 'can_view')): ?>
-					<li class="nav-item">
-						<a class="nav-link" href="settings/permissions/permission_list.php">Role Settings</a>
-					</li>
-					<?php endif; ?>
-				</ul>
-			</div>
 			
 			<div class="row">
 				<div class="col-lg-8">
@@ -69,19 +39,23 @@ require_role([1]);
 									<div class="col-12 col-md-6 col-xl-12">  
 										<div class="input-block local-forms">
 											<label>Old password <span class="login-danger">*</span></label>
-											<input class="form-control" type="text" placeholder="">
+											<input class="form-control" type="text" placeholder="Enter Old Password">
+											<div class="mt-2 text-end">
+												<a href="settings/passwords/forgot_password.php" class="text-primary nav-link" style="font-size: 14px;">Forgot Password?</a>
+											</div>
 										</div>
 									</div>
+									
 									<div class="col-12 col-md-6 col-xl-6">  
 										<div class="input-block local-forms">
 											<label>New password <span class="login-danger">*</span></label>
-											<input class="form-control" type="text" placeholder="">
+											<input class="form-control" type="text" placeholder="Enter New Password">
 										</div>
 									</div>
 									<div class="col-12 col-md-6 col-xl-6">  
 										<div class="input-block local-forms">
 											<label>Confirm password <span class="login-danger">*</span></label>
-											<input class="form-control" type="text" placeholder="">
+											<input class="form-control" type="text" placeholder="Enter Confirm Password">
 										</div>
 									</div>
 									<div class="col-12">

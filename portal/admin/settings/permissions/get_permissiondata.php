@@ -58,9 +58,9 @@ $datatypes = $searchType . "ii";
 
 $result = select($sql, $values, $datatypes);
 
-if ($result['status'] == "error") {
-    json_response($result['status'], "Query failed" . $result['error'], "", "");
-}
+    if ($result['status'] == "error") {
+        json_response($result['status'], "Query failed" . $result['error'], "", "");
+    }
 
 $html = "";
 $sr_no = $offset + 1;
@@ -96,6 +96,8 @@ foreach ($result['data'] as $row) {
             <td>{$created_at}</td>
             <td>{$updated_at}</td>
 
+            " . (has_permission('permissions', 'can_edit') ? "
+
             <td class='text-end'>
                 <a class='dropdown-item edit-btn' href='#'
                 data-id='{$row['permission_id']}'
@@ -108,7 +110,9 @@ foreach ($result['data'] as $row) {
                     <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit  
                 </a>
             </td>
+            " : "") . "
 
+            " . (has_permission('permissions', 'can_delete') ? "
             <td class='text-end'>
                 <a class='dropdown-item delete-btn' href='#' 
                 data-id='{$row['permission_id']}'
@@ -116,6 +120,8 @@ foreach ($result['data'] as $row) {
                     <i class='fa fa-trash'></i> Delete
                 </a>
             </td>
+            " : "") . "
+
         </tr>
     ";
 

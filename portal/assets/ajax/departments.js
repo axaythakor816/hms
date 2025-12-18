@@ -1,4 +1,4 @@
-var state = window.state || {
+var state = {
     page: 1,
     perPage: 10,
     search: "",

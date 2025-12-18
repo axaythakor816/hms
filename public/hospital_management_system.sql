@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 17, 2025 at 02:12 PM
+-- Generation Time: Dec 18, 2025 at 01:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -355,7 +355,8 @@ INSERT INTO `modules` (`module_id`, `module_name`, `created_at`, `updated_at`) V
 (11, 'settings', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
 (12, 'profiles', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
 (13, 'roles', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
-(14, 'manage users', '2025-12-17 12:16:47', '2025-12-17 12:16:47');
+(14, 'manage users', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
+(15, 'modules', '2025-12-18 08:16:36', '2025-12-18 08:16:36');
 
 -- --------------------------------------------------------
 
@@ -501,7 +502,7 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `role_name`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
+(1, 'super admin', '2025-12-08 15:21:49', '2025-12-18 17:23:42'),
 (2, 'doctor', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
 (3, 'patient', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
 (4, 'staff', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
@@ -555,7 +556,8 @@ INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module_id`, `can_vi
 (23, 1, 11, 1, 1, 1, 1, '2025-12-16 15:14:47', '2025-12-17 17:46:47'),
 (24, 1, 12, 1, 1, 1, 1, '2025-12-16 15:15:17', '2025-12-17 17:46:47'),
 (25, 1, 13, 1, 1, 1, 1, '2025-12-16 15:15:36', '2025-12-17 17:46:47'),
-(26, 1, 14, 1, 1, 1, 1, '2025-12-17 17:36:39', '2025-12-17 17:46:47');
+(26, 1, 14, 1, 1, 1, 1, '2025-12-17 17:36:39', '2025-12-17 17:46:47'),
+(27, 1, 15, 1, 1, 1, 1, '2025-12-18 13:46:52', '2025-12-18 13:46:52');
 
 -- --------------------------------------------------------
 
@@ -663,7 +665,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakor@gmail.com', '1234567891', '$2y$10$SjHGwKbDHiRfHvH9llbMtO3ByoUyOCKrryB.0n9DqQXQgy5WzyBYG', 1, NULL, NULL, 'active', '2025-11-24 13:33:21', '2025-12-03 09:59:04');
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakor@gmail.com', '1234567891', '$2y$10$9ziucdDatnm6R6PvijJ/LOwEzEaV88vJ1JFE/ArMy//DwvdzYqB6u', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-18 11:50:56'),
+(2, '28c95a3b-dc09-11f0-9778-fcaa141337b9', 'abc', 'dfg', 'axay@gmail.com', '1111111111', '$2y$10$MDkhC/35d/HuIEh.LJ0mHO2.VWFVeJ5vMDpgWODFtAJ5LFqlyN1Pm', 2, 'Male', '2026-01-03', 'active', '2025-12-18 12:00:34', '2025-12-18 12:01:59');
 
 -- --------------------------------------------------------
 
@@ -683,6 +686,29 @@ CREATE TABLE `vitals` (
   `recorded_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `website_details`
+--
+
+CREATE TABLE `website_details` (
+  `web_id` int(11) NOT NULL,
+  `website_name` varchar(255) NOT NULL,
+  `logo_path` varchar(255) DEFAULT NULL,
+  `favicon_path` varchar(255) DEFAULT NULL,
+  `address_line1` varchar(255) NOT NULL,
+  `address_line2` varchar(255) DEFAULT NULL,
+  `city` varchar(100) NOT NULL,
+  `state` varchar(100) NOT NULL,
+  `zip_postal_code` varchar(20) NOT NULL,
+  `country` varchar(100) NOT NULL,
+  `contact_email` varchar(150) DEFAULT NULL,
+  `contact_phone` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -942,6 +968,12 @@ ALTER TABLE `vitals`
   ADD KEY `doctor_id` (`doctor_id`);
 
 --
+-- Indexes for table `website_details`
+--
+ALTER TABLE `website_details`
+  ADD PRIMARY KEY (`web_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1099,7 +1131,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -1129,13 +1161,19 @@ ALTER TABLE `tax`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `vitals`
 --
 ALTER TABLE `vitals`
   MODIFY `vital_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `website_details`
+--
+ALTER TABLE `website_details`
+  MODIFY `web_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

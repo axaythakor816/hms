@@ -28,8 +28,6 @@ require_role([1]);
 		</div>
 		<!-- /Page Header -->
 
-		<?php require_once '../setting_nav.php'; ?>
-	
 		<div class="row">
 			<div class="col-sm-12">
 			
@@ -92,14 +90,16 @@ require_role([1]);
 										</th>
 										<th data-column="permission_id">Sr_No</th>
 										<th data-column="role_id">Roles</th>
-										<th data-column="module">Modules</th>
+										<th data-column="module_id">Modules</th>
 										<th data-column="can_view">Can View</th>
 										<th data-column="can_add">Can Add</th>
 										<th data-column="can_edit">Can Edit</th>
 										<th data-column="can_delete">Can Delete</th>
 										<th data-column="created_at">Ceated Date</th>
 										<th data-column="updated_at">Updated Date</th>
+										<?php if(has_permission('permissions', 'can_edit') || has_permission('permissions', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
+										<?php endif ?>
 									</tr>
 								</thead>
 								<tbody>

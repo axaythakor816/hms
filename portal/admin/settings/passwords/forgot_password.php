@@ -1,0 +1,60 @@
+<?php
+require_once '../../../../core/init.php';
+
+require_login();
+
+
+?>        
+<div class="page-wrapper">
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                        <li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
+                        <li class="breadcrumb-item active">Forgot Password</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="process_forgot_password.php">
+                            <div class="row">
+                                <h4 class="page-title">Forgot Password</h4>
+                                
+                                <div class="col-12 col-md-6 col-xl-12">  
+                                    <div class="input-block local-forms">
+                                        <label>Email Address <span class="login-danger">*</span></label>
+                                        <input class="form-control" type="email" name="email" placeholder="Enter your registered email" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="doctor-submit text-end">
+                                        <button type="submit" class="btn btn-primary submit-form me-2">Send Reset Link</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </form>
+                        <div class="mt-3">
+                            <a href="settings.php" class="text-primary nav-link" style="font-size: 14px;">Back to Settings</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /Page Content -->
+
+</div>

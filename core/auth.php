@@ -65,20 +65,22 @@ function login($email, $password) {
 // --------------------
 // ROLE REDIRECT FUNCTION
 // --------------------
-// function check_role($roleid)
-// {
-//     if ($roleid == '1') {
-//         return "http://localhost/hms/portal/admin/dashboard.php";
-//     } elseif ($roleid == '2') {
-//         return "http://localhost/hms/portal/doctor/dashboard.php";
-//     } elseif ($roleid == '3') {
-//         return "";
-//     } elseif ($roleid == '4') {
-//         return "";
-//     } elseif ($roleid == '5') {
-//         return "http://localhost/hms/portal/doctor/dashboard.php";
-//     }
-// }
+function is_superadmin($field, $table, $idcolumn, $id) {
+    global $conn;
+
+    $query = "SELECT $field FROM $table WHERE $idcolumn = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+
+    mysqli_stmt_bind_result($stmt, $roleId);
+    mysqli_stmt_fetch($stmt);
+
+    mysqli_stmt_close($stmt);
+
+    return ($roleId == 1);
+}
 
 // --------------------
 // ROLE REDIRECT FUNCTION

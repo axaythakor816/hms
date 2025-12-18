@@ -92,7 +92,9 @@ if(!has_permission('departments', 'can_view')) {
 										<th>Department Description</th>
 										<th data-column="created_at">Ceated Date</th>
 										<th data-column="updated_at">Updated Date</th>
+										<?php if(has_permission('departments', 'can_edit') || has_permission('departments', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
+										<?php endif ?>
 									</tr>
 								</thead>
 								<tbody>

@@ -17,7 +17,7 @@ if(!has_permission('departments', 'can_add')) {
 			<div class="row">
 				<div class="col-sm-12">
 					<ul class="breadcrumb">
-						<li class="breadcrumb-item"><a href="departments/departments.php" class="nav-link">Department </a></li>
+						<li class="breadcrumb-item"><a href="departments/department_list.php" class="nav-link">Department </a></li>
 						<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
 						<li class="breadcrumb-item active">Add Department</li>
 					</ul>

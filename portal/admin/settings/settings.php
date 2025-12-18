@@ -28,8 +28,6 @@ require_role([1]);
 				</div>
 			</div>
 			<!-- /Page Header -->
-
-			<?php require_once 'setting_nav.php' ?>
 			
 			<div class="row">
 				<div class="col-md-6">

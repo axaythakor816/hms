@@ -24,6 +24,4 @@ function require_role($allowed_roles = []) {
     }
 }
 
-
-
 ?>

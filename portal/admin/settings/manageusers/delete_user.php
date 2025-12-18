@@ -17,23 +17,51 @@ if(!verify_csrf($_POST['csrf_token'])) {
 }
 
 $ids = explode(',', $_POST['user_id']);  
-
 $ids = array_filter($ids);
 
 if(empty($ids)) {
     json_response("error", "Invalid request!");
 }
 
-$placeholders = implode(',', array_fill(0, count($ids), '?'));
-$type = str_repeat('i', count($ids));
+$superAdmins = [];
+$idsToDelete = [];
 
-$sql = "DELETE FROM users WHERE user_id IN ($placeholders)";
-$result = delete($sql, $ids, $type);
+foreach ($ids as $id) {
+    if (is_superadmin('role_id', 'users', 'user_id', $id)) {
+        $superAdmins[] = $id; 
+    } else {
+        $idsToDelete[] = $id; 
+    }
+}
 
-$result['message'] = ($result['status'] == "success") ? 
-    "User Deleted Successfully."
-    : $result['message'];
+$result = [];
+if (!empty($idsToDelete)) {
+    $placeholders = implode(',', array_fill(0, count($idsToDelete), '?'));
+    $type = str_repeat('i', count($idsToDelete));
+
+    $sql = "DELETE FROM users WHERE user_id IN ($placeholders)";
+    $result = delete($sql, $idsToDelete, $type);
+}
+
+if (!empty($superAdmins)) {
+    $superMsg = "Super Admin users are protected and cannot be deleted.";
+    if (!empty($idsToDelete) && $result['status'] == "success") {
+        $result['status'] = "success";
+        $result['message'] = "Users deleted successfully. ";
+    } else {
+        $result['status'] = "error";
+        $result['message'] = $superMsg;
+    }
+} else {
+    if (empty($result)) {
+        $result['status'] = "error";
+        $result['message'] = "No records deleted.";
+    } else {
+        $result['message'] = ($result['status'] == "success") ? 
+            "Users deleted successfully." 
+            : $result['message'];
+    }
+}
 
 json_response($result['status'], $result['message'], "", "");
-
 ?>

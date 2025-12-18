@@ -80,9 +80,11 @@ foreach ($result['data'] as $row) {
                 </div>
             </td>
             <td>{$row['id']}</td>
-            <td>" . ucfirst($row['role_name']) . "</td>
+            <td>" . ucwords($row['role_name']) . "</td>
             <td>{$created_at}</td>
             <td>{$updated_at}</td>
+
+             " . (has_permission('roles', 'can_edit') ? "
 
             <td class='text-end'>
                 <a class='dropdown-item edit-btn' href='#'
@@ -91,6 +93,9 @@ foreach ($result['data'] as $row) {
                     <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit
                 </a>
             </td>
+            " : "") . "
+
+            " . (has_permission('roles', 'can_delete') ? "
 
             <td class='text-end'>
                 <a class='dropdown-item delete-btn' href='#' 
@@ -99,6 +104,8 @@ foreach ($result['data'] as $row) {
                     <i class='fa fa-trash'></i> Delete
                 </a>
             </td>
+            " : "") . "
+
         </tr>
     ";
 

@@ -86,23 +86,27 @@ foreach ($result['data'] as $row) {
             <td>{$created_at}</td>
             <td>{$updated_at}</td>
 
+             " . (has_permission('departments', 'can_edit') ? "
             <td class='text-end'>
                 <a class='dropdown-item edit-btn' href='#'
-                data-id='{$row['department_id']}'
-                data-name='{$row['department_name']}'
-                data-head_id='{$row['department_head_id']}'
-                data-desc='{$row['department_description']}' >
+                    data-id='{$row['department_id']}'
+                    data-name='{$row['department_name']}'
+                    data-head_id='{$row['department_head_id']}'
+                    data-desc='{$row['department_description']}'>
                     <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit
                 </a>
             </td>
+            " : "") . "
 
+            " . (has_permission('departments', 'can_delete') ? "
             <td class='text-end'>
-                <a class='dropdown-item delete-btn' href='#' 
-                data-id='{$row['department_id']}'
-                data-name='{$row['department_name']}'>
+                <a class='dropdown-item delete-btn' href='#'
+                    data-id='{$row['department_id']}'
+                    data-name='{$row['department_name']}'>
                     <i class='fa fa-trash'></i> Delete
                 </a>
             </td>
+            " : "") . "
         </tr>
     ";
 

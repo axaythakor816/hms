@@ -1,4 +1,4 @@
-var state = window.state || {
+var state = {
     page: 1,
     perPage: 10,
     search: "",
@@ -28,7 +28,7 @@ $(document).ready(function () {
         loadpagedata();
     });
 
-    $(document).on("click", "#user_Pagination .page-link", function () {
+    $(document).on("click", ".page-link", function () {
         const page = parseInt($(this).data("page"));
         state.page = page;
         loadpagedata();
