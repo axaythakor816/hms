@@ -6,14 +6,14 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('modules', 'can_view')) {
-    showalert('error', 'Access Denine');
+    json_response('error', 'Access Denine');
     exit;
 }
 
 require_role([1]);
 
 if(!verify_csrf($_POST['csrf_token'])) {
-    showalert("error", "Invalid Csrf Token");
+    json_response("error", "Invalid Csrf Token");
     exit;
 }
 

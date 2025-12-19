@@ -148,7 +148,7 @@
                     <ul>
                         <li><a href="settings/settings.php" class="nav-link">General Setting</a></li>
                         <li><a href="settings/profile.php" class="nav-link">My Profile</a></li>
-                        <li><a href="settings/passwords/change-password.php" class="nav-link">Change Password</a></li>
+                        <li><a href="settings/passwords/change_password_page.php" class="nav-link">Change Password</a></li>
                         <?php if(has_permission('roles', 'can_view')) : ?>
                         <li><a href="settings/roles/role_list.php" class="nav-link">Role Settings</a></li>
                         <?php endif;

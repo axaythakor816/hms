@@ -61,7 +61,6 @@ function validateForm(formSelector, rules) {
                 }
             }
 
-
             // mobile
             if (rule === "mobile" && value !== "" &&
                 !/^[0-9]{10}$/.test(value)) {
@@ -98,7 +97,7 @@ function validateForm(formSelector, rules) {
                 let matchValue = $.trim(form.find("[name='" + matchField + "']").val() || '');
 
                 if (value !== matchValue) {
-                    addError(field, capitalize(field) + " does not match the " + capitalize(matchField) + ".");
+                    addError(field, capitalize(field) + " does not match the " + capitalize(matchField.replace(/_/g, ' ').replace(/id/gi, '').trim()) + ".");
                     return true;
                 }
             }
@@ -164,8 +163,16 @@ function validateForm(formSelector, rules) {
     });
 
     function addError(field, msg) {
+        let fieldName = field.replace(/_/g, ' ');
+
+        fieldName = fieldName.replace(/id/gi, '').trim();
+
+        if (fieldName) {
+            fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+        }
+
         if (!errors[field]) errors[field] = [];
-        errors[field].push(msg);
+        errors[field].push(msg.replace(capitalize(field), fieldName));
     }
 
     function capitalize(str) {

@@ -4,7 +4,7 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('manage users', 'can_delete')) {
-	showalert("error", "Access Denine");
+	json_response("error", "Access Denine");
 	exit;
 }
 

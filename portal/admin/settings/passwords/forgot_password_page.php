@@ -27,14 +27,14 @@ require_login();
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="process_forgot_password.php">
+                        <form method="POST" id="send_email_form">
                             <div class="row">
                                 <h4 class="page-title">Forgot Password</h4>
                                 
                                 <div class="col-12 col-md-6 col-xl-12">  
                                     <div class="input-block local-forms">
-                                        <label>Email Address <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="email" name="email" placeholder="Enter your registered email" required>
+                                        <label>User Name <span class="login-danger">*</span></label>
+                                        <input class="form-control" type="email" name="email" placeholder="Enter your Registered email Or Number" required>
                                     </div>
                                 </div>
                                 

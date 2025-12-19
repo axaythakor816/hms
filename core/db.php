@@ -72,10 +72,11 @@ function select($sql, $values = [], $datatypes = "") {
             $result = mysqli_stmt_get_result($stmt);
             $data = [];
 
-            while ($row = mysqli_fetch_assoc($result)) {
-                $data[] = $row;
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $data[] = $row;
+                }
             }
-
             mysqli_stmt_close($stmt);
 
             return [
@@ -171,7 +172,7 @@ function checkDuplicateFields($table, $fields = [], $id = [], $operator = "OR") 
         foreach ($result['data'] as $row) {
             foreach ($fields as $field => $value) {
                 if (strtolower($row[$field]) == strtolower($value)) {
-                    $errors[$field] = ucfirst($field) . " already exists";
+                    $errors[$field] = friendlyFieldName($field) . " already exists";
                 }
             }
         }

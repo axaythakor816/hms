@@ -35,6 +35,14 @@ $department_id = $_POST['department_id'];
 $department_name = $_POST['department_name'];
 $department_head_id = $_POST['department_head_id'];
 $department_description = $_POST['department_description'];
+
+
+$dup = checkDuplicateFields("departments", ["department_name" => $department_name], ['department_id' => $department_id]);
+
+if($dup['status'] === "duplicate") {
+    json_response("error", "", "", $dup['errors']);
+}
+
 $sql = "UPDATE departments SET 
     department_name = ?,
     department_head_id = ?,

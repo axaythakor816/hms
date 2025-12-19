@@ -65,6 +65,20 @@ function filterInput($input, $type = "string") {
     }
 }
 
+function friendlyFieldName($field) {
+    $fieldName = str_replace('_', ' ', $field);
+
+    $fieldName = preg_replace('/id/i', '', $fieldName);
+
+    $fieldName = trim($fieldName);
+    if ($fieldName !== '') {
+        $fieldName = ucfirst($fieldName);
+    }
+
+    return $fieldName;
+}
+
+
 function validate($data, $rules) {
     $errors = [];
 
@@ -79,7 +93,7 @@ function validate($data, $rules) {
             // required
             // -------------------------
             if ($rule === 'required' && $value === '') {
-                $errors[$field][] = ucfirst($field) . " is required.";
+                $errors[$field][] = friendlyFieldName($field) . " is required.";
                 break;
             }
 
@@ -167,7 +181,7 @@ function validate($data, $rules) {
             if (strpos($rule, 'match:') === 0) {
                 $matchField = explode(':', $rule)[1];
                 if ($value !== ($data[$matchField] ?? '')) {
-                    $errors[$field][] = ucfirst($field) . " does not match the " . ucfirst($matchField) . ".";
+                    $errors[$field][] = friendlyFieldName($field) . " does not match the " . friendlyFieldName($matchField) . ".";
                 break;
 
                 }
@@ -189,7 +203,7 @@ function validate($data, $rules) {
             if (strpos($rule, 'min:') === 0) {
                 $min = (int) explode(':', $rule)[1];
                 if (strlen($value) < $min) {
-                    $errors[$field][] = ucfirst($field) . " must be at least $min characters.";
+                    $errors[$field][] = friendlyFieldName($field) . " must be at least $min characters.";
                     break;
                     
                 }
@@ -201,7 +215,7 @@ function validate($data, $rules) {
             if (strpos($rule, 'max:') === 0) {
                 $max = (int) explode(':', $rule)[1];
                 if (strlen($value) > $max) {
-                    $errors[$field][] = ucfirst($field) . " must not exceed $max characters.";
+                    $errors[$field][] = friendlyFieldName($field) . " must not exceed $max characters.";
                     break;
 
                 }
@@ -213,7 +227,7 @@ function validate($data, $rules) {
             if (strpos($rule, 'min_value:') === 0) {
                 $min = (int) explode(':', $rule)[1];
                 if (is_numeric($value) && $value < $min) {
-                    $errors[$field][] = ucfirst($field) . " must be at least $min.";
+                    $errors[$field][] = friendlyFieldName($field) . " must be at least $min.";
                     break;
 
                 }
@@ -225,7 +239,7 @@ function validate($data, $rules) {
             if (strpos($rule, 'max_value:') === 0) {
                 $max = (int) explode(':', $rule)[1];
                 if (is_numeric($value) && $value > $max) {
-                    $errors[$field][] = ucfirst($field) . " must not exceed $max.";
+                    $errors[$field][] = friendlyFieldName($field) . " must not exceed $max.";
                     break;
 
                 }
@@ -237,7 +251,7 @@ function validate($data, $rules) {
             if (strpos($rule, 'regex:') === 0) {
                 $pattern = substr($rule, 6); // regex:/pattern/
                 if (!preg_match($pattern, $value)) {
-                    $errors[$field][] = ucfirst($field) . " format is invalid.";
+                    $errors[$field][] = friendlyFieldName($field) . " format is invalid.";
                     break;
 
                 }
