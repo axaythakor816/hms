@@ -56,7 +56,7 @@ require_role([1]);
                             <div class="d-flex gap-4 mt-1">
 
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="can_view" id="can_view" value="1" checked>
+                                    <input class="form-check-input" type="checkbox" name="can_view" id="can_view" value="1">
                                     <label class="form-check-label">Can View</label>
                                 </div>
 

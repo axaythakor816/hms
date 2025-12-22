@@ -46,7 +46,7 @@ require_role([1]);
                             <div class="input-block local-forms">
                                 <label>Module <span class="login-danger">*</span></label>
                                 <select name="module_id" id="edit_module_id" class="form-select form-control">
-
+                                    <!-- options insertd synamically -->
                                 </select>
 
                                 <span class="error" id="edit_module_error"></span>

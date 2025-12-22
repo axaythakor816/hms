@@ -3,7 +3,6 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-
 ?>        
 <div class="page-wrapper">
     <!-- Page Content -->
@@ -27,27 +26,28 @@ require_login();
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" id="send_email_form">
+                        <form method="POST" id="send_email_form" novalidate>
                             <div class="row">
                                 <h4 class="page-title">Forgot Password</h4>
                                 
                                 <div class="col-12 col-md-6 col-xl-12">  
                                     <div class="input-block local-forms">
                                         <label>User Name <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="email" name="email" placeholder="Enter your Registered email Or Number" required>
+                                        <input class="form-control" type="text" name="user_name" id="user_name" placeholder="Enter your Registered email Or Number" required>
+                                        <span id="user_name_error" class="error"></span>
                                     </div>
                                 </div>
                                 
                                 <div class="col-12">
                                     <div class="doctor-submit text-end">
-                                        <button type="submit" class="btn btn-primary submit-form me-2">Send Reset Link</button>
+                                        <button type="submit" name="send_link" class="btn btn-primary submit-form me-2">Send Reset Link</button>
                                     </div>
                                 </div>
                                 
                             </div>
                         </form>
                         <div class="mt-3">
-                            <a href="settings.php" class="text-primary nav-link" style="font-size: 14px;">Back to Settings</a>
+                            <a href="settings/passwords/change_password_page.php" class="text-primary nav-link" style="font-size: 14px;">Back to Settings</a>
                         </div>
                     </div>
                 </div>
@@ -56,5 +56,5 @@ require_login();
 
     </div>
     <!-- /Page Content -->
-
 </div>
+<script src="../assets/ajax/passwords.js"></script>

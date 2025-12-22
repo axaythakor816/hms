@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    $(".error").text("");
 
     $("#change_password_form").submit(function(e) {
         e.preventDefault();
@@ -62,4 +61,61 @@ $(document).ready(function () {
         });
 
     })
+
+     $("#send_email_form").submit(function(e) {
+        e.preventDefault(); 
+        $(".error").text("");
+
+
+        let rules = {
+            user_name: 'required|username',
+        };
+
+        let errors = validateForm("#send_email_form", rules);
+        
+        if(Object.keys(errors).length > 0) {
+            $.each(errors, function(keys, message) {
+                $("#" + keys + "_error").text(message);
+            });
+            return false;
+        }
+
+        var formdata = new FormData($("#send_email_form")[0]);
+        
+        $.ajax({
+            type: "POST",
+            url: "settings/passwords/send_forgot_password_link.php",
+            data: formdata,
+            beforeSend: function() {
+                $("button[name = 'send_link']").prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Sending...');
+            },
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                  $("button[name = 'send_link']").prop("disabled", false).text("Send Reset Link");
+                    $("#send_email_form")[0].reset(); 
+                if(res.status == 'error') {    
+                    if(res.message) {
+                        showAlert(res.status, res.message);
+                    }else {
+                        $.each(res.errors, function(field, message) {
+                            if(Array.isArray(message)) {
+                                $("#" + field + "_error").text(message.join(", "));
+                            }else{
+                                $("#" + field + "_error").text(message);
+                            }
+                        });
+                    }
+                }else if(res.status == 'success') {
+                    showAlert(res.status, res.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Status: ", status);
+                console.log("Ajax Error: ", error);
+                console.log("Response: ", xhr.responseText);
+            }
+        });
+    });
+
 });

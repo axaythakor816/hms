@@ -1,6 +1,7 @@
 {
     "require": {
         "setasign/fpdf": "^1.8",
-        "phpoffice/phpspreadsheet": "^5.3"
+        "phpoffice/phpspreadsheet": "^5.3",
+        "phpmailer/phpmailer": "^7.0"
     }
 }

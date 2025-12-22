@@ -1,7 +1,9 @@
 <?php
-require_once '../../../../core/init.php';
-
-require_login();
+require_once '../../core/helpers.php';
+require_once '../../core/auth.php';
+require_once '../../core/permissions.php';
+require_once '../../core/db.php';
+require_once '../../vendor/autoload.php';
 
 $rules = [
     'user_name' => 'required|user_name'

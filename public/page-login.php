@@ -136,7 +136,7 @@ if (is_logged_in()) redirect("http://localhost/hms/portal/admin/dashboard.php");
                            <div class="checkbox text-left" style="display: flex; align-items: center; gap: 8px;">
                                 <input type="checkbox" name="remember" id="remember" style="margin: 0;">
                                 <label for="remember" style="margin: 0; cursor: pointer;">Remember Me</label>
-                                <a href="#" class="pull-right text-thm" style="margin-left: auto; text-decoration: none;">Forgot Password?</a>
+                                <a href="forgotpassword/forgot_password_page.php" class="pull-right text-thm" style="margin-left: auto; text-decoration: none;">Forgot Password?</a>
                             </div>
 
 
