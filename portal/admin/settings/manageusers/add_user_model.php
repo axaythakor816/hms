@@ -50,10 +50,64 @@ require_role([1]);
                         <div class="col-md-6 mt-3">
                             <div class="input-block local-forms">
                                 <label>Email <span class="login-danger">*</span></label>
-                                <input type="email" name="email" id="email" placeholder="Enter Email Address" class="form-control">
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <!-- Email Input -->
+                                    <input type="email" name="email" id="email" placeholder="Enter Email Address" class="form-control">
+
+                                    <!-- Verification Icon -->
+                                    <span id="email_verified_icon" style="font-size:20px; color:green;"></span>
+
+                                    <!-- Send Verification Button -->
+                                    <button type="button" id="send_verification_btn" name="send_verification" class="btn btn-sm btn-success">
+                                        Send
+                                    </button>
+                                </div>
+                                <!-- <span class="text-muted d-block mt-1">📧 Verify email before login</span> -->
                                 <span class="error" id="email_error"></span>
                             </div>
                         </div>
+
+                        <!-- OTP Field -->
+                        <div class="col-md-6 mt-3" id="otp_block" style="display:none;">
+                            <div class="input-block local-forms">
+                                <label>Enter OTP <span class="login-danger">*</span></label>
+
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-auto">
+                                        <input type="text" name="otp" id="otp"
+                                            placeholder="Enter OTP"
+                                            class="form-control form-control-sm">
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <button type="button" id="verify_otp_btn" name="verify_otp"
+                                                class="btn btn-primary btn-md">
+                                            Verify OTP
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 🔥 OTP Timer -->
+                               <div class="mt-1 d-flex align-items-center gap-3">
+                                    <small class="text-muted">
+                                        OTP expires in <span id="otp_timer">05:00</span>
+                                    </small>
+
+                                    <button type="button"
+                                            id="resend_otp_btn" name="resend_otp"
+                                            class="btn p-1 btn-info text-light"
+                                            disabled>
+                                        Resend OTP
+                                    </button>
+                                </div>
+                                <span class="error" id="otp_error"></span>
+                            </div>
+                        </div>
+
+
+                        <!-- Hidden Email Verified Field -->
+                        <input type="hidden" name="email_verified" id="email_verified" value="0">
 
                         <!-- Phone -->
                         <div class="col-md-6 mt-3">
@@ -139,7 +193,6 @@ require_role([1]);
 
                             </div>
                         </div>
-
                     </div>
 
                     <div class="text-end mt-4">

@@ -66,7 +66,7 @@ $htmlBody = "
 
 $plainBody = "Dear User,
 
-We received a request to reset your password for your account on Your Company/Project Name.
+We received a request to reset your password for your account on Karn Hospital.
 
 Please open the link below to reset your password:
 $resetLink
@@ -76,8 +76,7 @@ This link is valid for the next 30 minutes and can only be used once.
 If you did not request a password reset, please ignore this email or contact our support team immediately.
 
 Thank you,
-Your Company/Project Name Team
-
+Karn Hospital Support Team
 ---
 This is an automated message, please do not reply.";
 

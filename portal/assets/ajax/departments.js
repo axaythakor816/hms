@@ -193,8 +193,9 @@ $(document).ready(function () {
         let id = $(this).data("id");
         let name = $(this).data("name");
         let head = $(this).data("head_id");
-        let desc = $(this).data("desc");
-
+        // let desc = $(this).data("desc");
+        let desc = String($(this).data("desc") ?? "");
+        
         $("#edit_department_id").val(id);
         $("#edit_department_name").val(name);
         $("#edit_department_description").val(desc);

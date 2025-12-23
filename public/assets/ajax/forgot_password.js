@@ -45,6 +45,7 @@ $(document).ready(function () {
                     }
                 }else if(res.status == "success") {
                     showAlert(res.status, res.message);
+                    $("#user_id").val("");
                     Redirect("http://localhost/hms/public/page-login.php", 2000);
                 }
             },

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 18, 2025 at 01:47 PM
+-- Generation Time: Dec 23, 2025 at 06:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -657,16 +657,18 @@ CREATE TABLE `users` (
   `dob` date DEFAULT NULL,
   `status` enum('active','inactive','blocked') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `reset_token_hash` varchar(255) DEFAULT NULL,
+  `reset_token_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakor@gmail.com', '1234567891', '$2y$10$9ziucdDatnm6R6PvijJ/LOwEzEaV88vJ1JFE/ArMy//DwvdzYqB6u', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-18 11:50:56'),
-(2, '28c95a3b-dc09-11f0-9778-fcaa141337b9', 'abc', 'dfg', 'axay@gmail.com', '1111111111', '$2y$10$MDkhC/35d/HuIEh.LJ0mHO2.VWFVeJ5vMDpgWODFtAJ5LFqlyN1Pm', 2, 'Male', '2026-01-03', 'active', '2025-12-18 12:00:34', '2025-12-18 12:01:59');
+INSERT INTO `users` (`user_id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL),
+(2, '28c95a3b-dc09-11f0-9778-fcaa141337b9', 'abc', 'dfg', 'axay@gmail.com', '1111111111', '$2y$10$MDkhC/35d/HuIEh.LJ0mHO2.VWFVeJ5vMDpgWODFtAJ5LFqlyN1Pm', 2, 'Male', '2026-01-03', 'active', '2025-12-18 12:00:34', '2025-12-18 12:01:59', NULL, NULL);
 
 -- --------------------------------------------------------
 

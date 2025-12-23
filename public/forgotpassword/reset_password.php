@@ -1,11 +1,11 @@
 <?php
 require_once '../../core/config.php';
-// require_once '../../core/db.php';
 require_once '../../core/helpers.php';
 require_once '../../vendor/autoload.php';
 
 $action = $_POST['action'];
 
+// Verify token
 if($action == "verify_token") {
         
     if (!isset($_POST['token']) || empty($_POST['token'])) {
@@ -46,7 +46,9 @@ if($action == "verify_token") {
 
     json_response("success", "", $user_id);
 
-}elseif ($action == 'changepassword') {
+}
+// new password created
+elseif ($action == 'changepassword') {
 
     $rules = [
         'new_password' => 'required|password_strong',
@@ -59,13 +61,13 @@ if($action == "verify_token") {
         json_response("error", "", "", $errors);
     }
 
-    $id = $_POST['user_id'];
+    $user_id = $_POST['user_id'];
 
-    if(empty($id)) {
+    if(empty($user_id)) {
         json_response("error", "invalid Request");
     }
 
-    $password = $_POST['password'] ?? '';
+    $password = $_POST['new_password'] ?? '';
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 

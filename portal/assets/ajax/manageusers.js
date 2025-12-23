@@ -78,6 +78,14 @@ $(document).ready(function () {
         $("#adduser_form")[0].reset();
         $("button[name='save_user']").prop("disabled", false).text("Create User");  
         $(".error").text("");
+        $("input[name='email']").prop("disabled", false);
+        $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+        $('#email_verified_icon').hide("");
+        $('#email_verified').val("");  
+        $("button[name = 'resend_otp']").prop("disabled", true).text('Resend otp');
+        $('#otp_block').hide();
+        $('#send_verification_btn').show()
+
     });
 
     $("#adduser_form").submit(function(e) {
@@ -371,8 +379,224 @@ $(document).ready(function () {
         }, 2000);
     });
 
+    $(document).on('click', '#send_verification_btn', function() {
+        $(".error").text("");
+        
+        let rules = {
+            email: "required|email",
+        };
+
+        let errors = validateForm("#adduser_form", rules);
+
+        if(Object.keys(errors).length > 0) {
+             $.each(errors, function (index, value) {
+                $("#" + index + "_error").text(value);                 
+            });
+            return false;
+        }
+
+        var email = $("input[name = 'email']").val();
+        var csrf_token = $("input[name='csrf_token']").val();
+
+        $.ajax({
+            type: "POST",
+            url: "settings/manageusers/send_and_verifyotp.php",
+            data: {
+                email: email,
+                action: "send_otp",
+                csrf_token: csrf_token,
+            },
+            beforeSend: function() {
+                $("button[name = 'send_verification']").prop("disabled", true).html('<span class="spinner-border spinner-border-sm me-1"></span> Sending...');
+            },
+            dataType: "json",
+            success: function (res) {
+                if(res.status == "error") {
+                    $("button[name = 'send_verification']").prop("disabled", false).text('Send');
+                    if(res.message) {
+                        showAlert(res.status, res.message);
+                    }else{
+                        $.each(res.errors, function(field, message) {
+                            if(Array.isArray(message)) {
+                                $("#" + field + "_error").text(message.join(", "));
+                            } else{
+                                $("#" + field + "_error").text(message);
+                            }
+                        });
+                    }
+                }else if(res.status == "success") {
+                    showAlert(res.status, res.message);
+                    $('#otp_block').show();
+                    $("input[name='email']").prop("disabled", true);
+                    $("button[name = 'send_verification']").prop("disabled", true).text(' Send');
+                    $('#send_verification_btn').hide();
+                    startOtpTimer(300); 
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Status: ", status);
+                console.log("Ajax Error: ", error);
+                console.log("Response: ", xhr.responseText);
+            }
+        });
+        
+    });
+
+    $('#verify_otp_btn').on('click', function() {
+        $(".error").text("");
+
+        let rules = {
+            otp: "required|digits:6"
+        };
+
+        let errors = validateForm("#adduser_form", rules);
+        
+        if(Object.keys(errors).length > 0) {
+            $.each(errors, function(field, message) {
+                $("#" + field + "_error").text(message);
+            });
+            return false;
+        }
+
+        var otp = $('#otp').val();
+        var csrf_token = $("input[name='csrf_token']").val();
+
+        $.ajax({
+            type: "POST",
+            url: "settings/manageusers/send_and_verifyotp.php",
+            data: {
+                otp: otp,
+                csrf_token: csrf_token,
+                action: 'verify_otp'
+            },
+            beforeSend: function() {
+                $("button[name = 'verify_otp']").prop("disabled", true).text('Verifying...');
+            },
+            dataType: "json",
+            success: function (res) {
+                $("button[name = 'verify_otp']").prop("disabled", false).text('Verify OTP');
+                if(res.status == "error") {
+                    
+                    if(res.message) {
+                        showAlert(res.status, res.message);
+                    }else{
+                         $.each(res.errors, function(field, message) {
+                            if(Array.isArray(message)) {
+                                $("#" + field + "_error").text(message.join(", "));
+                            } else{
+                                $("#" + field + "_error").text(message);
+                            }
+                        });
+                    }
+                }else if(res.status == "success") {
+                    showAlert(res.status, res.message);
+                    $('#otp_block').hide();
+                    $('#email_verified_icon').html("✔️");
+                    $("#email_verified").val(res.data);
+                } 
+            },
+            error: function(xhr, status, error){
+                console.log("Status: ", status);
+                console.log("Ajax Error: ", error);
+                console.log("Response: ", xhr.responseText);
+            }
+        });
+    });
+
+    $('#resend_otp_btn').on('click', function () {
+        $(".error").text("");
+        
+        let rules = {
+            email: "required|email",
+        };
+
+        let errors = validateForm("#adduser_form", rules);
+
+        if(Object.keys(errors).length > 0) {
+             $.each(errors, function (index, value) {
+                $("#" + index + "_error").text(value);                 
+            });
+            return false;
+        }
+
+        var email = $("input[name = 'email']").val();
+        var csrf_token = $("input[name='csrf_token']").val();
+
+        $.ajax({
+            type: "POST",
+            url: "settings/manageusers/send_and_verifyotp.php",
+            data: {
+                email: email,
+                action: "send_otp",
+                csrf_token: csrf_token,
+            },
+            beforeSend: function() {
+                $("button[name = 'resend_otp']").prop("disabled", true).text('Resending...');
+            },
+            dataType: "json",
+            success: function (res) {
+                if(res.status == "error") {
+                    $("button[name = 'resend_otp']").prop("disabled", false).text('Resend otp');
+                    if(res.message) {
+                        showAlert(res.status, res.message);
+                    }else{
+                        $.each(res.errors, function(field, message) {
+                            if(Array.isArray(message)) {
+                                $("#" + field + "_error").text(message.join(", "));
+                            } else{
+                                $("#" + field + "_error").text(message);
+                            }
+                        });
+                    }
+                }else if(res.status == "success") {
+                    showAlert(res.status, "OTP has been resent to your email. Please check your inbox.");
+                    $("button[name = 'resend_otp']").prop("disabled", true).text('Resend otp');
+                    startOtpTimer(300); 
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Status: ", status);
+                console.log("Ajax Error: ", error);
+                console.log("Response: ", xhr.responseText);
+            }
+        });
+    }); 
 
 });
+
+let otpInterval = null;
+
+function startOtpTimer(duration = 300) {
+    if (otpInterval) {
+        clearInterval(otpInterval);
+    }
+
+    otpTime = duration;
+    $('#resend_otp_btn').prop('disabled', true);
+    updateOtpTimerUI();
+
+    otpInterval = setInterval(() => {
+        otpTime--;
+        updateOtpTimerUI();
+
+        if (otpTime <= 0) {
+            clearInterval(otpInterval);
+            otpInterval = null; // reset
+            $('#otp_timer').text('Expired');
+            $('#resend_otp_btn').prop('disabled', false);
+        }
+    }, 1000);
+}
+
+function updateOtpTimerUI() {
+    let min = Math.floor(otpTime / 60);
+    let sec = otpTime % 60;
+
+    $('#otp_timer').text(
+        `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`
+    );
+}
+
 
 function get_roles(callback) {
     let csrf_token = $("#csrf_token").val();
@@ -449,3 +673,4 @@ function updateDeleteButtonState() {
         $(".user-delete").addClass("disabled");
     }
 }
+
