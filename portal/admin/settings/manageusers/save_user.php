@@ -46,6 +46,7 @@ $gender = $_POST['gender'];
 $dob = $_POST['dob'];
 $status = $_POST['status'];
 $password = password_hash($password, PASSWORD_DEFAULT);
+$verified_email = strtolower($_POST['email_verified']);
 
 $dup = checkDuplicateFields("users", ["email" => $email, "phone" => $phone]);
 
@@ -53,11 +54,19 @@ if($dup['status'] === "duplicate") {
     json_response("error", "", "", $dup['errors']);
 }
 
+if(empty($verified_email) || $verified_email != $email || $_SESSION['email_verified'] != $email) {
+    json_response("error", "", "unveryfied", ["email" => "Please verify your email."]);
+}
+
 $query = "INSERT INTO users (first_name, last_name, email, phone, password, role_id, gender, dob, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 $types = "sssisisss";
 $values = [$first_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status];
 
 $result = insert($query, $values, $types);
+
+if($result['status'] == "success") {
+    unset($_SESSION['email_verified']);
+}
 
 $result['message'] = ($result['status'] === "success") 
     ? "User Created Successfully." 

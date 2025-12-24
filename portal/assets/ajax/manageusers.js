@@ -72,20 +72,22 @@ $(document).ready(function () {
     
     $("#addUserModal").on("show.bs.modal", function() {
         get_roles();
+        $("#email_verified").val(""); 
+        $('#email_verified_icon').hide();
+        $('#send_verification_btn').show();
     });
 
     $("#addUserModal").on("hide.bs.modal", function () {
         $("#adduser_form")[0].reset();
         $("button[name='save_user']").prop("disabled", false).text("Create User");  
         $(".error").text("");
-        $("input[name='email']").prop("disabled", false);
+        $("input[name='email']").prop("readonly", false);
         $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
-        $('#email_verified_icon').hide("");
+        $('#email_verified_icon').hide();
         $('#email_verified').val("");  
         $("button[name = 'resend_otp']").prop("disabled", true).text('Resend otp');
-        $('#otp_block').hide();
-        $('#send_verification_btn').show()
-
+        $('.otp_block').hide();
+        $('#send_verification_btn').show();
     });
 
     $("#adduser_form").submit(function(e) {
@@ -114,6 +116,30 @@ $(document).ready(function () {
             return false;
         }
 
+        let otpVisible = $(this).closest("form").find(".otp_block").is(":visible");
+
+        if(otpVisible) {
+            var checkotp = $("#otp").val().trim();
+            if(!checkotp) {
+                $("#otp_error").text("Otp Is Required.");
+                return false;
+            }
+        }
+
+        let verified_email = $("input[name = 'email_verified']").val().trim();
+        let current_email = $("#email").val().trim();
+
+        if(!verified_email || verified_email !== current_email) {
+            $("#email_error").text("Please verify your email.");
+            $("input[name='email']").prop("readonly", false);
+            $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+            $('#send_verification_btn').show();
+            $("#otp").val('');
+            $('#email_verified_icon').hide("");
+
+            return false; 
+        }
+
         var form = $("#adduser_form")[0];
         var formdata = new FormData(form);
 
@@ -139,6 +165,13 @@ $(document).ready(function () {
                                 $("#" + field + "_error").text(message.join(", "));
                             } else{
                                 $("#" + field + "_error").text(message);
+                                if(res.data == "unveryfied") {
+                                    $("input[name='email']").prop("readonly", false);
+                                    $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+                                    $('#send_verification_btn').show();
+                                    $("#otp").val('');
+                                    $('#email_verified_icon').hide("");
+                                }
                             }
                         });
                     }
@@ -163,6 +196,13 @@ $(document).ready(function () {
         $("#edituser_form")[0].reset();
         $(".error").text("");
         $("button[name='update_user']").prop("disabled", false).text("Update User");  
+        $("input[name='email']").prop("readonly", false);
+        $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+        $('#edit_email_verified_icon').hide();
+        $('#edit_email_verified').val("");  
+        $("button[name = 'resend_otp']").prop("disabled", true).text('Resend otp');
+        $('.otp_block').hide();
+        $('#edit_send_verification_btn').show();
 
     });
 
@@ -178,8 +218,8 @@ $(document).ready(function () {
         let status = $(this).data("status");
         let gender = $(this).data("gender");
 
-
         $("#edit_user_id").val(id);
+
         get_roles(function() {
             $("#edit_role_id").val(role).trigger("change");
         });
@@ -192,8 +232,14 @@ $(document).ready(function () {
         $("#edit_phone").val(phone);
         $("#edit_dob").val(dob);
         $("#edit_status").val(status);
-
         $("#editUserModal").modal("show");
+
+        $('#edit_send_verification_btn').hide();
+
+        $("#edit_email_verified").val(email); 
+        $('#edit_email_verified_icon').show();
+        // console.log($("#edit_email_verified").val());
+
     });
 
     $("#edituser_form").submit(function(e) {
@@ -222,6 +268,31 @@ $(document).ready(function () {
             return false;
         }
 
+        let otpVisible = $(this).closest("form").find(".otp_block").is(":visible");
+
+        if(otpVisible) {
+            var checkotp = $("#edit_otp").val().trim();
+            if(!checkotp) {
+                $("#edit_otp_error").text("Otp Is Required.");
+                return false;
+            }
+        }
+
+        let verified_email = $(this).closest("form").find("input[name='email_verified']").val().trim();
+        let current_email  = $(this).closest("form").find("input[name='email']").val().trim();
+
+        if(!verified_email || verified_email !== current_email) {
+            $("#edit_email_error").text("Please verify your email.");
+            $("input[name='email']").prop("readonly", false);
+            $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+            $('#edit_send_verification_btn').show();
+            $("#edit_otp").val('');
+            $('#edit_email_verified_icon').hide();
+
+            return false; 
+        }
+        let near = $(this).closest("form");
+
         var form = $("#edituser_form")[0];
         var formdata = new FormData(form);
 
@@ -246,6 +317,13 @@ $(document).ready(function () {
                                 $("#edit_" + field + "_error").text(message.join(", "));
                             }else{
                                 $("#edit_" + field + "_error").text(message);
+                                if(res.data == "unveryfied") {
+                                    near.find("input[name='email']").prop("readonly", false);
+                                    near.find("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+                                    near.find('#edit_send_verification_btn').show();
+                                    near.find("#edit_otp").val('');
+                                    near.find('#edit_email_verified_icon').hide("");
+                                }
                             }
                         });
                     }
@@ -379,29 +457,36 @@ $(document).ready(function () {
         }, 2000);
     });
 
-    $(document).on('click', '#send_verification_btn', function() {
+    $(document).on('click', '.send_verification_btn', function() {
         $(".error").text("");
         
         let rules = {
             email: "required|email",
         };
 
-        let errors = validateForm("#adduser_form", rules);
+        // let errors = validateForm("#adduser_form", rules);
+        let errors = validateForm('#' + $(this).closest("form").attr("id"), rules);
+        let formId = $(this).closest("form").attr("id");
 
         if(Object.keys(errors).length > 0) {
-             $.each(errors, function (index, value) {
-                $("#" + index + "_error").text(value);                 
+            $.each(errors, function(index, value) {
+                $("#" + (formId === "edituser_form" ? "edit_" : "") + index + "_error").text(value);
             });
             return false;
         }
 
-        var email = $("input[name = 'email']").val();
-        var csrf_token = $("input[name='csrf_token']").val();
+        // var email = $("input[name = 'email']").val();
+        // var csrf_token = $("input[name='csrf_token']").val();
+
+        var email = $(this).closest("form").find("input[name='email']").val();
+        var csrf_token = $(this).closest("form").find("input[name='csrf_token']").val();
+        var edit_id = $(this).closest("form").find("#edit_user_id").val();
 
         $.ajax({
             type: "POST",
             url: "settings/manageusers/send_and_verifyotp.php",
             data: {
+                user_id: edit_id,
                 email: email,
                 action: "send_otp",
                 csrf_token: csrf_token,
@@ -417,19 +502,16 @@ $(document).ready(function () {
                         showAlert(res.status, res.message);
                     }else{
                         $.each(res.errors, function(field, message) {
-                            if(Array.isArray(message)) {
-                                $("#" + field + "_error").text(message.join(", "));
-                            } else{
-                                $("#" + field + "_error").text(message);
-                            }
+                            let prefix = (formId === "edituser_form") ? "edit_" : "";
+                            $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
                         });
                     }
                 }else if(res.status == "success") {
                     showAlert(res.status, res.message);
-                    $('#otp_block').show();
-                    $("input[name='email']").prop("disabled", true);
+                    $('.otp_block').show();
+                    $("input[name='email']").prop("readonly", true);
                     $("button[name = 'send_verification']").prop("disabled", true).text(' Send');
-                    $('#send_verification_btn').hide();
+                    $('.send_verification_btn').hide();
                     startOtpTimer(300); 
                 }
             },
@@ -442,24 +524,33 @@ $(document).ready(function () {
         
     });
 
-    $('#verify_otp_btn').on('click', function() {
+    $(document).on('click', '.verify_otp_btn', function() {
         $(".error").text("");
 
         let rules = {
             otp: "required|digits:6"
         };
 
-        let errors = validateForm("#adduser_form", rules);
+        let form = $(this).closest("form");
+        // let errors = validateForm("#adduser_form", rules);
+        let errors = validateForm('#' + $(this).closest("form").attr("id"), rules);
+        let formId = $(this).closest("form").attr("id");
+
         
         if(Object.keys(errors).length > 0) {
-            $.each(errors, function(field, message) {
-                $("#" + field + "_error").text(message);
+            console.log("errors ", errors);
+            console.log("formid ", formId);
+
+            $.each(errors, function(index, value) {
+                $("#" + (formId === "edituser_form" ? "edit_" : "") + index + "_error").text(value);
             });
             return false;
         }
 
-        var otp = $('#otp').val();
-        var csrf_token = $("input[name='csrf_token']").val();
+        // var otp = $("input[name = 'otp']").val();
+        // var csrf_token = $("input[name='csrf_token']").val();
+        var csrf_token = $(this).closest("form").find("input[name='csrf_token']").val();
+        var otp = $(this).closest("form").find("input[name='otp']").val();
 
         $.ajax({
             type: "POST",
@@ -480,19 +571,18 @@ $(document).ready(function () {
                     if(res.message) {
                         showAlert(res.status, res.message);
                     }else{
-                         $.each(res.errors, function(field, message) {
-                            if(Array.isArray(message)) {
-                                $("#" + field + "_error").text(message.join(", "));
-                            } else{
-                                $("#" + field + "_error").text(message);
-                            }
+                        $.each(res.errors, function(field, message) {
+                            let prefix = (formId === "edituser_form") ? "edit_" : "";
+                            $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
                         });
                     }
                 }else if(res.status == "success") {
                     showAlert(res.status, res.message);
-                    $('#otp_block').hide();
-                    $('#email_verified_icon').html("✔️");
-                    $("#email_verified").val(res.data);
+                    $('.otp_block').hide();
+                    $('.email_verified_icon').show();
+                    // $("input[name = 'email_verified']").val(res.data);
+                    form.find("input[name='email_verified']").val(res.data);
+
                 } 
             },
             error: function(xhr, status, error){
@@ -503,24 +593,30 @@ $(document).ready(function () {
         });
     });
 
-    $('#resend_otp_btn').on('click', function () {
+    $(document).on('click', '.resend_otp_btn', function () {
         $(".error").text("");
         
         let rules = {
             email: "required|email",
         };
 
-        let errors = validateForm("#adduser_form", rules);
+        // let errors = validateForm("#adduser_form", rules);
+        let errors = validateForm('#' + $(this).closest("form").attr("id"), rules);
+        let formId = $(this).closest("form").attr("id");
 
         if(Object.keys(errors).length > 0) {
-             $.each(errors, function (index, value) {
-                $("#" + index + "_error").text(value);                 
+            let formId = $(this).closest("form").attr("id");
+            $.each(errors, function(index, value) {
+                $("#" + (formId === "edituser_form" ? "edit_" : "") + index + "_error").text(value);
             });
             return false;
         }
 
-        var email = $("input[name = 'email']").val();
-        var csrf_token = $("input[name='csrf_token']").val();
+        var email = $(this).closest("form").find("input[name='email']").val();
+        var csrf_token = $(this).closest("form").find("input[name='csrf_token']").val();
+
+        // var email = $("input[name = 'email']").val();
+        // var csrf_token = $("input[name='csrf_token']").val();
 
         $.ajax({
             type: "POST",
@@ -541,11 +637,8 @@ $(document).ready(function () {
                         showAlert(res.status, res.message);
                     }else{
                         $.each(res.errors, function(field, message) {
-                            if(Array.isArray(message)) {
-                                $("#" + field + "_error").text(message.join(", "));
-                            } else{
-                                $("#" + field + "_error").text(message);
-                            }
+                            let prefix = (formId === "edituser_form") ? "edit_" : "";
+                            $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
                         });
                     }
                 }else if(res.status == "success") {
@@ -572,7 +665,7 @@ function startOtpTimer(duration = 300) {
     }
 
     otpTime = duration;
-    $('#resend_otp_btn').prop('disabled', true);
+    $('.resend_otp_btn').prop('disabled', true);
     updateOtpTimerUI();
 
     otpInterval = setInterval(() => {
@@ -581,9 +674,9 @@ function startOtpTimer(duration = 300) {
 
         if (otpTime <= 0) {
             clearInterval(otpInterval);
-            otpInterval = null; // reset
-            $('#otp_timer').text('Expired');
-            $('#resend_otp_btn').prop('disabled', false);
+            otpInterval = null;
+            $('.otp_timer').text('Expired');
+            $('.resend_otp_btn').prop('disabled', false);
         }
     }, 1000);
 }
@@ -592,7 +685,7 @@ function updateOtpTimerUI() {
     let min = Math.floor(otpTime / 60);
     let sec = otpTime % 60;
 
-    $('#otp_timer').text(
+    $('.otp_timer').text(
         `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`
     );
 }

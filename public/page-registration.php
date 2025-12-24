@@ -124,12 +124,47 @@
                                 <span class="error" id="name_error"></span><br>
                                 <input type="text" name="name" id="name" class="form-control" placeholder="Enter your full name" required>
                             </div>
-
+                            
                             <div class="form-group text-left">
                                 <label for="email"><i class="fa fa-envelope text-thm"></i> Email Address</label>
-                                <span class="error" id="email_error"></span><br>
-                                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="username">
+                                <span class="error" id="email_error"></span>
+
+                                <div class="input-group mt-1">
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="username">
+
+                                    <span class="input-group-btn">
+                                        <button type="button" id="send_verification_btn" name="send_verification" class="btn btn-success">
+                                            Send
+                                        </button>
+                                    </span>
+                                </div>
+
+                                <!-- Verified Icon Thoda Side Me -->
+                                <span id="email_verified_icon" class="email_verified_icon" style="font-size:20px; color:green; display:none; margin-left: 10px; margin-top: 5px; display: inline-block;">
+                                    ✔️
+                                </span>
                             </div>
+
+                            <!-- OTP Field -->
+                            <div class="form-group text-left otp_block" id="otp_block" style="display:none;">
+                                <label>Enter OTP <span class="login-danger">*</span></label>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-auto">
+                                        <input type="text" name="otp" id="otp" class="form-control form-control-sm" placeholder="Enter OTP">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" id="verify_otp_btn" name="verify_otp" class="btn btn-primary btn-md verify_otp_btn">Verify OTP</button>
+                                    </div>
+                                </div>
+                                <div class="mt-1 d-flex align-items-center gap-3">
+                                    <small class="text-muted">OTP expires in <span id="otp_timer" class="otp_timer">05:00</span></small>
+                                    <button type="button" id="resend_otp_btn" name="resend_otp" class="btn p-1 btn-info text-light resend_otp_btn" disabled>Resend OTP</button>
+                                </div>
+                                <span class="error" id="otp_error"></span>
+                            </div>
+
+                            <!-- Hidden Field to store verified email -->
+                            <input type="hidden" name="email_verified" id="email_verified" value="">
 
                             <div class="form-group text-left">
                                 <label for="phone"><i class="fa fa-phone text-thm"></i> Phone Number</label>

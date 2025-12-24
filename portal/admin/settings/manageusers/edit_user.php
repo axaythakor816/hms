@@ -43,10 +43,25 @@ $role_id    = $_POST['role_id'];
 $gender     = $_POST['gender'];
 $dob        = $_POST['dob'];
 $status     = $_POST['status'];
+$verified_email = strtolower($_POST['email_verified'] ?? '');
 
 $dup = checkDuplicateFields("users", ["email" => $email, "phone" => $phone], ["user_id" => $user_id]);
 if($dup['status'] === "duplicate") {
     json_response("error", "", "", $dup['errors']);
+}
+
+$checksql = "SELECT email FROM users WHERE user_id = ?";
+$checkvalue = [$user_id];
+$checktype = "i";
+
+$checkresult = select($checksql, $checkvalue, $checktype);
+
+$original_email_from_db = $checkresult['data'][0]['email'];
+
+if ($email !== $original_email_from_db) {
+    if (empty($verified_email) || !isset($_SESSION['email_verified']) || $_SESSION['email_verified'] != $email) {
+        json_response("error", "", "unverified", ["email" => "Please verify your email."]);
+    }
 }
 
 if (is_superadmin('role_id','users', 'user_id', $user_id)) {
