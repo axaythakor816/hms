@@ -198,7 +198,7 @@
                                 </button>
                             </div>
 
-                            <div class="text-center mt20">
+                            <div class="text-center" style="margin-top: 20px">
                                 <p>Already have an account? <a href="page-login.php" class="text-thm">Login Here</a></p>
                             </div>
                         </form>

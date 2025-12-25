@@ -139,6 +139,6 @@ if(has_permission('departments', 'can_delete')) {
 ?>
 
 <script src="../assets/ajax/departments.js"></script>
-<script>
+<!-- <script>
 	loadpagedata();
-</script>
+</script> -->

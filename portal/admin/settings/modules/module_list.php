@@ -137,6 +137,6 @@ require_role([1]);
 <script src="../assets/ajax/modules.js"></script>
 
 
-<script>
+<!-- <script>
 	loadpagedata();
-</script>
+</script> -->

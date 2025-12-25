@@ -28,7 +28,7 @@ $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
 
 $allowedCols = ['module_id', 'module_name', 'created_at', 'updated_at'];
 
-if(in_array($sortColumn, $allowedCols)) {
+if(!in_array($sortColumn, $allowedCols)) {
     $sortColumn = 'module_id';
 
 }

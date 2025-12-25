@@ -144,7 +144,7 @@ if (is_logged_in()) redirect("http://localhost/hms/portal/admin/dashboard.php");
                                 <button type="submit" name="login" class="btn btn-lg ulockd-btn-thm2">Login <i class="fa fa-sign-in"></i></button>
                             </div>
 
-                            <div class="text-center mt20">
+                            <div class="text-center" style="margin-top: 20px;">
                                 <p>Don't have an account? <a href="page-registration.php" class="text-thm">Register Now</a></p>
                             </div>
                         </form>

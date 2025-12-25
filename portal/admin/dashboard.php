@@ -44,6 +44,13 @@ require_once('../includes/footer.php');
       method: 'post',
       success: function(data) {
         $('#content-container').html(data);
+          if (window.state) {
+            state.page = 1;
+            state.perPage = 10;
+            state.search = "";
+            state.sortOrder = "ASC";
+          }
+
       },
       error: function(xhr, status, error) {
         console.log("Ajax Error: ", error);

@@ -143,7 +143,7 @@ require_role([1]);
 ?>
 
 <script src="../assets/ajax/manageusers.js"></script>
-
+<!-- 
 <script>
 	loadpagedata();
-</script>
+</script> -->
