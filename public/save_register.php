@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../core/config.php';
 require_once '../core/helpers.php';
 require_once '../core/db.php';
@@ -18,11 +19,13 @@ if(!empty($errors)) {
 }
 
 $name = $_POST['name'];
-$email = $_POST['email'];
+$email = strtolower($_POST['email']);
 $phone = $_POST['phone'];
 $password = $_POST['password'];
 $confirm_password = $_POST['confirm_password'];
 // $uuid = uuid();
+$verified_email = strtolower($_POST['email_verified']);
+
 
 $fields = [
     'email' => $email,
@@ -34,12 +37,20 @@ if ($dup['status'] === "duplicate") {
     json_response("error", "", "", $dup['errors']);
 }
 
+if(empty($verified_email) || $verified_email != $email || $_SESSION['email_verified'] != $email) {
+    json_response("error", "", "unveryfied", ["email" => "Please verify your email."]);
+}
+
 $password = password_hash($password, PASSWORD_DEFAULT);
 
 $sql = "INSERT INTO users (first_name, email, phone, password) VALUES (?,?,?,?)";
 $values = [$name, $email, $phone, $password];
 $types = "ssss";
 $result = insert($sql, $values, $types);
+
+if($result['status'] == "success") {
+    unset($_SESSION['email_verified']);
+}
 
 $result['message'] = ($result['status'] === "success") 
     ? "Registration Successful. Continue To Login..." 

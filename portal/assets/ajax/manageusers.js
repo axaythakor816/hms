@@ -13,7 +13,7 @@ window.state = window.state || {
     $(document).ready(function () {
         loadpagedata();
 
-        $("#searchInput").on("keyup", function () {
+        $(".user-search-blk #searchInput").on("keyup", function () {
             state.search = $(this).val();
             state.page = 1;
             loadpagedata();
@@ -33,19 +33,19 @@ window.state = window.state || {
             loadpagedata();
         });
 
-        $(document).on("click", ".page-link", function () {
+        $(document).on("click", "#user_Pagination .page-link", function () {
             const page = parseInt($(this).data("page"));
             state.page = page;
             loadpagedata();
         });
 
-        $("#RecordsPerPage").on("change", function () {
+        $(".user-search-blk #RecordsPerPage").on("change", function () {
             state.perPage = parseInt($(this).val());
             state.page = 1;
             loadpagedata();
         });
 
-        $(document).on("click", "th[data-column]", function () {
+        $(document).on("click", "#user_table th[data-column]", function () {
             let col = $(this).data("column");
 
             if (state.sortColumn === col) {
@@ -583,11 +583,11 @@ window.state = window.state || {
                         }
                     }else if(res.status == "success") {
                         showAlert(res.status, res.message);
+                        $("button[name = 'verify_otp']").prop("disabled", false).text('Verify OTP');
                         $('.otp_block').hide();
                         $('.email_verified_icon').show();
                         // $("input[name = 'email_verified']").val(res.data);
                         form.find("input[name='email_verified']").val(res.data);
-
                     } 
                 },
                 error: function(xhr, status, error){
@@ -723,6 +723,8 @@ window.state = window.state || {
     function loadpagedata() {
         const { page, perPage, search, sortColumn, sortOrder} = state;
         const csrf_token = $("#user_csrf_token").val();
+        const table = $("#user_table");
+        if (!table.length) return;
         
         $.ajax({
             type: "POST",

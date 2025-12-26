@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 23, 2025 at 06:06 AM
+-- Generation Time: Dec 26, 2025 at 02:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -181,9 +181,6 @@ CREATE TABLE `discharge_summaries` (
 CREATE TABLE `doctors` (
   `doctor_id` bigint(20) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `uuid` char(36) NOT NULL,
-  `display_name` varchar(150) DEFAULT NULL,
-  `photo_url` varchar(1000) DEFAULT NULL,
   `specialty` varchar(150) DEFAULT NULL,
   `sub_specialty` varchar(150) DEFAULT NULL,
   `qualification` varchar(255) DEFAULT NULL,
@@ -198,12 +195,9 @@ CREATE TABLE `doctors` (
   `available_time_to` time DEFAULT NULL,
   `languages_spoken` varchar(255) DEFAULT NULL,
   `bio` text DEFAULT NULL,
-  `email_verified` tinyint(1) DEFAULT 0,
-  `phone_verified` tinyint(1) DEFAULT 0,
   `is_consultation_online` tinyint(1) DEFAULT 0,
   `ratings_avg` decimal(3,2) DEFAULT 0.00,
   `ratings_count` int(11) DEFAULT 0,
-  `password_hash` varchar(255) NOT NULL,
   `two_fa_enabled` tinyint(1) DEFAULT 0,
   `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`)),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -647,6 +641,7 @@ CREATE TABLE `tax` (
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `uuid` varchar(36) NOT NULL DEFAULT uuid(),
+  `profile_image` varchar(1000) DEFAULT NULL,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
@@ -666,9 +661,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `uuid`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', 'axay', 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL),
-(2, '28c95a3b-dc09-11f0-9778-fcaa141337b9', 'abc', 'dfg', 'axay@gmail.com', '1111111111', '$2y$10$MDkhC/35d/HuIEh.LJ0mHO2.VWFVeJ5vMDpgWODFtAJ5LFqlyN1Pm', 2, 'Male', '2026-01-03', 'active', '2025-12-18 12:00:34', '2025-12-18 12:01:59', NULL, NULL);
+INSERT INTO `users` (`user_id`, `uuid`, `profile_image`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL),
+(2, '28c95a3b-dc09-11f0-9778-fcaa141337b9', NULL, 'abc', 'dfg', 'axay@gmail.com', '1111111111', '$2y$10$MDkhC/35d/HuIEh.LJ0mHO2.VWFVeJ5vMDpgWODFtAJ5LFqlyN1Pm', 2, 'Male', '2026-01-03', 'active', '2025-12-18 12:00:34', '2025-12-18 12:01:59', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -785,7 +780,6 @@ ALTER TABLE `discharge_summaries`
 ALTER TABLE `doctors`
   ADD PRIMARY KEY (`doctor_id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
-  ADD UNIQUE KEY `uuid` (`uuid`),
   ADD UNIQUE KEY `medical_license_no` (`medical_license_no`),
   ADD KEY `department_id` (`department_id`),
   ADD KEY `specialty` (`specialty`),

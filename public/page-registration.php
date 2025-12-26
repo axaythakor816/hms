@@ -126,39 +126,35 @@
                             </div>
                             
                             <div class="form-group text-left">
+                                
                                 <label for="email"><i class="fa fa-envelope text-thm"></i> Email Address</label>
-                                <span class="error" id="email_error"></span>
 
-                                <div class="input-group mt-1">
-                                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="username">
+                                <div style="display:flex; align-items:center;">
+                                    <input type="email" id="email" name="email" style="flex:1; margin-right:5px;" class="form-control" placeholder="Enter your email">
+                                    <span id="email_verified_icon" style="display:none; font-size:20px; color:green;">✔️</span>
 
-                                    <span class="input-group-btn">
-                                        <button type="button" id="send_verification_btn" name="send_verification" class="btn btn-success">
-                                            Send
-                                        </button>
-                                    </span>
+                                    <button type="button" name="send_verification" id="send_verification_btn" class="btn btn-info">Send</button>
                                 </div>
 
-                                <!-- Verified Icon Thoda Side Me -->
-                                <span id="email_verified_icon" class="email_verified_icon" style="font-size:20px; color:green; display:none; margin-left: 10px; margin-top: 5px; display: inline-block;">
-                                    ✔️
-                                </span>
+                                <span class="error" id="email_error"></span>
+
                             </div>
 
                             <!-- OTP Field -->
                             <div class="form-group text-left otp_block" id="otp_block" style="display:none;">
-                                <label>Enter OTP <span class="login-danger">*</span></label>
-                                <div class="row g-2 align-items-center">
-                                    <div class="col-auto">
-                                        <input type="text" name="otp" id="otp" class="form-control form-control-sm" placeholder="Enter OTP">
-                                    </div>
-                                    <div class="col-auto">
+                                <label><i class="fa fa-key text-thm"></i> Enter OTP <span class="login-danger">*</span></label>
+
+                                <div style="display:flex; align-items:center;">
+                                        <input type="text" name="otp" id="otp" style="flex:1; margin-right:5px;" class="form-control form-control-sm" placeholder="Enter OTP">
+
                                         <button type="button" id="verify_otp_btn" name="verify_otp" class="btn btn-primary btn-md verify_otp_btn">Verify OTP</button>
-                                    </div>
                                 </div>
-                                <div class="mt-1 d-flex align-items-center gap-3">
+                                <span class="error" id="otp_error"></span>
+
+
+                                <div style="display:flex; align-items:center; margin-top: 5px;">
                                     <small class="text-muted">OTP expires in <span id="otp_timer" class="otp_timer">05:00</span></small>
-                                    <button type="button" id="resend_otp_btn" name="resend_otp" class="btn p-1 btn-info text-light resend_otp_btn" disabled>Resend OTP</button>
+                                    <button type="button" id="resend_otp_btn" name="resend_otp" class="btn p-1 btn-info text-light resend_otp_btn" style="margin-left: 5px;" disabled>Resend OTP</button>
                                 </div>
                                 <span class="error" id="otp_error"></span>
                             </div>
@@ -222,7 +218,7 @@
 <script type="text/javascript" src="assets/js/wow.min.js"></script>
 <script type="text/javascript" src="assets/js/slider.js"></script>
 <script type="text/javascript" src="assets/js/video-player.js"></script>
-<script type="text/javascript" src="assets/js/jflickrfeed.min.js"></script>
+<!-- <script type="text/javascript" src="assets/js/jflickrfeed.min.js"></script> -->
 <script type="text/javascript" src="assets/js/timepicker.js"></script>
 <script type="text/javascript" src="assets/js/tweetie.js"></script>
 <!-- Color Switcher script --> 

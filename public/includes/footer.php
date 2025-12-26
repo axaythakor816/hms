@@ -184,7 +184,7 @@
 <script type="text/javascript" src="assets/js/wow.min.js"></script>
 <script type="text/javascript" src="assets/js/slider.js"></script>
 <script type="text/javascript" src="assets/js/video-player.js"></script>
-<script type="text/javascript" src="assets/js/jflickrfeed.min.js"></script>
+<!-- <script type="text/javascript" src="assets/js/jflickrfeed.min.js"></script> -->
 <script type="text/javascript" src="assets/js/timepicker.js"></script>
 <script type="text/javascript" src="assets/js/tweetie.js"></script>
 <!-- Color Switcher script --> 

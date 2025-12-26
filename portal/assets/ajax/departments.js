@@ -12,7 +12,7 @@ window.state = window.state || {
     $(document).ready(function () {
         loadpagedata();
 
-        $("#searchInput").on("keyup", function () {
+        $(".department-table-blk #searchInput").on("keyup", function () {
             state.search = $(this).val();
             state.page = 1;
             loadpagedata();
@@ -32,19 +32,19 @@ window.state = window.state || {
             loadpagedata();
         });
 
-        $(document).on("click", ".page-link", function () {
+        $(document).on("click", "#department_Pagination .page-link", function () {
             const page = parseInt($(this).data("page"));
             state.page = page;
             loadpagedata();
         });
 
-        $("#RecordsPerPage").on("change", function () {
+        $(".department-table-blk #RecordsPerPage").on("change", function () {
             state.perPage = parseInt($(this).val());
             state.page = 1;
             loadpagedata();
         });
 
-        $(document).on("click", "th[data-column]", function () {
+        $(document).on("click", "#department_table th[data-column]", function () {
             let col = $(this).data("column");
 
             if (state.sortColumn === col) {
@@ -414,7 +414,9 @@ window.state = window.state || {
     function loadpagedata() {
         const { page, perPage, search, sortColumn, sortOrder } = state;
         const token = $('#department_csrf_token').val();
-
+        const table = $("#department_table");
+        if (!table.length) return;
+        
         $.ajax({
             type: "POST",
             url: "departments/get_departmentdata.php",

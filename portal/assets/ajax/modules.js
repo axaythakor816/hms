@@ -12,7 +12,7 @@ window.state = window.state || {
     $(document).ready(function () {
         loadpagedata();
 
-        $("#searchInput").on("keyup", function () {
+        $(".module-table-blk #searchInput").on("keyup", function () {
             state.search = $(this).val();
             state.page = 1;
             loadpagedata();
@@ -32,19 +32,19 @@ window.state = window.state || {
             loadpagedata();
         });
 
-        $(document).on("click", ".page-link", function() {
+        $(document).on("click", "#module_Pagination .page-link", function() {
             const page = parseInt($(this).data("page"));
             state.page = page;
             loadpagedata();
         });
 
-        $("#RecordsPerPage").on("change", function() {
+        $(".module-table-blk #RecordsPerPage").on("change", function() {
             state.perPage = parseInt($(this).val());
             state.page = 1;
             loadpagedata();
         });
 
-        $(document).on("click", "th[data-column]", function() {
+        $(document).on("click", "#module_table th[data-column]", function() {
             let col = $(this).data("column");
             if (state.sortColumn === col) {
                 state.sortOrder = (state.sortOrder === "ASC") ? "DESC" : "ASC";
@@ -336,6 +336,8 @@ window.state = window.state || {
     function loadpagedata() {
         const { page, perPage, search, sortColumn, sortOrder} = state;
         const token = $("#module_csrf_token").val();
+        const table = $("#module_table");
+        if (!table.length) return;
 
         $.ajax({
             type: "POST",

@@ -1,6 +1,7 @@
 <?php
-require_once '../core/auth.php';
 require_once '../core/helpers.php';
+
+require_once '../core/auth.php';
 // logout();
 // if (is_logged_in()) redirect(check_role($_SESSION['role_id']));
 if (is_logged_in()) redirect("http://localhost/hms/portal/admin/dashboard.php");
@@ -170,7 +171,7 @@ if (is_logged_in()) redirect("http://localhost/hms/portal/admin/dashboard.php");
 <script type="text/javascript" src="assets/js/wow.min.js"></script>
 <script type="text/javascript" src="assets/js/slider.js"></script>
 <script type="text/javascript" src="assets/js/video-player.js"></script>
-<script type="text/javascript" src="assets/js/jflickrfeed.min.js"></script>
+<!-- <script type="text/javascript" src="assets/js/jflickrfeed.min.js"></script> -->
 <script type="text/javascript" src="assets/js/timepicker.js"></script>
 <script type="text/javascript" src="assets/js/tweetie.js"></script>
 <!-- Color Switcher script --> 

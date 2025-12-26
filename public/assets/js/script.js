@@ -856,7 +856,7 @@
         target: 'instafeed',
         limit: 10,
         mock: true,
-        success: function(data) {
+        success: function(data) {   
           for(i=0;i<data.data.length;i++) {
             // console.log(data.data[i]);
             console.log(data.data[i].images.low_resolution.width);

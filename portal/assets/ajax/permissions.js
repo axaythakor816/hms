@@ -12,7 +12,7 @@ window.state = window.state || {
         loadpagedata();
 
 
-        $("#searchInput").on("keyup", function () {
+        $(".permission-table-blk #searchInput").on("keyup", function () {
             state.search = $(this).val();
             state.page = 1;
             loadpagedata();
@@ -32,19 +32,19 @@ window.state = window.state || {
             loadpagedata();
         });
 
-        $(document).on("click", ".page-link", function () {
+        $(document).on("click", "#permission_Pagination .page-link", function () {
             const page = parseInt($(this).data("page"));
             state.page = page;
             loadpagedata();
         });
 
-        $("#RecordsPerPage").on("change", function () {
+        $(".permission-search-blk #RecordsPerPage").on("change", function () {
             state.perPage = parseInt($(this).val());
             state.page = 1;
             loadpagedata();
         });
 
-        $(document).on("click", "th[data-column]", function () {
+        $(document).on("click", "#permission_table th[data-column]", function () {
             let col = $(this).data("column");
 
             if (state.sortColumn === col) {
@@ -357,7 +357,6 @@ window.state = window.state || {
             }, 2000);
         });
 
-
     });
 
     function get_roles(callback) {
@@ -385,7 +384,6 @@ window.state = window.state || {
             }
         });
     }
-
 
     function get_modules(callback) {
         let csrf_token = $("#csrf_token").val();
@@ -415,6 +413,8 @@ window.state = window.state || {
     function loadpagedata() {
         const { page, perPage, search, sortColumn, sortOrder} = state;
         const token = $("#permission_csrf_token").val();
+        const table = $("#permission_table");
+        if (!table.length) return;
 
         $.ajax({
             type: "POST",

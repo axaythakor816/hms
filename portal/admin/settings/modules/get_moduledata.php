@@ -12,7 +12,7 @@ if(!has_permission('modules', 'can_view')) {
 
 require_role([1]);
 
-if(!verify_csrf($_POST['csrf_token'])) {
+if(!verify_csrf($_POST['csrf_token'] ?? '')) {
     json_response("error", "Invalid Csrf Token");
     exit;
 }

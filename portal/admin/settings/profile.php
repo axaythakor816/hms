@@ -8,7 +8,7 @@ require_login();
 // 	exit;
 // }
 
-require_role([1]);
+// require_role([1]);
 
 ?>
         <div class="page-wrapper">
@@ -34,7 +34,7 @@ require_role([1]);
                             <div class="profile-view">
                                 <div class="profile-img-wrap">
                                     <div class="profile-img">
-                                        <a href="#"><img class="avatar" src="assets/img/user-06.jpg" alt=""></a>
+                                        <a href="#"><img class="avatar" src="../assets/img/user-06.jpg" alt=""></a>
                                     </div>
                                 </div>
                                 <div class="profile-basic">

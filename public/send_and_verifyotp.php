@@ -1,21 +1,11 @@
 <?php
-
-require_once '../../../../core/init.php';
-
-require_login();
-
-if(!has_permission('manage users', 'can_add')) {
-	json_response("error", "Access Denine");
-	exit;
-}
-
-require_role([1]);
+session_start();
+require_once '../core/config.php';
+require_once '../core/helpers.php';
+require_once '../core/db.php';
+require_once '../vendor/autoload.php';
 
 $_POST = filteration($_POST);
-
-if(!verify_csrf($_POST['csrf_token'])) {
-    json_response("error", "Invalid CSRF Token", "", "");
-}
 
 $action = $_POST['action'] ?? '';
 
@@ -31,14 +21,8 @@ if($action == 'send_otp') {
         json_response("error", "", "", $errors);
     }
     $sendemail = strtolower($_POST['email']);
-
-    $id = $_POST['user_id'] ?? "";
-    
-    if(!empty($id)) {
-        $dup = checkDuplicateFields("users", ["email" => $sendemail], ["user_id" => $id]);
-    }else{
-        $dup = checkDuplicateFields("users", ["email" => $sendemail]);
-    }
+   
+    $dup = checkDuplicateFields("users", ["email" => $sendemail]);
 
     if($dup['status'] === "duplicate") {
         json_response("error", "", "", $dup['errors']);

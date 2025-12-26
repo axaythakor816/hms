@@ -32,16 +32,16 @@ $sortOrder = ($sortOrder === "DESC") ? "DESC" : "ASC";
 
 $offset = ($page - 1) * $perPage;
 
-$sql = "SELECT * FROM users WHERE 1";
+$sql = "SELECT u.*, r.role_name FROM users u LEFT JOIN roles r on u.role_id = r.id WHERE 1";
 $whereValues = [];
 $searchType  = "";
 
 
 if (!empty($search)) {
-    $sql .= " AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ? OR gender LIKE ? OR dob LIKE ? OR created_at LIKE ? OR updated_at like ?) ";
+    $sql .= " AND (r.role_name LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ? OR u.email LIKE ? OR u.phone LIKE ? OR u.gender LIKE ? OR u.dob LIKE ? OR u.created_at LIKE ? OR u.updated_at like ?) ";
     $searchParam = "%$search%";
-    $whereValues = [$searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam];
-    $searchType = "ssssssss";
+    $whereValues = [$searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam, $searchParam];
+    $searchType = "sssssssss";
 }
 
 $totalSql = $sql;

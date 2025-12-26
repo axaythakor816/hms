@@ -32,15 +32,15 @@ $sortOrder = ($sortOrder === "DESC") ? "DESC" : "ASC";
 
 $offset = ($page - 1) * $perPage;
 
-$sql = "SELECT * FROM role_permissions WHERE 1";
+$sql = "SELECT rp.*, r.role_name, m.module_name FROM role_permissions rp LEFT JOIN roles r on rp.role_id = r.id LEFT JOIN modules m on rp.module_id = m.module_id WHERE 1";
 $whereValues = [];
 $searchType  = "";
 
 if (!empty($search)) {
-    $sql .= " AND (module_id LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
+    $sql .= " AND (r.role_name LIKE ? OR m.module_name LIKE ? OR rp.created_at LIKE ? OR rp.updated_at LIKE ?)";
     $searchParam = "%$search%";
-    $whereValues = [$searchParam, $searchParam, $searchParam];
-    $searchType  = "sss";
+    $whereValues = [$searchParam, $searchParam, $searchParam, $searchParam];
+    $searchType  = "ssss";
 }
 
 $totalSql = $sql;
