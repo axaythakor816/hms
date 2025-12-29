@@ -64,7 +64,8 @@ $sr_no = $offset + 1;
 
 foreach ($result['data'] as $row) {
 
-    $department_head_name = get_label("display_name", "doctors", "doctor_id", $row['department_head_id']);
+    // $department_head_name = get_label("display_name", "doctors", "doctor_id", $row['department_head_id']);
+    $department_head_name = "";
     // <td>{$sr_no}</td>
     $created_at =  format_datetime($row['created_at']);
     $updated_at =  format_datetime($row['updated_at']

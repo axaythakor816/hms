@@ -77,6 +77,7 @@ window.state = window.state || {
         
         $("#addUserModal").on("show.bs.modal", function() {
             get_roles();
+            
             $("#email_verified").val(""); 
             $('#email_verified_icon').hide();
             $('#send_verification_btn').show();
@@ -256,13 +257,22 @@ window.state = window.state || {
                 last_name: "required|name|max:10",
                 email: "required|email",
                 phone: "required|mobile",
-                password: "required|password_strong",
-                confirm_password: "required|match:password",
+                // password: "required|password_strong",
+                // confirm_password: "required|match:password",
                 role_id: "required",
                 gender: "required",
                 dob: "required|date",
                 status: "required",
             };
+            
+            let password = $(this).closest("form").find("input[name='password']").val().trim();
+            let confirm_password = $(this).closest("form").find("input[name='confirm_password']").val().trim();
+
+
+            if(password !== "" || confirm_password !== "") {
+                rules.password = "required|password_strong";
+                rules.confirm_password = "required|match:password";
+            }
 
             let errors = validateForm("#edituser_form", rules);
 

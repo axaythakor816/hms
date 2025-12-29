@@ -11,7 +11,7 @@
                         <span>Dashboard</span> <span class="menu-arrow"></span>
                     </a>
                     <ul>
-                        <li><a href="<?php echo 'dashboard/' . check_role($_SESSION['role_id']);?>" class="nav-link">Admin Dashboard</a></li>
+                        <li><a href="<?php echo 'dashboard/' . check_role($_SESSION['role_id']);?>" class="nav-link">Dashboard</a></li>
                     </ul>
                 </li>
                 <?php endif; ?>

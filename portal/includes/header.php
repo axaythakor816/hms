@@ -19,7 +19,6 @@
 	
 	<!-- Select2 CSS -->
 	<link rel="stylesheet" type="text/css" href="../assets/css/select2.min.css">
-	
 	<!-- Datepicker CSS -->
 	<link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
 	

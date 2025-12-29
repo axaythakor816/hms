@@ -6,6 +6,9 @@
 // }
 
 function clean($value) {
+    if ($value === null) {
+        return '';
+    }
     return htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
 }
 

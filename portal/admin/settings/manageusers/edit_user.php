@@ -16,13 +16,20 @@ $rules = [
     'last_name' => 'required|name|max:10',
     'email' => 'required|email',
     'phone' => 'required|mobile',
-    'password' => 'required|password_strong',
-    'confirm_password' => 'required|match:password',
+    // 'password' => 'required|password_strong',
+    // 'confirm_password' => 'required|match:password',
     'role_id' => 'required',
     'gender' => 'required',
     'dob' => 'required|date',
     'status' => 'required',
 ];
+$password   = trim($_POST['password'] ?? '');
+$confirm_password = trim($_POST['confirm_password'] ?? '');
+
+if($password !== "" || $confirm_password !== "") {
+    $rules['password'] = 'required|password_strong';
+    $rules['confirm_password'] = 'required|match:password';
+}
 
 $errors = validate($_POST, $rules);
 if(!empty($errors)) {
@@ -38,7 +45,9 @@ $first_name = strtolower($_POST['first_name']);
 $last_name  = strtolower($_POST['last_name']);
 $email      = strtolower($_POST['email']);
 $phone      = $_POST['phone'];
-$password   = password_hash($_POST['password'], PASSWORD_DEFAULT);
+if($password !== "") {
+    $update_fields['password'] = password_hash($password, PASSWORD_DEFAULT);
+}
 $role_id    = $_POST['role_id'];
 $gender     = $_POST['gender'];
 $dob        = $_POST['dob'];
@@ -72,20 +81,36 @@ if (is_superadmin('role_id','users', 'user_id', $user_id)) {
     }
 }
 
-$sql = "UPDATE users SET 
-    first_name = ?,
-    last_name  = ?,
-    email      = ?,
-    phone      = ?,
-    password   = ?,
-    role_id    = ?,
-    gender     = ?,
-    dob        = ?,
-    status     = ?
-    WHERE user_id = ?";
+if(!empty($password)) {
+    $sql = "UPDATE users SET 
+        first_name = ?,
+        last_name  = ?,
+        email      = ?,
+        phone      = ?,
+        password   = ?,
+        role_id    = ?,
+        gender     = ?,
+        dob        = ?,
+        status     = ?
+        WHERE user_id = ?";
 
-$values = [$first_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status, $user_id];
-$type = "sssisisssi";
+    $values = [$first_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status, $user_id];
+    $type = "sssisisssi";
+}else{
+    $sql = "UPDATE users SET 
+        first_name = ?,
+        last_name  = ?,
+        email      = ?,
+        phone      = ?,
+        role_id    = ?,
+        gender     = ?,
+        dob        = ?,
+        status     = ?
+        WHERE user_id = ?";
+
+    $values = [$first_name, $last_name, $email, $phone, $role_id, $gender, $dob, $status, $user_id];
+    $type = "sssiisssi";
+}
 
 $result = update($sql, $values, $type);
 

@@ -97,25 +97,30 @@ require_role([2]); // Doctor role
         <div class="row">
             <div class="col-12 col-md-12 col-lg-6 col-xl-9">
                 <div class="card">
-                    <div class="card-body">
+                   <div class="card-body">
                         <div class="chart-title patient-visit">
                             <h4>Patient Visit by Gender</h4>
-                        </div>
-                        <div id="patient-chart">
-                            <p style="text-align:center; padding:50px;">[Static Chart Placeholder]</p>
-                        </div>
+                            <div >
+                                <ul class="nav chat-user-total">
+                                    <li><i class="fa fa-circle current-users" aria-hidden="true"></i>Male 75%</li>
+                                    <li><i class="fa fa-circle old-users" aria-hidden="true"></i> Female 25%</li>
+                                </ul>
+                            </div>
+                            
+                        </div>	
+                        <div id="patient-chart"></div>
                     </div>
                 </div>
             </div>
 
             <div class="col-12 col-md-12 col-lg-6 col-xl-3 d-flex">
                 <div class="card">
-                    <div class="card-body">
+                   <div class="card-body">
                         <div class="chart-title">
-                            <h4>Appointments by Type</h4>
-                        </div>
+                            <h4>Patient by Department</h4>
+                        </div>	
                         <div id="donut-chart-dash" class="chart-user-icon">
-                            <p style="text-align:center; padding:50px;">[Static Donut Chart]</p>
+                            <img src="../assets/img/icons/user-icon.svg" alt="">
                         </div>
                     </div>
                 </div>
@@ -228,3 +233,6 @@ require_role([2]); // Doctor role
 
     </div>
 </div>
+
+<script src="../assets/plugins/apexchart/apexcharts.min.js"></script>
+<script src="../assets/plugins/apexchart/chart-data.js"></script>

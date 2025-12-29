@@ -1,8 +1,4 @@
-<?php
-require_once('includes/auth_check.php');
-require_once('includes/header.php');
-require_once('includes/sidebar.php');
-?>
+
         <div class="page-wrapper">
             <div class="content">
 			
@@ -45,7 +41,7 @@ require_once('includes/sidebar.php');
 								</div>
                                 <div class="row custom-invoice">
                                     <div class="col-12 col-md-6 m-b-20">
-                                        <img src="assets/img/logo.png" width="35" height="35" alt=""> <span>Pre Clinic</span>
+                                        <img src="../assets/img/logo.png" width="35" height="35" alt=""> <span>Pre Clinic</span>
                                         <ul class="list-unstyled invoice-clinic mt-2">
                                             <li>3864 Quiet Valley Lane,
                                             <li>Sherman Oaks, CA, 91403</li>
@@ -147,6 +143,3 @@ require_once('includes/sidebar.php');
 			</div>
 			
 		</div>
-<?php 
-require_once('includes/footer.php');
-?>

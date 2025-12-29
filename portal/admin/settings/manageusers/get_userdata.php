@@ -71,9 +71,11 @@ foreach($result['data'] as $row) {
     $dob = format_datetime($row['dob'], 'd M Y');
 
     // Status color
-    $statusClass = strtolower($row['status']) === 'active' ? 'status-green' :
-         (strtolower($row['status']) === 'inactive' ? 'status-yellow' :
-         (strtolower($row['status']) === 'blocked' ? 'status-red' : 'status-gray'));  
+    $status = strtolower(trim($row['status'])); // Trim spaces aur lowercase
+    $statusClass = $status === 'active' ? 'status-green' :
+                ($status === 'pending' ? 'status-orange' :
+                ($status === 'blocked' ? 'status-red' :
+                ($status === 'inactive' ? 'status-gray' : 'status-gray')));
 
     $role = get_label("role_name", "roles", "id", $row['role_id']);
 

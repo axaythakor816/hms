@@ -1,8 +1,4 @@
-<?php
-require_once('includes/auth_check.php');
-require_once('includes/header.php');
-require_once('includes/sidebar.php');
-?>
+
         <div class="page-wrapper">
             <div class="content">
 			
@@ -36,21 +32,21 @@ require_once('includes/sidebar.php');
 													<div class="top-nav-search table-search-blk">
 														<form>
 															<input type="text" class="form-control" placeholder="Search here">
-															<a class="btn"><img src="assets/img/icons/search-normal.svg" alt=""></a>
+															<a class="btn"><img src="../assets/img/icons/search-normal.svg" alt=""></a>
 														</form>
 													</div>
 													<div class="add-group">
-														<a href="add-salary.php" class="btn btn-primary add-pluss ms-2"><img src="assets/img/icons/plus.svg" alt=""></a>
-														<a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img src="assets/img/icons/re-fresh.svg" alt=""></a>
+														<a href="add-salary.php" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
+														<a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div class="col-auto text-end float-end ms-auto download-grp">
-											<a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-01.svg" alt=""></a>
-											<a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg" alt=""></a>
-											<a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg" alt=""></a>
-											<a href="javascript:;" ><img src="assets/img/icons/pdf-icon-04.svg" alt=""></a>
+											<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-01.svg" alt=""></a>
+											<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-02.svg" alt=""></a>
+											<a href="javascript:;" class=" me-2"><img src="../assets/img/icons/pdf-icon-03.svg" alt=""></a>
+											<a href="javascript:;" ><img src="../assets/img/icons/pdf-icon-04.svg" alt=""></a>
 											
 										</div>
 									</div>
@@ -135,7 +131,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-001</td>
-												<td class="profile-image"><a href="profile.php"><img width="28" height="28" src="assets/img/profiles/avatar-01.jpg" class="rounded-circle m-r-5" alt=""> Andrea Lalema</a></td>
+												<td class="profile-image"><a href="profile.php"><img width="28" height="28" src="../assets/img/profiles/avatar-01.jpg" class="rounded-circle m-r-5" alt=""> Andrea Lalema</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.php" class="__cf_email__" data-cfemail="f6938e979b869a93b6919b979f9ad895999b">[email&#160;protected]</a>	</td>
 												<td>01.05.2020</td>
 												<td>
@@ -171,7 +167,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-002</td>
-												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="assets/img/profiles/avatar-03.jpg" class="rounded-circle m-r-5" alt="">William Stephin</a></td>
+												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="../assets/img/profiles/avatar-03.jpg" class="rounded-circle m-r-5" alt="">William Stephin</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="6d08150c001d01082d0a000c0401430e0200">[email&#160;protected]</a>	</td>
 												<td>03.05.2020</td>
 												<td>
@@ -207,7 +203,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-003</td>
-												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="assets/img/profiles/avatar-02.jpg" class="rounded-circle m-r-5" alt="">Smith Bruklin</a></td>
+												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="../assets/img/profiles/avatar-02.jpg" class="rounded-circle m-r-5" alt="">Smith Bruklin</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="23465b424e534f4663444e424a4f0d404c4e">[email&#160;protected]</a>	</td>
 												<td>04.05.2020</td>
 												<td>
@@ -243,7 +239,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-004</td>
-												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="assets/img/profiles/avatar-04.jpg" class="rounded-circle m-r-5" alt=""> Bernardo James</a></td>
+												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="../assets/img/profiles/avatar-04.jpg" class="rounded-circle m-r-5" alt=""> Bernardo James</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="27425f464a574b4267404a464e4b0944484a">[email&#160;protected]</a>	</td>
 												<td>06.06.2020</td>
 												<td>
@@ -279,7 +275,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-005</td>
-												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="assets/img/profiles/avatar-06.jpg" class="rounded-circle m-r-5" alt="">Cristina Groves</a></td>
+												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="../assets/img/profiles/avatar-06.jpg" class="rounded-circle m-r-5" alt="">Cristina Groves</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="7e1b061f130e121b3e19131f1712501d1113">[email&#160;protected]</a>	</td>
 												<td>13.05.2020</td>
 												<td>
@@ -315,7 +311,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-006</td>
-												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="assets/img/profiles/avatar-05.jpg" class="rounded-circle m-r-5" alt=""> Mark Hay Smith</a></td>
+												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="../assets/img/profiles/avatar-05.jpg" class="rounded-circle m-r-5" alt=""> Mark Hay Smith</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="b0d5c8d1ddc0dcd5f0d7ddd1d9dc9ed3dfdd">[email&#160;protected]</a>	</td>
 												<td>11.12.2020</td>
 												<td>
@@ -351,7 +347,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-007</td>
-												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="assets/img/profiles/avatar-01.jpg" class="rounded-circle m-r-5" alt=""> Andrea Lalema</a></td>
+												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="../assets/img/profiles/avatar-01.jpg" class="rounded-circle m-r-5" alt=""> Andrea Lalema</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="5a3f223b372a363f1a3d373b333674393537">[email&#160;protected]</a>	</td>
 												<td>01.05.2020</td>
 												<td>
@@ -387,7 +383,7 @@ require_once('includes/sidebar.php');
 													</div>
 												</td>
 												<td>EID-008</td>
-												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="assets/img/profiles/avatar-02.jpg" class="rounded-circle m-r-5" alt=""> Smith Bruklin</a></td>
+												<td class="profile-image"><a href="profile.html"><img width="28" height="28" src="../assets/img/profiles/avatar-02.jpg" class="rounded-circle m-r-5" alt=""> Smith Bruklin</a></td>
 												<td><a href="../../cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="bdd8c5dcd0cdd1d8fddad0dcd4d193ded2d0">[email&#160;protected]</a>	</td>
 												<td>01.05.2020</td>
 												<td>
@@ -430,7 +426,7 @@ require_once('includes/sidebar.php');
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-body text-center">
-						<img src="assets/img/sent.png" alt="" width="50" height="46">
+						<img src="../assets/img/sent.png" alt="" width="50" height="46">
 						<h3>Are you sure want to delete this ?</h3>
 						<div class="m-t-20"> <a href="#" class="btn btn-white" data-bs-dismiss="modal">Close</a>
 							<button type="submit" class="btn btn-danger">Delete</button>
@@ -440,6 +436,3 @@ require_once('includes/sidebar.php');
 			</div>
 			
 		</div>
-<?php 
-require_once('includes/footer.php');
-?>

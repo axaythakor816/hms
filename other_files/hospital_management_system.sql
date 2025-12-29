@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 26, 2025 at 02:31 PM
+-- Generation Time: Dec 29, 2025 at 01:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -650,7 +650,7 @@ CREATE TABLE `users` (
   `role_id` int(11) NOT NULL DEFAULT 5,
   `gender` enum('Male','Female','Other') DEFAULT NULL,
   `dob` date DEFAULT NULL,
-  `status` enum('active','inactive','blocked') DEFAULT 'active',
+  `status` enum('pending','active','inactive','blocked') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `reset_token_hash` varchar(255) DEFAULT NULL,
@@ -663,7 +663,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `uuid`, `profile_image`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
 (1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL),
-(2, '28c95a3b-dc09-11f0-9778-fcaa141337b9', NULL, 'abc', 'dfg', 'axay@gmail.com', '1111111111', '$2y$10$MDkhC/35d/HuIEh.LJ0mHO2.VWFVeJ5vMDpgWODFtAJ5LFqlyN1Pm', 2, 'Male', '2026-01-03', 'active', '2025-12-18 12:00:34', '2025-12-18 12:01:59', NULL, NULL);
+(2, 'c95fc9b3-e4a2-11f0-8d7b-fcaa141337b9', NULL, 'xyz', NULL, 'azjiijljt87@novamails.my', '5632369566', '$2y$10$mflo0Y2vjyVIGxz5KqnlgOMIXHWo.dYtueT0hSy07oENfP3UgD8fy', 5, NULL, NULL, 'active', '2025-12-29 10:40:25', '2025-12-29 10:40:25', NULL, NULL),
+(3, 'c920cfdc-e4a4-11f0-8d7b-fcaa141337b9', NULL, 'abc', NULL, 'ntpsi641@novamails.my', '5632369568', '$2y$10$KHUt9ynYyrODeO2DA.z07ODhJ6564u78Y2VkzwVB4zRKb97JNmfge', 5, NULL, NULL, 'pending', '2025-12-29 10:54:44', '2025-12-29 10:54:44', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -780,6 +781,7 @@ ALTER TABLE `discharge_summaries`
 ALTER TABLE `doctors`
   ADD PRIMARY KEY (`doctor_id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD UNIQUE KEY `uq_doctor_user` (`user_id`),
   ADD UNIQUE KEY `medical_license_no` (`medical_license_no`),
   ADD KEY `department_id` (`department_id`),
   ADD KEY `specialty` (`specialty`),
@@ -1157,7 +1159,7 @@ ALTER TABLE `tax`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `vitals`

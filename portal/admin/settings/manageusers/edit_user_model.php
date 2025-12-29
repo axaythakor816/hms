@@ -185,8 +185,10 @@ require_role([1]);
                                 <select name="status" id="edit_status" class="form-select form-control">
                                     <option value="">Select Options</option>
                                     <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="pending" disabled>pending</option>
                                     <option value="blocked">Blocked</option>
+                                    <option value="inactive">inactive</option>
+
                                 </select>
                                 <span class="error" id="edit_status_error"></span>
                             </div>

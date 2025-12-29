@@ -253,8 +253,5 @@ require_role([1]);
             </div>
             
         </div>
-<?php 
-
-// require_once('../includes/footer.php');
-
-?>
+<script src="../assets/plugins/apexchart/apexcharts.min.js"></script>
+<script src="../assets/plugins/apexchart/chart-data.js"></script>
