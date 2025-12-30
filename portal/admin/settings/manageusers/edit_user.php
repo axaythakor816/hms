@@ -113,6 +113,58 @@ if(!empty($password)) {
 }
 
 $result = update($sql, $values, $type);
+if($result['status'] !== "success") {
+    json_response($result['status'], $result['message']);
+}
+
+$doctor_check = select("SELECT * FROM doctors WHERE user_id = ?", [$user_id], "i");
+$staff_check = select("SELECT * FROM staff WHERE user_id = ?", [$user_id], "i");
+$patient_check = select("SELECT * FROM patients WHERE user_id = ?", [$user_id], "i");
+
+$role_id = (int) $role_id; 
+
+if ($doctor_check['rows'] > 0 && !in_array($role_id, [2, 3])) {
+    update("UPDATE doctors SET doctor_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
+}
+
+
+if (in_array($role_id, [2, 5]) && $staff_check['rows'] > 0) {
+    update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
+}
+
+switch($role_id) {
+    case 2: // Doctor
+        if($doctor_check['rows']>0){
+            update("UPDATE doctors SET doctor_status=? WHERE user_id=?", ['active', $user_id], "si");
+        } else {
+            insert("INSERT INTO doctors (user_id, doctor_status) VALUES (?, ?)", [$user_id,'active'], "is");
+        }
+        break;
+
+    case 3: // Patient
+        if($patient_check['rows']>0){
+            update("UPDATE patients SET patient_status=? WHERE user_id=?", ['admit', $user_id], "si");
+        } else {
+            insert("INSERT INTO patients (user_id, patient_status) VALUES (?, ?)", [$user_id,'admit'], "is");
+        }
+        break;
+
+    case 4: // Staff
+        if($staff_check['rows']>0){
+            update("UPDATE staff SET staff_status=? WHERE user_id=?", ['active', $user_id], "si");
+        } else {
+            insert("INSERT INTO staff (user_id, staff_status) VALUES (?, ?)", [$user_id,'active'], "is");
+        }
+        break;
+
+    default: // Other roles → treat as staff
+        if($staff_check['rows']>0){
+            update("UPDATE staff SET staff_status=? WHERE user_id=?", ['active', $user_id], "si");
+        } else {
+            insert("INSERT INTO staff (user_id, staff_status) VALUES (?, ?)", [$user_id,'active'], "is");
+        }
+        break;
+}
 
 $result['message'] = ($result['status'] === "success") 
     ? "User Updated Successfully." 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 29, 2025 at 01:17 PM
+-- Generation Time: Dec 30, 2025 at 12:39 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -195,6 +195,11 @@ CREATE TABLE `doctors` (
   `available_time_to` time DEFAULT NULL,
   `languages_spoken` varchar(255) DEFAULT NULL,
   `bio` text DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `pincode` varchar(20) DEFAULT NULL,
+  `doctor_status` enum('active','inactive','suspended','retired','resigned') NOT NULL DEFAULT 'active',
   `is_consultation_online` tinyint(1) DEFAULT 0,
   `ratings_avg` decimal(3,2) DEFAULT 0.00,
   `ratings_count` int(11) DEFAULT 0,
@@ -377,12 +382,11 @@ CREATE TABLE `nurse_notes` (
 CREATE TABLE `patients` (
   `patient_id` bigint(20) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `uuid` char(36) NOT NULL,
   `photo_url` varchar(1000) DEFAULT NULL,
-  `address` text DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
   `city` varchar(100) DEFAULT NULL,
   `state` varchar(100) DEFAULT NULL,
-  `zipcode` varchar(20) DEFAULT NULL,
+  `pincode` varchar(20) DEFAULT NULL,
   `blood_group` varchar(10) DEFAULT NULL,
   `height_cm` decimal(5,2) DEFAULT NULL,
   `weight_kg` decimal(5,2) DEFAULT NULL,
@@ -393,7 +397,7 @@ CREATE TABLE `patients` (
   `insurance_number` varchar(100) DEFAULT NULL,
   `emergency_contact_name` varchar(150) DEFAULT NULL,
   `emergency_contact_phone` varchar(30) DEFAULT NULL,
-  `patient_status` enum('active','inactive') DEFAULT 'active',
+  `patient_status` enum('admitted','discharged','under_treatment','transferred','expired') NOT NULL DEFAULT 'admitted',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -578,16 +582,18 @@ CREATE TABLE `rooms` (
 CREATE TABLE `staff` (
   `staff_id` bigint(20) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `uuid` char(36) NOT NULL,
   `designation` varchar(150) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
   `staff_shift` enum('morning','evening','night','rotational') DEFAULT 'rotational',
   `join_date` date DEFAULT NULL,
   `staff_salary` decimal(12,2) DEFAULT NULL,
-  `address` text DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `pincode` varchar(20) DEFAULT NULL,
   `email_verified` tinyint(1) DEFAULT 0,
   `phone_verified` tinyint(1) DEFAULT 0,
-  `staff_status` enum('active','inactive','suspended') DEFAULT 'active',
+  `staff_status` enum('active','inactive','suspended','on_leave','resigned') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -662,9 +668,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `uuid`, `profile_image`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL),
-(2, 'c95fc9b3-e4a2-11f0-8d7b-fcaa141337b9', NULL, 'xyz', NULL, 'azjiijljt87@novamails.my', '5632369566', '$2y$10$mflo0Y2vjyVIGxz5KqnlgOMIXHWo.dYtueT0hSy07oENfP3UgD8fy', 5, NULL, NULL, 'active', '2025-12-29 10:40:25', '2025-12-29 10:40:25', NULL, NULL),
-(3, 'c920cfdc-e4a4-11f0-8d7b-fcaa141337b9', NULL, 'abc', NULL, 'ntpsi641@novamails.my', '5632369568', '$2y$10$KHUt9ynYyrODeO2DA.z07ODhJ6564u78Y2VkzwVB4zRKb97JNmfge', 5, NULL, NULL, 'pending', '2025-12-29 10:54:44', '2025-12-29 10:54:44', NULL, NULL);
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -860,7 +864,6 @@ ALTER TABLE `nurse_notes`
 ALTER TABLE `patients`
   ADD PRIMARY KEY (`patient_id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
-  ADD UNIQUE KEY `uuid` (`uuid`),
   ADD KEY `blood_group` (`blood_group`);
 
 --
@@ -929,7 +932,6 @@ ALTER TABLE `rooms`
 ALTER TABLE `staff`
   ADD PRIMARY KEY (`staff_id`),
   ADD UNIQUE KEY `user_id` (`user_id`),
-  ADD UNIQUE KEY `uuid` (`uuid`),
   ADD KEY `department_id` (`department_id`),
   ADD KEY `staff_id` (`staff_id`);
 
@@ -1159,7 +1161,7 @@ ALTER TABLE `tax`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `vitals`

@@ -126,7 +126,6 @@ foreach($result['data'] as $row) {
     </tr>";
 }
 
-
 if($html == '') {
     $html = "<tr><td colspan='8' class='text-center'>No records found</td></tr>";
 

@@ -64,13 +64,61 @@ $values = [$first_name, $last_name, $email, $phone, $password, $role_id, $gender
 
 $result = insert($query, $values, $types);
 
+if($result['status'] === "error") {
+    json_response($result['status'], $result['message'], "", "");
+}
 if($result['status'] == "success") {
+    $user_id = $result['insert_id'];
     unset($_SESSION['email_verified']);
 }
 
-$result['message'] = ($result['status'] === "success") 
-    ? "User Created Successfully." 
-    : $result['message'];
+switch($role_id) {
+    case 2: 
+        $table = "doctors";
+        $status = "active";
+        $query = "INSERT INTO doctors (user_id, doctor_status) VALUES (?, ?)";
+        $types = "is";
+        break;
 
-json_response($result['status'], $result['message'], "", "");
+    case 3:
+        $table = "patients";    
+        $status = "admit";
+        $query = "INSERT INTO patients (user_id, patient_status) VALUES (?, ?)";
+        $types = "is";
+        break;
+
+    case 4: 
+        $table = "staff";
+        $status = "active";
+        $query = "INSERT INTO staff (user_id, staff_status) VALUES (?, ?)";
+        $types = "is";
+        break;
+
+    case 5:
+        $table = "";
+        $result['message'] = ($result['status'] === "success") 
+            ? "User Created Successfully." 
+            : $result['message'];
+
+        json_response($result['status'], $result['message'], "", "");
+        break;
+
+    default:
+        $table = "staff";
+        $status = "active";
+        $query = "INSERT INTO staff (user_id, staff_status) VALUES (?, ?)";
+        $types = "is";
+        break;
+}
+
+if(!empty($table)) {
+    $values = [$user_id, $status];
+    $insert_result = insert($query, $values, $types);
+}
+
+$insert_result['message'] = ($insert_result['status'] === "success") 
+    ? "User Created Successfully." 
+    : $insert_result['message'];
+
+json_response($insert_result['status'], $insert_result['message'], "", "");
 ?>

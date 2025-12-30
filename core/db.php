@@ -15,8 +15,10 @@ function insert($sql, $values, $datatypes) {
         }
 
         if (mysqli_stmt_execute($stmt)) {
+            $inserted_id = mysqli_insert_id($conn);
             mysqli_stmt_close($stmt);
-            return ["status" => "success", "message" => "Record inserted successfully"];
+
+            return ["status" => "success", "message" => "Record inserted successfully", "insert_id" => $inserted_id];
         } else {
             $error = mysqli_stmt_error($stmt);
             mysqli_stmt_close($stmt);

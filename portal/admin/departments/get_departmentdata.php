@@ -11,11 +11,11 @@ if(!verify_csrf($_POST['csrf_token'] ?? '')) {
     json_response("error", "Invalid CSRF Token");
 }
 
-$page       = filterInput($_POST['page'] ?? 1, "int");
-$perPage    = filterInput($_POST['perPage'] ?? 10, "int");
-$search     = filterInput($_POST['search'] ?? '', "string");
+$page = filterInput($_POST['page'] ?? 1, "int");
+$perPage = filterInput($_POST['perPage'] ?? 10, "int");
+$search = filterInput($_POST['search'] ?? '', "string");
 $sortColumn = filterInput($_POST['sortColumn'] ?? 'department_id', "string");
-$sortOrder  = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
+$sortOrder = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
 
 $page    = $page ?: 1;
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
