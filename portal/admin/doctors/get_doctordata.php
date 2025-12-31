@@ -1,12 +1,15 @@
 <?php
 
-use PhpOffice\PhpSpreadsheet\Calculation\Engine\FormattedNumber;
+// use PhpOffice\PhpSpreadsheet\Calculation\Engine\FormattedNumber;
 require_once '../../../core/init.php';
 
 require_login();
 if(!has_permission("doctors", "can_view")) {
-    showalert("error", "Access Denied You Are Not Authorize Persion");	
+    json_response("error", "Access Denied You Are Not Authorize Persion");	
 	exit;
+}
+if(!verify_csrf($_POST['csrf_token'])) {
+    json_response("error", "Invalid CSRF Token", "", "");
 }
 
 $page = filterInput($_POST['page'], "int");
@@ -19,7 +22,7 @@ $page = $page ?: 1;
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
 
 $allowedCols = [
-    'first_name', 'last_name', 'email', 'phone', 'gender', 'dob', 'status', 'specialty','sub_specialty', 'qualification', 'years_experience', 'medical_license_no', 'license_issue_date', 'license_expiry_date','consultation_fee', 'available_days','available_time_from', 'available_time_to', 'languages_spoken', 'bio', 'doctor_status','is_consultation_online', 'ratings_avg', 'ratings_count', 'two_fa_enabled', 'department_name'
+    'doctor_id', 'first_name', 'email', 'phone', 'gender', 'dob', 'status', 'specialty','sub_specialty', 'qualification', 'years_experience', 'medical_license_no', 'consultation_fee', 'available_days','available_time_from', 'languages_spoken', 'doctor_status', 'department_name', 'created_at', 'updated_at'
 ];
 
 if(!in_array($sortColumn, $allowedCols)) {

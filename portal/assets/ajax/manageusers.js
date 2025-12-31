@@ -706,7 +706,7 @@ window.state = window.state || {
     }
 
     function get_roles(callback) {
-        let csrf_token = $("#csrf_token").val();
+        let csrf_token = $("input[name = 'csrf_token']").val();
         
         $.ajax({
             type: "POST",

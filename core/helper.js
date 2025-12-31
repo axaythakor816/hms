@@ -158,6 +158,58 @@ function validateForm(formSelector, rules) {
                 }
             }
 
+            // file:type:xxx
+            if (rule.startsWith("file")) {
+                let file = element[0]?.files[0];
+
+                if (!file) {
+                    return false; 
+                }
+
+                // type check
+                let typeRule = rule.match(/type:([a-z0-9,]+)/i);
+                if (typeRule) {
+                    let allowedTypes = typeRule[1].split(",");
+                    let fileExt = file.name.split(".").pop().toLowerCase();
+
+                    if (!allowedTypes.includes(fileExt)) {
+                        addError(
+                            field,
+                            capitalize(field) + " must be of type: " + allowedTypes.join(", ")
+                        );
+                        return true;
+                    }
+                }
+            }
+
+            // max_size:xKB / xMB
+            if (rule.startsWith("max_size:")) {
+                let file = element[0]?.files[0];
+                if (!file) return false;
+
+                let sizeValue = rule.split(":")[1].toUpperCase();
+                let maxBytes = 0;
+
+                if (sizeValue.endsWith("MB")) {
+                    let mb = parseFloat(sizeValue.replace("MB", ""));
+                    maxBytes = mb * 1024 * 1024;
+                } 
+                else if (sizeValue.endsWith("KB")) {
+                    let kb = parseFloat(sizeValue.replace("KB", ""));
+                    maxBytes = kb * 1024;
+                } 
+                else {
+                    let mb = parseFloat(sizeValue);
+                    maxBytes = mb * 1024 * 1024;
+                }
+
+                if (file.size > maxBytes) {
+                    let readable = sizeValue.endsWith("KB") ? sizeValue : sizeValue + " MB";
+                    addError(field, capitalize(field) + " must be  " + readable + " or smaller.");
+                    return true;
+                }
+            }
+
             return false;
         });
     });

@@ -1,3 +1,12 @@
+<?php
+require_once '../../../core/init.php';
+
+require_login();
+if(!has_permission("doctors", "can_add")) {
+    showalert("error", "Access Denied You Are Not Authorize Persion");	
+	exit;
+}
+?>
 <!-- Add Doctor Modal -->
 <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -7,8 +16,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" enctype="multipart/form-data">
-
+                <form method="POST" id="add_doctor_form" enctype="multipart/form-data" novalidate> 
+                    <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
+    
                     <div class="accordion" id="doctorFormAccordion">
 
                         <!-- Doctor Basic Details -->
@@ -23,9 +33,23 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="input-block local-forms">
-                                                <label for="display_name">Display Name <span class="login-danger">*</span></label>
-                                                <input id="display_name" name="display_name" class="form-control" type="text" placeholder="Enter full name">
-                                                <span class="error" id="display_name_error"></span>
+                                                <label for="first_name">First Name <span class="login-danger">*</span></label>
+                                                <input id="first_name" name="first_name" class="form-control" type="text" placeholder="Enter First name">
+                                                <span class="error" id="first_name_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-block local-forms">
+                                                <label for="middle_name">Middel Name <span class="login-danger">*</span></label>
+                                                <input id="middle_name" name="middle_name" class="form-control" type="text" placeholder="Enter Middel name">
+                                                <span class="error" id="middle_name_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-block local-forms">
+                                                <label for="last_name">Last Name <span class="login-danger">*</span></label>
+                                                <input id="last_name" name="last_name" class="form-control" type="text" placeholder="Enter Last name">
+                                                <span class="error" id="last_name_error"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -52,15 +76,8 @@
                                         <div class="col-md-4">
                                             <div class="input-block local-forms">
                                                 <label for="department_id">Department <span class="login-danger">*</span></label>
-                                                <select id="department_id" name="department_id" class="form-control select">
-                                                    <option value="">Select Department</option>
-                                                    <option value="1">Orthopedist</option>
-                                                    <option value="2">Skin Specialist</option>
-                                                    <option value="3">Psychology</option>
-                                                    <option value="4">Neurologist</option>
-                                                    <option value="5">Dentist</option>
-                                                    <option value="6">Cardiologist</option>
-                                                    <option value="7">Gynecologist</option>
+                                                <select id="department_id" name="department_id" class="form-control form-select">
+                                                    <!-- option inserted dynamically -->
                                                 </select>
                                                 <span class="error" id="department_id_error"></span>
                                             </div>
@@ -68,7 +85,7 @@
                                         <div class="col-md-4">
                                             <div class="input-block local-forms">
                                                 <label for="years_experience">Years of Experience <span class="login-danger">*</span></label>
-                                                <input id="years_experience" name="years_experience" class="form-control" type="number" placeholder="Enter number of years">
+                                                <input id="years_experience" min="0" max="99" name="years_experience" class="form-control" type="number" placeholder="Enter number of years">
                                                 <span class="error" id="years_experience_error"></span>
                                             </div>
                                         </div>
@@ -169,18 +186,116 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="input-block local-forms">
+                                                <label for="dob">Date of Birth <span class="login-danger">*</span></label>
+                                                <input id="dob" name="dob" class="form-control" type="date">
+                                                <span class="error" id="dob_error"></span>
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-4">
+                                            <div class="input-block local-forms">
+                                                <label for="profile_image">Profile Image <span class="login-danger">*</span></label>
+                                                <input id="profile_image" type="file" name="profile_image" class="form-control">
+                                                <span class="error" id="profile_image_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-block local-forms">
                                                 <label for="languages_spoken">Languages Spoken <span class="login-danger">*</span></label>
                                                 <input id="languages_spoken" name="languages_spoken" class="form-control" type="text" placeholder="English, Hindi">
                                                 <span class="error" id="languages_spoken_error"></span>
                                             </div>
+                                        </div>           
+                                        <div class="col-md-5">
+                                            <label class="mb-2 d-block">Gender <span class="login-danger">*</span></label>
+
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender" id="gender_male" value="male">
+                                                <label class="form-check-label" for="gender_male">Male</label>
+                                            </div>
+
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender" id="gender_female" value="female">
+                                                <label class="form-check-label" for="gender_female">Female</label>
+                                            </div>
+
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender" id="gender_other" value="other">
+                                                <label class="form-check-label" for="gender_other">Other</label>
+                                            </div><br>
+                                                <span class="error" id="gender_error"></span>
                                         </div>
-                                        <div class="col-md-8">
+                                            
+                                        <div class="col-md-7">
                                             <div class="input-block local-forms">
                                                 <label for="bio">Bio <span class="login-danger">*</span></label>
                                                 <textarea id="bio" name="bio" class="form-control" rows="3" placeholder="Short bio about the doctor"></textarea>
+                                                <small class="text-muted">
+                                                    <span id="bio_count">0</span>/300 characters used
+                                                </small>
                                                 <span class="error" id="bio_error"></span>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Doctor Address Details -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingAddress">
+                                <button class="accordion-button collapsed" type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseAddress"
+                                        aria-expanded="false"
+                                        aria-controls="collapseAddress">
+                                    Doctor Address Details
+                                </button>
+                            </h2>
+
+                            <div id="collapseAddress"
+                                class="accordion-collapse collapse"
+                                aria-labelledby="headingAddress"
+                                data-bs-parent="#doctorFormAccordion">
+
+                                <div class="accordion-body">
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="input-block local-forms">
+                                                <label for="street">Street Address <span class="login-danger">*</span></label>
+                                                <input id="street" name="street" class="form-control" type="text"
+                                                    placeholder="Enter street / area">
+                                                <span class="error" id="street_error"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="input-block local-forms">
+                                                <label for="city">City <span class="login-danger">*</span></label>
+                                                <input id="city" name="city" class="form-control" type="text"
+                                                    placeholder="Enter city">
+                                                <span class="error" id="city_error"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="input-block local-forms">
+                                                <label for="state">State <span class="login-danger">*</span></label>
+                                                <input id="state" name="state" class="form-control" type="text"
+                                                    placeholder="Enter state">
+                                                <span class="error" id="state_error"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="input-block local-forms">
+                                                <label for="pincode">Pincode <span class="login-danger">*</span></label>
+                                                <input id="pincode" name="pincode" class="form-control" type="text"
+                                                    placeholder="Enter pincode">
+                                                <span class="error" id="pincode_error"></span>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -196,25 +311,78 @@
                             <div id="collapseLogin" class="accordion-collapse collapse" aria-labelledby="headingLogin" data-bs-parent="#doctorFormAccordion">
                                 <div class="accordion-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="input-block local-forms">
                                                 <label for="email">Email <span class="login-danger">*</span></label>
-                                                <input id="email" name="email" class="form-control" type="email" placeholder="Enter email address">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <input id="email" name="email" class="form-control" type="email" placeholder="Enter email address">
+                                                    <!-- Verification Icon -->
+                                                    <span id="email_verified_icon" class="email_verified_icon" style="display: none; font-size:20px; color:green;">✔️</span>
+
+                                                    <!-- Send Verification Button -->
+                                                    <button type="button" id="send_verification_btn" name="send_verification" class="btn btn-sm btn-success send_verification_btn">
+                                                        Send
+                                                    </button>
+                                                </div>
                                                 <span class="error" id="email_error"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <!-- OTP Field -->
+                                        <div class="col-md-6 otp_block" id="otp_block" style="display:none;">
+                                            <div class="input-block local-forms">
+                                                <label>Enter OTP <span class="login-danger">*</span></label>
+
+                                                <div class="d-flex align-items-center gap-2">
+
+                                                    <input type="text" name="otp" id="otp"
+                                                        placeholder="Enter OTP"
+                                                        class="form-control form-control-sm" style="max-width: 240px;">
+                    
+                                                    <button type="button" id="verify_otp_btn" name="verify_otp"
+                                                            class="btn btn-primary btn-md verify_otp_btn">
+                                                        Verify OTP
+                                                    </button>
+                                                
+                                                </div>
+
+                                                <!-- OTP Timer -->
+                                            <div class="mt-1 d-flex align-items-center gap-3">
+                                                    <small class="text-muted">
+                                                        OTP expires in <span id="otp_timer" class="otp_timer">05:00</span>
+                                                    </small>
+
+                                                    <button type="button"
+                                                            id="resend_otp_btn" name="resend_otp"
+                                                            class="btn p-1 btn-info text-light resend_otp_btn"
+                                                            disabled>
+                                                        Resend OTP
+                                                    </button>
+                                                </div>
+                                                <span class="error" id="otp_error"></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden Email Verified Field -->
+                                        <input type="hidden" name="email_verified" id="email_verified" value="">
+                                        <div class="col-md-6">
                                             <div class="input-block local-forms">
                                                 <label for="phone">Phone <span class="login-danger">*</span></label>
                                                 <input id="phone" name="phone" class="form-control" type="text" placeholder="Enter phone number">
                                                 <span class="error" id="phone_error"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="input-block local-forms">
                                                 <label for="password">Password <span class="login-danger">*</span></label>
                                                 <input id="password" name="password" class="form-control" type="password" placeholder="Enter password">
                                                 <span class="error" id="password_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-block local-forms">
+                                                <label for="confirm_assword">Confirm Password <span class="login-danger">*</span></label>
+                                                <input id="confirm_password" name="confirm_password" class="form-control" type="password" placeholder="Enter confirm password">
+                                                <span class="error" id="confirm_password_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -232,33 +400,63 @@
                             <div id="collapseOther" class="accordion-collapse collapse" aria-labelledby="headingOther" data-bs-parent="#doctorFormAccordion">
                                 <div class="accordion-body">
                                     <div class="row">
+                                       
                                         <div class="col-md-4">
-                                            <div class="input-block select-gender">
-                                                <label for="is_consultation_online">Consultation Online? <span class="login-danger">*</span></label>
-                                                <select id="is_consultation_online" name="is_consultation_online" class="form-control">
-                                                    <option value="0">No</option>
+                                            <div class="input-block local-forms">
+                                                <label for="status">Account Status <span class="login-danger">*</span></label>
+                                                <select id="status" name="status" class="form-control form-select">
+                                                    <option value="">Select</option>
+                                                    <option value="active">Active</option>
+                                                    <option value="inactive">Inactive</option>
+                                                    <option value="blocked">Blocked</option>
+                                                </select>
+                                                <span class="error" id="status_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-block local-forms">
+                                                <label for="doctor_status">Doctor Status <span class="login-danger">*</span></label>
+                                                <select id="doctor_status" name="doctor_status" class="form-control form-select">
+                                                    <option value="">Select</option>
+                                                    <option value="active">Active</option>
+                                                    <option value="inactive">Inactive</option>
+                                                    <option value="suspended">Suspended</option>
+                                                    <option value="retired">Retired</option>
+                                                </select>
+                                                <span class="error" id="doctor_status_error"></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Online Consultation -->
+                                        <div class="col-md-4">
+                                            <div class="input-block local-forms">
+                                                <label for="is_consultation_online">
+                                                    Online Consultation <span class="login-danger">*</span>
+                                                </label>
+                                                <select id="is_consultation_online" name="is_consultation_online" class="form-select form-control">
+                                                    <option value="">Select</option>
                                                     <option value="1">Yes</option>
+                                                    <option value="0">No</option>
                                                 </select>
                                                 <span class="error" id="is_consultation_online_error"></span>
                                             </div>
                                         </div>
+
+                                        <!-- Two Factor Authentication -->
                                         <div class="col-md-4">
-                                            <div class="input-block">
-                                                <label for="is_enabled">Status <span class="login-danger">*</span></label>
-                                                <select id="is_enabled" name="is_enabled" class="form-control">
-                                                    <option value="1">Active</option>
-                                                    <option value="0">Inactive</option>
+                                            <div class="input-block local-forms">
+                                                <label for="two_fa_enabled">
+                                                    Two Factor Authentication
+                                                </label>
+                                                <select id="two_fa_enabled" name="two_fa_enabled" class="form-select form-control">
+                                                    <option value="">Select</option>
+                                                    <option value="0">Disabled</option>
+                                                    <option value="1">Enabled</option>
                                                 </select>
-                                                <span class="error" id="is_enabled_error"></span>
+                                                <span class="error" id="two_fa_enabled_error"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="input-block local-top-form">
-                                                <label for="photo_url">Profile Photo <span class="login-danger">*</span></label>
-                                                <input id="photo_url" type="file" name="photo_url" class="form-control">
-                                                <span class="error" id="photo_url_error"></span>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -267,7 +465,8 @@
                     </div> <!-- accordion end -->
 
                     <div class="col-12 text-end mt-3">
-                        <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary me-2 cancel-form" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="save_doctor" class="btn btn-primary">Create Doctor</button>
                     </div>
 
                 </form>

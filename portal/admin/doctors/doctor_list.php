@@ -97,19 +97,19 @@ if(!has_permission('doctors', 'can_view')) {
                                         <th data-column="specialty">Specialty</th>
                                         <th data-column="sub_specialty">Sub Specialty</th>
                                         <th data-column="qualification">Qualification</th>
-                                        <th>Experience</th>
-                                        <th>Department</th>
-                                        <th>Medical License No</th>
-                                        <th>Consultation Fee</th>
-                                        <th>Available Days</th>
-                                        <th>Available Time</th>
-                                        <th>Languages Spoken</th>
+                                        <th data-column="years_experience">Experience</th>
+                                        <th data-column="department_name">Department</th>
+                                        <th data-column="medical_license_no">Medical License No</th>
+                                        <th data-column="consultation_fee">Consultation Fee</th>
+                                        <th data-column="available_days">Available Days</th>
+                                        <th data-column="available_time_from">Available Time</th>
+                                        <th data-column="languages_spoken">Languages Spoken</th>
                                         <th>Bio</th>
-                                        <th>Doctor Status</th>
+                                        <th data-column="doctor_status">Doctor Status</th>
 										<th>Address</th>
 
-                                        <th>Created At</th>
-                                        <th>Updated At</th>
+                                        <th data-column="created_at">Created At</th>
+                                        <th data-column="updated_at">Updated At</th>
 										
 										<?php if(has_permission('doctors', 'can_edit') || has_permission('doctors', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>

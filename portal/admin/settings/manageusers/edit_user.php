@@ -42,16 +42,16 @@ if(!verify_csrf($_POST['csrf_token'])) {
 
 $user_id = $_POST['user_id'];
 $first_name = strtolower($_POST['first_name']);
-$last_name  = strtolower($_POST['last_name']);
-$email      = strtolower($_POST['email']);
-$phone      = $_POST['phone'];
+$last_name = strtolower($_POST['last_name']);
+$email = strtolower($_POST['email']);
+$phone = $_POST['phone'];
 if($password !== "") {
     $update_fields['password'] = password_hash($password, PASSWORD_DEFAULT);
 }
-$role_id    = $_POST['role_id'];
-$gender     = $_POST['gender'];
-$dob        = $_POST['dob'];
-$status     = $_POST['status'];
+$role_id = $_POST['role_id'];
+$gender = $_POST['gender'];
+$dob = $_POST['dob'];
+$status = $_POST['status'];
 $verified_email = strtolower($_POST['email_verified'] ?? '');
 
 $dup = checkDuplicateFields("users", ["email" => $email, "phone" => $phone], ["user_id" => $user_id]);
@@ -84,14 +84,14 @@ if (is_superadmin('role_id','users', 'user_id', $user_id)) {
 if(!empty($password)) {
     $sql = "UPDATE users SET 
         first_name = ?,
-        last_name  = ?,
-        email      = ?,
-        phone      = ?,
-        password   = ?,
-        role_id    = ?,
-        gender     = ?,
-        dob        = ?,
-        status     = ?
+        last_name = ?,
+        email = ?,
+        phone = ?,
+        password = ?,
+        role_id = ?,
+        gender = ?,
+        dob = ?,
+        status = ?
         WHERE user_id = ?";
 
     $values = [$first_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status, $user_id];
@@ -99,13 +99,13 @@ if(!empty($password)) {
 }else{
     $sql = "UPDATE users SET 
         first_name = ?,
-        last_name  = ?,
-        email      = ?,
-        phone      = ?,
-        role_id    = ?,
-        gender     = ?,
-        dob        = ?,
-        status     = ?
+        last_name = ?,
+        email = ?,
+        phone = ?,
+        role_id = ?,
+        gender = ?,
+        dob = ?,
+        status = ?
         WHERE user_id = ?";
 
     $values = [$first_name, $last_name, $email, $phone, $role_id, $gender, $dob, $status, $user_id];
@@ -127,13 +127,12 @@ if ($doctor_check['rows'] > 0 && !in_array($role_id, [2, 3])) {
     update("UPDATE doctors SET doctor_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
 }
 
-
 if (in_array($role_id, [2, 5]) && $staff_check['rows'] > 0) {
     update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
 }
 
 switch($role_id) {
-    case 2: // Doctor
+    case 2: 
         if($doctor_check['rows']>0){
             update("UPDATE doctors SET doctor_status=? WHERE user_id=?", ['active', $user_id], "si");
         } else {
@@ -141,7 +140,7 @@ switch($role_id) {
         }
         break;
 
-    case 3: // Patient
+    case 3:
         if($patient_check['rows']>0){
             update("UPDATE patients SET patient_status=? WHERE user_id=?", ['admit', $user_id], "si");
         } else {
@@ -149,7 +148,7 @@ switch($role_id) {
         }
         break;
 
-    case 4: // Staff
+    case 4: 
         if($staff_check['rows']>0){
             update("UPDATE staff SET staff_status=? WHERE user_id=?", ['active', $user_id], "si");
         } else {
@@ -157,7 +156,7 @@ switch($role_id) {
         }
         break;
 
-    default: // Other roles → treat as staff
+    default: 
         if($staff_check['rows']>0){
             update("UPDATE staff SET staff_status=? WHERE user_id=?", ['active', $user_id], "si");
         } else {

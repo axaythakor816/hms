@@ -93,9 +93,18 @@ function validate($data, $rules) {
             // -------------------------
             // required
             // -------------------------
-            if ($rule === 'required' && $value === '') {
-                $errors[$field][] = friendlyFieldName($field) . " is required.";
-                break;
+            if ($rule === 'required') {
+
+                if (isset($_FILES[$field])) {
+                    if (!isset($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+                        $errors[$field][] = friendlyFieldName($field) . " is required.";
+                        break;
+                    }
+                }
+                else if ($value === '') {
+                    $errors[$field][] = friendlyFieldName($field) . " is required.";
+                    break;
+                }
             }
 
             // -------------------------
@@ -257,6 +266,59 @@ function validate($data, $rules) {
 
                 }
             }
+
+            // -------------------------
+            // file:type:jpg,png,pdf
+            // -------------------------
+            if (strpos($rule, 'file:type:') === 0) {
+
+                if (!isset($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+                    continue; 
+                }
+
+                $allowedTypes = explode(',', str_replace('file:type:', '', $rule));
+                $fileName = $_FILES[$field]['name'];
+                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+                if (!in_array($fileExt, $allowedTypes)) {
+                    $errors[$field][] = friendlyFieldName($field) .
+                        " must be of type: " . implode(', ', $allowedTypes) . ".";
+                    break;
+                }
+            }
+
+            // -------------------------
+            // max_size:20KB / 2MB
+            // -------------------------
+            if (strpos($rule, 'max_size:') === 0) {
+
+                if (!isset($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+                    continue;
+                }
+
+                $sizeValue = strtoupper(str_replace('max_size:', '', $rule));
+                $fileSize = $_FILES[$field]['size']; 
+                $maxBytes = 0;
+
+                if (str_ends_with($sizeValue, 'MB')) {
+                    $mb = (float) str_replace('MB', '', $sizeValue);
+                    $maxBytes = $mb * 1024 * 1024;
+                }
+                elseif (str_ends_with($sizeValue, 'KB')) {
+                    $kb = (float) str_replace('KB', '', $sizeValue);
+                    $maxBytes = $kb * 1024;
+                }
+                else {
+                    $maxBytes = (float)$sizeValue * 1024 * 1024;
+                }
+
+                if ($fileSize > $maxBytes) {
+                    $errors[$field][] =
+                        friendlyFieldName($field) . " must be " . $sizeValue . " or smaller.";
+                    break;
+                }
+            }
+
         }
     }
 

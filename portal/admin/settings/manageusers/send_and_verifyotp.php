@@ -43,8 +43,6 @@ if($action == 'send_otp') {
     if($dup['status'] === "duplicate") {
         json_response("error", "", "", $dup['errors']);
     }
-    $genericMsg = "Password reset link will be sent to your email.";
-    $genericMsg = ucwords($genericMsg);
 
     $otp = rand(100000, 999999);
     $expiry = date('Y-m-d H:i:s', strtotime('+5 minutes'));

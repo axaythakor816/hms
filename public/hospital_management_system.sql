@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 30, 2025 at 12:39 PM
+-- Generation Time: Dec 31, 2025 at 06:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -208,6 +208,10 @@ CREATE TABLE `doctors` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `doctors`
+--
 
 -- --------------------------------------------------------
 
@@ -649,6 +653,7 @@ CREATE TABLE `users` (
   `uuid` varchar(36) NOT NULL DEFAULT uuid(),
   `profile_image` varchar(1000) DEFAULT NULL,
   `first_name` varchar(100) NOT NULL,
+  `middle_name` varchar(100) DEFAULT NULL,
   `last_name` varchar(100) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `phone` varchar(30) DEFAULT NULL,
@@ -667,8 +672,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `uuid`, `profile_image`, `first_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL);
+INSERT INTO `users` (`user_id`, `uuid`, `profile_image`, `first_name`, `middle_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', NULL, 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL);
 
 -- --------------------------------------------------------
 
