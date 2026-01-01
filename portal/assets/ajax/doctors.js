@@ -118,6 +118,9 @@ window.state = window.state || {
             $("button[name = 'resend_otp']").prop("disabled", true).text('Resend otp');
             $('.otp_block').hide();
             $('#send_verification_btn').show();
+            $("#duplicate_message").text();
+            $("input[name = 'duplicate_id']").val("");
+            $("#duplicate_name").text();
         });
 
         $(document).on('click', '.send_verification_btn', function() {
@@ -125,21 +128,19 @@ window.state = window.state || {
             
             let rules = {
                 email: "required|email",
-                phone: "required|mobile",
             };
 
             let errors = validateForm('#' + $(this).closest("form").attr("id"), rules);
             let formId = $(this).closest("form").attr("id");
 
-            if(Object.keys(errors).length > 0) {
-                $.each(errors, function(index, value) {
-                    $("#" + (formId === "edit_doctor_form" ? "edit_" : "") + index + "_error").text(value);
-                });
-                return false;
-            }
+            // if(Object.keys(errors).length > 0) {
+            //     $.each(errors, function(index, value) {
+            //         $("#" + (formId === "edit_doctor_form" ? "edit_" : "") + index + "_error").text(value);
+            //     });
+            //     return false;
+            // }
 
             var email = $(this).closest("form").find("input[name='email']").val();
-            var phone = $(this).closest("form").find("input[name='phone']").val();
             var csrf_token = $(this).closest("form").find("input[name='csrf_token']").val();
             var edit_id = $(this).closest("form").find("#edit_doctor_id").val();
 
@@ -149,8 +150,6 @@ window.state = window.state || {
                 data: {
                     user_id: edit_id,
                     email: email,
-                    phone: phone,
-                    // action: "send_otp",
                     action: "check_user",
                     csrf_token: csrf_token,
                 },
@@ -159,8 +158,9 @@ window.state = window.state || {
                 },
                 dataType: "json",
                 success: function (res) {
-
+                    
                     if(res.status == "error") {
+                        $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
                         if(res.message) {
                             showAlert(res.status, res.message);
                         }else{
@@ -170,52 +170,29 @@ window.state = window.state || {
                             });
                         }
                     }else if(res.status == "success") {
-                        if(res.data == "duplicate") {
-                            if(!confirm("User Already Exist Are You Sure Change The User Role.")){
-                                $("input[name='email']").prop("readonly", false);
-                                $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
-                                return;
-                            }
-                        }
-
-                        $.ajax({
-                            type: "POST",
-                            url: "doctors/send_and_verifyotp.php",
-                            data: {
-                                user_id: edit_id,
-                                email: email,
-                                action: "send_otp",
-                                csrf_token: csrf_token,
-                            },
-                            dataType: "json",
-                            success: function (res) {
-                                if(res.status == "error") {
-                                    $("button[name = 'send_verification']").prop("disabled", false).text('Send');
-                                    if(res.message) {
-                                        showAlert(res.status, res.message);
-                                    }else{
-                                        $.each(res.errors, function(field, message) {
-                                            let prefix = (formId === "edituser_form") ? "edit_" : "";
-                                            $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
-                                        });
-                                    }
-                                }else if(res.status == "success") {
-                                    showAlert(res.status, res.message);
-                                    $('.otp_block').show();
-                                    $("input[name='email']").prop("readonly", true);
-                                    $("button[name = 'send_verification']").prop("disabled", true).text(' Send');
-                                    $('.send_verification_btn').hide();
-                                    startOtpTimer(300); 
-                                }
+                        if (res.data == "duplicate") {
+                            if(res.errors){
+                                let prefix = (formId === "edit_doctor_form") ? "edit_" : "";
+                                $("#" + prefix + "duplicate_message").text(res.errors.email);
+                                $("#" + prefix + "duplicate_name").text(res.errors.user_name);
                                 
-                            },
-                            error: function(xhr, status, error) {
-                                console.log("Status: ", status);
-                                console.log("Ajax Error: ", error);
-                                console.log("Response: ", xhr.responseText);
                             }
-                        });
 
+                            showConfirmModal(function (confirmed) {
+                                if (!confirmed) {
+                                    console.log("confirm block");
+                                    $("input[name='email']").prop("readonly", false);
+                                    $("button[name='send_verification']").prop("disabled", false).text(' Send');
+                                    return;
+                                }
+                                $("input[name = 'duplicate_id']").val(res.errors.user_id); 
+
+                                sendOtpRequest(formId, edit_id, email, csrf_token);
+                            });
+                        }else{
+                            $("input[name = 'duplicate_id']").val(""); 
+                            sendOtpRequest(formId, edit_id, email, csrf_token);
+                        }
                     }
                 },
                 error: function(xhr, status, error) {
@@ -225,6 +202,84 @@ window.state = window.state || {
                 }
             });
             
+        });
+
+        $(document).on('click', '.verify_otp_btn', function() {
+            $(".error").text("");
+
+            let rules = {
+                otp: "required|digits:6"
+            };
+
+            let form = $(this).closest("form");
+            let errors = validateForm('#' + $(this).closest("form").attr("id"), rules);
+            let formId = $(this).closest("form").attr("id");
+
+            if(Object.keys(errors).length > 0) {
+                console.log("errors ", errors);
+                console.log("formid ", formId);
+
+                $.each(errors, function(index, value) {
+                    $("#" + (formId === "edituser_form" ? "edit_" : "") + index + "_error").text(value);
+                });
+                return false;
+            }
+
+            var duplicate_id = $("input[name = 'duplicate_id']").val();
+            var csrf_token = $(this).closest("form").find("input[name='csrf_token']").val();
+            var otp = $(this).closest("form").find("input[name='otp']").val();
+
+            $.ajax({
+                type: "POST",
+                url: "doctors/send_and_verifyotp.php",
+                data: {
+                    otp: otp,
+                    duplicate_id: duplicate_id,
+                    csrf_token: csrf_token,
+                    action: 'verify_otp'
+                },
+                beforeSend: function() {
+                    $("button[name = 'verify_otp']").prop("disabled", true).text('Verifying...');
+                },
+                dataType: "json",
+                success: function (res) {
+                    $("button[name = 'verify_otp']").prop("disabled", false).text('Verify OTP');
+                    if(res.status == "error") {
+                        
+                        if(res.message) {
+                            showAlert(res.status, res.message);
+                        }else{
+                            $.each(res.errors, function(field, message) {
+                                let prefix = (formId === "edituser_form") ? "edit_" : "";
+                                $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
+                            });
+                        }
+                    }else if(res.status == "success") {
+                        showAlert(res.status, res.message);
+                        if(res.data.user_id) {
+                            console.log("data");
+                            $("input[name = 'duplicate_id']").val(res.data.user_id);
+                            form.find("input[name = 'first_name']").val(res.data.first_name);
+                            form.find("input[name = 'middle_name']").val(res.data.middle_name);
+                            form.find("input[name = 'last_name']").val(res.data.last_name);
+                            form.find("input[name = 'dob']").val(res.data.dob);
+                            let gender = (res.data.gender) ? res.data.gender.toLowerCase() : "";
+                            form.find("input[name = 'gender'][value='" + gender + "']").prop("checked", true);
+                            form.find("select[name = 'status']").val(res.data.status).trigger("change");
+                            form.find("input[name = 'phone']").val(res.data.phone);
+                        }
+                        $("button[name = 'verify_otp']").prop("disabled", false).text('Verify OTP');
+                        $('.otp_block').hide();
+                        $('.email_verified_icon').show();
+                        form.find("input[name='email_verified']").val(res.data.email);
+                    } 
+                },
+                error: function(xhr, status, error){
+                    console.log("Status: ", status);
+                    console.log("Ajax Error: ", error);
+                    console.log("Response: ", xhr.responseText);
+                }
+            });
         });
 
         $("#add_doctor_form").submit(function(e) {
@@ -263,7 +318,7 @@ window.state = window.state || {
                 doctor_status: "required",
                 is_consultation_online: "required|numeric",
                 two_fa_enabled: "required|numeric",
-                profile_image: "required|file:type:jpg,jpeg,png|max_size:20KB"
+                profile_image: "required|file:type:jpg,jpeg,png|max_size:2MB"
             };
 
             let errors = validateForm("#add_doctor_form", rules);
@@ -282,7 +337,8 @@ window.state = window.state || {
                     otp : "required|digits:6|numeric"
                 }
 
-                let checkotperror = $("#add_doctor_form", checkotp);
+                let checkotperror = validateForm("#add_doctor_form", checkotp);
+                // console.log(checkotperror);
                 if(Object.keys(checkotperror).length > 0) {
                     $.each(checkotperror, function(field, value) {
                         $("#" + field + "_error").text(value);
@@ -307,6 +363,11 @@ window.state = window.state || {
 
             let form = $("#add_doctor_form")[0];
             let formdata = new FormData(form);
+            let duplicate_id = $("input[name = 'duplicate_id']").val();
+
+            if(duplicate_id) {
+                formdata.append("duplicate_id", duplicate_id);
+            }
             
             $.ajax({
                 type: "POST",
@@ -357,10 +418,64 @@ window.state = window.state || {
             });
         });
 
-
-
-        
     });
+
+    function showConfirmModal(callback) {
+        $('#confirmModal').modal('show');
+
+        $('#confirmYes').off('click').on('click', function () {
+            $('#confirmModal').modal('hide');
+            callback(true);
+        });
+
+        $('#confirmNo').off('click').on('click', function () {
+            $('#confirmModal').modal('hide');
+            callback(false);
+        });
+    }
+
+    function sendOtpRequest(formId, edit_id, email, csrf_token) {
+        $.ajax({
+            type: "POST",
+            url: "doctors/send_and_verifyotp.php",
+            data: {
+                user_id: edit_id,
+                email: email,
+                action: "send_otp",
+                csrf_token: csrf_token,
+            },
+            dataType: "json",
+            success: function (res) {
+                if(res.status == "error") {
+                    $("button[name = 'send_verification']").prop("disabled", false).text('Send');
+                    if(res.message) {
+                        showAlert(res.status, res.message);
+                    }else{
+                        $.each(res.errors, function(field, message) {
+                            let prefix = (formId === "edituser_form") ? "edit_" : "";
+                            $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
+                        });
+                    }
+                }else if(res.status == "success") {
+                    showAlert(res.status, res.message);
+                    $('.otp_block').show();
+                    $("input[name='email']").prop("readonly", true);
+                    $("button[name = 'send_verification']").prop("disabled", true).text(' Send');
+                    $('.send_verification_btn').hide();
+
+                    console.log("id: ", $("input[name='duplicate_id']").val()); 
+
+
+                    startOtpTimer(300); 
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Status: ", status);
+                console.log("Ajax Error: ", error);
+                console.log("Response: ", xhr.responseText);
+            }
+        });
+    }
 
     function loadpagedata() {
         const { page, perPage, search, sortColumn, sortOrder} =  state;
@@ -418,6 +533,38 @@ window.state = window.state || {
         } else {
             $(".doctor-delete").addClass("disabled");
         }
+    }
+     let otpInterval = null;
+
+    function startOtpTimer(duration = 300) {
+        if (otpInterval) {
+            clearInterval(otpInterval);
+        }
+
+        otpTime = duration;
+        $('.resend_otp_btn').prop('disabled', true);
+        updateOtpTimerUI();
+
+        otpInterval = setInterval(() => {
+            otpTime--;
+            updateOtpTimerUI();
+
+            if (otpTime <= 0) {
+                clearInterval(otpInterval);
+                otpInterval = null;
+                $('.otp_timer').text('Expired');
+                $('.resend_otp_btn').prop('disabled', false);
+            }
+        }, 1000);
+    }
+
+    function updateOtpTimerUI() {
+        let min = Math.floor(otpTime / 60);
+        let sec = otpTime % 60;
+
+        $('.otp_timer').text(
+            `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`
+        );
     }
 
     function get_department(callback) {

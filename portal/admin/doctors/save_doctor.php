@@ -46,7 +46,7 @@ $rules = [
     "doctor_status" => "required",
     "is_consultation_online" => "required|numeric",
     "two_fa_enabled" => "required|numeric",
-    "profile_image" => "required|file:type:jpg,jpeg,png|max_size:20KB"
+    "profile_image" => "required|file:type:jpg,jpeg,png|max_size:2MB"
 ];
 
 $errors = validate($_POST, $rules);
@@ -60,7 +60,7 @@ if(!verify_csrf($_POST['csrf_token'])) {
 $_POST = filteration($_POST);
 
 $first_name = strtolower($_POST['first_name']);
-$middle_name = strtolower($_POST['middele_name']);
+$middle_name = strtolower($_POST['middle_name']);
 $last_name = strtolower($_POST['last_name']);
 $qualification = strtolower($_POST['qualification']);
 $specialty = strtolower($_POST['specialty']);
@@ -84,23 +84,105 @@ $state = strtolower($_POST['state']);
 $pincode = $_POST['pincode'];
 $email = $_POST['email'];
 $phone = $_POST['phone'];
-$password = $_POST['password'];
 $status = $_POST['status'];
 $doctor_status = $_POST['doctor_status'];
 $is_consultation_online = $_POST['is_consultation_online'];
 $two_fa_enabled = $_POST['two_fa_enabled'];
+$duplicate_id = $_POST['duplicate_id'] ?? "";
+$verified_email = strtolower($_POST['email_verified']);
+$password = $_POST['password'];
+$password = password_hash($password, PASSWORD_DEFAULT);
 
-$dup = checkDuplicateFields("users", ["email" => $email, "phone" => $phone]);
+if(!empty($duplicate_id)) {
+    $dup = checkDuplicateFields("users", ["phone" => $phone], ["user_id" => $duplicate_id]);
+}else{
+     $dup = checkDuplicateFields("users", ["phone" => $phone]);   
+}
 
 if($dup['status'] === "duplicate") {
     json_response("error", "", "", $dup['errors']);
 }
 
-$profile_image = uploadfile("profile_image", "uploads/profile_images/", "", null, "", ['jpg', 'jpeg', 'png']);
-
-if (empty($profile_image)) {
-    json_response("error", "Image Uploading Error");
+if(empty($verified_email) || $verified_email != $email || $_SESSION['email_verified'] != $email) {
+    json_response("error", "", "unveryfied", ["email" => "Please verify your email."]);
 }
+$role_id = 2;
+if(!empty($duplicate_id)) {
+    if (is_superadmin('role_id','users', 'user_id', $duplicate_id)) {
+        json_response("error", "This is a Super Admin. You cannot change this role.");
+    }
+
+    $doctor_check = select("SELECT * FROM doctors WHERE user_id = ?", [$duplicate_id], "i");
+    $staff_check = select("SELECT * FROM staff WHERE user_id = ?", [$duplicate_id], "i");
+    $patient_check = select("SELECT * FROM patients WHERE user_id = ?", [$duplicate_id], "i");
+
+    $role_id = (int) $role_id; 
+
+    if ($doctor_check['rows'] > 0 && !in_array($role_id, [2, 3])) {
+        update("UPDATE doctors SET doctor_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
+    }
+
+    if (in_array($role_id, [2, 5]) && $staff_check['rows'] > 0) {
+        update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
+    }
+
+    $profile_image = uploadfile("profile_image", "uploads/profile_images/", "users", $duplicate_id, "user_id", ['jpg', 'jpeg', 'png']);
+
+    if (empty($profile_image)) {
+        json_response("error", "Image Uploading Error");
+    }
+    $sql = "UPDATE users SET 
+        profile_image = ?, 
+        first_name = ?, 
+        middle_name = ?,
+        last_name = ?,
+        email = ?,
+        phone = ?,
+        password = ?,
+        role_id = ?,
+        gender = ?,
+        dob = ?,
+        status = ?
+        WHERE user_id = ?";
+    $values = [ $profile_image, $first_name, $middle_name, $last_name, $email, $phone, $password,$role_id, $gender, $dob, $status, $duplicate_id ];
+    $datatypes = "sssssssisssi";
+    $result = update($sql, $values, $datatypes);
+    $final_id = $duplicate_id;
+
+}else{
+    $profile_image = uploadfile("profile_image", "uploads/profile_images/", "", null, "", ['jpg', 'jpeg', 'png']);
+
+    if (empty($profile_image)) {
+        json_response("error", "Image Uploading Error");
+    }
+    $sql = "INSERT INTO users (profile_image, first_name, middle_name, last_name, email, phone, password, role_id, gender, dob, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $values = [ $profile_image, $first_name,$middle_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status ];
+    $datatypes = "ssssssissi";
+    $result = insert($sql, $values, $datatypes);
+    $final_id = $result['insert_id'];
+}
+
+if($result['status'] == "error") {
+    json_response($result['status'], $result['message']);
+}
+
+$doctorsql = "INSERT INTO doctors (user_id, specialty, sub_specialty, qualification, years_experience, department_id, medical_license_no, license_issue_date, license_expiry_date, consultation_fee, available_days, available_time_from, available_time_to, languages_spoken, bio, street, city, state, pincode, doctor_status, is_consultation_online, two_fa_enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$doctorvalues = [ $final_id, $specialty, $sub_specialty, $qualification, $years_experience, $department_id, $medical_license_no, $license_issue_date, $license_expiry_date, $consultation_fee, $available_days, $available_time_from, $available_time_to, $languages_spoken, $bio, $street, $city, $state, $pincode, $doctor_status, $is_consultation_online, $two_fa_enabled ];
+$doctordatatypes = "isssiissdsssssssssssii";
+
+$doctorresult = insert($doctorsql, $doctorvalues, $doctordatatypes);
+
+
+$doctorresult['message'] = ($doctorresult['status'] === "success") 
+    ? "User Created Successfully." 
+    : $doctorresult['message'];
+
+json_response($doctorresult['status'], $doctorresult['message'], "", "");
+
+
+
+
+
 
 
 ?>
