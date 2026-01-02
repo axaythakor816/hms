@@ -336,3 +336,36 @@ function generatePagination(currentPage, totalPages) {
     return paginationHtml;
 }
 
+let otpInterval = null;
+
+function startOtpTimer(duration = 300) {
+    if (otpInterval) {
+        clearInterval(otpInterval);
+    }
+
+    otpTime = duration;
+    $('.resend_otp_btn').prop('disabled', true);
+    updateOtpTimerUI();
+
+    otpInterval = setInterval(() => {
+        otpTime--;
+        updateOtpTimerUI();
+
+        if (otpTime <= 0) {
+            clearInterval(otpInterval);
+            otpInterval = null;
+            $('.otp_timer').text('Expired');
+            $('.resend_otp_btn').prop('disabled', false);
+        }
+    }, 1000);
+}
+
+function updateOtpTimerUI() {
+    let min = Math.floor(otpTime / 60);
+    let sec = otpTime % 60;
+
+    $('.otp_timer').text(
+        `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`
+    );
+}
+

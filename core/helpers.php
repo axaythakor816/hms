@@ -401,7 +401,12 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
     }
 
     // Create unique filename
-    $uniqueName = ($id ? $id . "_" : "") . time() . "_" . uniqid() . "." . $ext;
+    $role = basename(dirname(rtrim($uploadFolder, '/')));
+    if($role == "doctor" || $role == "staff" || $role == "patient") {
+        $uniqueName = $role . "_" . ($id ?? "new" ) .  "_" . time() . "_" . uniqid() . "." . $ext;
+    }else{
+        $uniqueName = ($id ? $id . "_" : "") . time() . "_" . uniqid() . "." . $ext;
+    }
 
     $targetPath = rtrim($uploadFolder, '/') . '/' . $uniqueName;
 

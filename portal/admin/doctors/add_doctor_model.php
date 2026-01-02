@@ -380,7 +380,7 @@ if(!has_permission("doctors", "can_add")) {
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-block local-forms">
-                                                <label for="confirm_assword">Confirm Password <span class="login-danger">*</span></label>
+                                                <label for="confirm_pssword">Confirm Password <span class="login-danger">*</span></label>
                                                 <input id="confirm_password" name="confirm_password" class="form-control" type="password" placeholder="Enter confirm password">
                                                 <span class="error" id="confirm_password_error"></span>
                                             </div>
@@ -475,22 +475,3 @@ if(!has_permission("doctors", "can_add")) {
     </div>
 </div>
 
-<div class="modal fade" id="confirmModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Confirmation</h5>
-        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> -->
-      </div>
-      <div class="modal-body" id="">
-        <span id="duplicate_message"></span>
-         <span>, Are You Sure Change The <span id="duplicate_name"></span> Role.</span>
-      </div>
-      <input type="hidden" name="duplicate_id" id="duplicate_id">
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="confirmNo">No</button>
-        <button type="button" class="btn btn-primary" id="confirmYes">Yes</button>
-      </div>
-    </div>
-  </div>
-</div>

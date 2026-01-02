@@ -37,25 +37,23 @@ if($action == 'check_user') {
     }
 
     if($dup['status'] === "duplicate") {
-        // if(!empty($id)) {
-        //     $user = 
-        //     $dup['errors']['user_id'] = $id;
-        //     $dup['errors']['user_name'] = $user['data'][0]['first_name'];
-        // }else{
-
-           
+        if(!empty($id)) {
+            json_response("error", "", "", $dup['errors']);
+        }else{           
             $user = select("SELECT user_id, first_name FROM users WHERE email = ? LIMIT 1", [$email], "s");
             if (is_superadmin('role_id','users', 'user_id', $user['data'][0]['user_id'])) {
                 json_response("error", "This is a Super Admin. You cannot change this role.");
             }
 
-            $check_doctor = select("SELECT *")
+            $check_doctor = select("SELECT * FROM doctors WHERE user_id = ?", [$user['data'][0]['user_id']], "i");
 
-            if()
+            if($check_doctor['rows'] > 0) {
+                json_response("error", "Doctor Already Exist");
+            }
 
             $dup['errors']['user_id'] = $user['data'][0]['user_id'];
             $dup['errors']['user_name'] = $user['data'][0]['first_name'];
-        // }
+        }
         json_response("success", "", "duplicate", $dup['errors']);
     }
     json_response("success","");

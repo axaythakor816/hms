@@ -103,6 +103,16 @@ if($dup['status'] === "duplicate") {
     json_response("error", "", "", $dup['errors']);
 }
 
+if(!empty($duplicate_id)) {
+    $license_dup = checkDuplicateFields("doctors", ["medical_license_no" => $medical_license_no], ["user_id" => $duplicate_id]);
+}else{
+    $license_dup = checkDuplicateFields("doctors", ["medical_license_no" => $medical_license_no]);   
+}
+
+if($license_dup['status'] === "duplicate") {
+    json_response("error", "", "", $license_dup['errors']);
+}
+
 if(empty($verified_email) || $verified_email != $email || $_SESSION['email_verified'] != $email) {
     json_response("error", "", "unveryfied", ["email" => "Please verify your email."]);
 }
@@ -118,15 +128,27 @@ if(!empty($duplicate_id)) {
 
     $role_id = (int) $role_id; 
 
-    if ($doctor_check['rows'] > 0 && !in_array($role_id, [2, 3])) {
-        update("UPDATE doctors SET doctor_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
+    if ($doctor_check['rows'] > 0 ) {
+        json_response("error", "Doctor Already Exist");
     }
 
     if (in_array($role_id, [2, 5]) && $staff_check['rows'] > 0) {
-        update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
+        $image = select("SELECT profile_image FROM users WHERE user_id = ?",[$duplicate_id],"i");
+
+        if ($image['rows'] > 0 && !empty($image['data'][0]['profile_image'])) {
+            $oldImage = $image['data'][0]['profile_image'];
+
+            $deleteimage = deletefile("../../assets/uploads/staff/profile_image/" . $oldImage);
+            if(!$deleteimage) {
+                json_response("error", "image delete problem");
+            }
+        }
+
+        update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $duplicate_id], "si");
+
     }
 
-    $profile_image = uploadfile("profile_image", "uploads/profile_images/", "users", $duplicate_id, "user_id", ['jpg', 'jpeg', 'png']);
+    $profile_image = uploadfile("profile_image", "../../assets/uploads/doctor/profile_image/", "users", $duplicate_id, "user_id", ['jpg', 'jpeg', 'png']);
 
     if (empty($profile_image)) {
         json_response("error", "Image Uploading Error");
@@ -150,14 +172,14 @@ if(!empty($duplicate_id)) {
     $final_id = $duplicate_id;
 
 }else{
-    $profile_image = uploadfile("profile_image", "uploads/profile_images/", "", null, "", ['jpg', 'jpeg', 'png']);
+    $profile_image = uploadfile("profile_image", "../../assets/uploads/doctor/profile_image/", "", null, "", ['jpg', 'jpeg', 'png']);
 
     if (empty($profile_image)) {
         json_response("error", "Image Uploading Error");
     }
     $sql = "INSERT INTO users (profile_image, first_name, middle_name, last_name, email, phone, password, role_id, gender, dob, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $values = [ $profile_image, $first_name,$middle_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status ];
-    $datatypes = "ssssssissi";
+    $datatypes = "sssssssisss";
     $result = insert($sql, $values, $datatypes);
     $final_id = $result['insert_id'];
 }
@@ -168,7 +190,7 @@ if($result['status'] == "error") {
 
 $doctorsql = "INSERT INTO doctors (user_id, specialty, sub_specialty, qualification, years_experience, department_id, medical_license_no, license_issue_date, license_expiry_date, consultation_fee, available_days, available_time_from, available_time_to, languages_spoken, bio, street, city, state, pincode, doctor_status, is_consultation_online, two_fa_enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 $doctorvalues = [ $final_id, $specialty, $sub_specialty, $qualification, $years_experience, $department_id, $medical_license_no, $license_issue_date, $license_expiry_date, $consultation_fee, $available_days, $available_time_from, $available_time_to, $languages_spoken, $bio, $street, $city, $state, $pincode, $doctor_status, $is_consultation_online, $two_fa_enabled ];
-$doctordatatypes = "isssiissdsssssssssssii";
+$doctordatatypes = "isssiisssdssssssssssii";
 
 $doctorresult = insert($doctorsql, $doctorvalues, $doctordatatypes);
 
@@ -178,11 +200,6 @@ $doctorresult['message'] = ($doctorresult['status'] === "success")
     : $doctorresult['message'];
 
 json_response($doctorresult['status'], $doctorresult['message'], "", "");
-
-
-
-
-
 
 
 ?>

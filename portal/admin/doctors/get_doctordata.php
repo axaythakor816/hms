@@ -35,6 +35,7 @@ $sql = "SELECT
     -- USERS
     u.user_id,
     u.first_name,
+    u.middle_name,
     u.last_name,
     u.profile_image,
     u.email,
@@ -136,7 +137,7 @@ foreach($result['data'] as $row) {
                 <td>" . clean($row['medical_license_no']) . "</td>
                 <td>" . clean($row['consultation_fee']) . "</td>
                 <td>" . clean($row['available_days']) . "</td>
-                <td>" . format_datetime($row['available_time_from']) . (!empty($row['available_time_from']) && !empty($row['available_time_to']) ? ' to ' : '') . format_datetime($row['available_time_to']) . "</td>
+                <td>" . format_datetime($row['available_time_from'], "g:i A \\o\\n M j, Y") . (!empty($row['available_time_from']) && !empty($row['available_time_to']) ? ' to ' : '') . format_datetime($row['available_time_to'], "g:i A \\o\\n M j, Y") . "</td>
                 <td>" . ucwords(clean($row['languages_spoken'])) . "</td>
                 <td>" . ucwords(clean($row['bio'])) . "</td>
                 <td>" . ucwords(clean($row['doctor_status'])) . "</td>
@@ -149,12 +150,35 @@ foreach($result['data'] as $row) {
                             <a class='dropdown-item edit-btn' href='#'
                                 data-id='{$row['doctor_id']}'
                                 data-first_name='{$row['first_name']}'
+                                data-middle_name='{$row['middle_name']}'
                                 data-last_name='{$row['last_name']}'
+                                data-qualification='{$row['qualification']}'
+                                data-specialty='{$row['specialty']}'
+                                data-sub_specialty='{$row['sub_specialty']}'
+                                data-department_id='{$row['department_id']}'
+                                data-years_experience='{$row['years_experience']}'
+                                data-medical_license_no='{$row['medical_license_no']}'
+                                data-license_issue_date='{$row['license_issue_date']}'
+                                data-license_expiry_date='{$row['license_expiry_date']}'
+                                data-consultation_fee='{$row['consultation_fee']}'
+                                data-available_days='{$row['available_days']}'
+                                data-available_time_from='{$row['available_time_from']}'
+                                data-available_time_to='{$row['available_time_to']}'
+                                data-dob='{$row['dob']}'
+                                data-profile_image='{$row['profile_image']}'
+                                data-languages_spoken='{$row['languages_spoken']}'
+                                data-gender='{$row['gender']}'
+                                data-bio='{$row['bio']}'
+                                data-street='{$row['street']}'
+                                data-city='{$row['city']}'
+                                data-state='{$row['state']}'
+                                data-pincode='{$row['pincode']}'
                                 data-email='{$row['email']}'
                                 data-phone='{$row['phone']}'
-                                data-dob='{$row['dob']}'
-                                data-gender='{$row['gender']}'
-                                data-status='{$row['user_status']}'>
+                                data-status='{$row['user_status']}'
+                                data-doctor_status='{$row['doctor_status']}'
+                                data-is_consultation_online='{$row['is_consultation_online']}'                               
+                                data-two_fa_enabled='{$row['two_fa_enabled']}'>
                                 <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit
                             </a>
                         </td>

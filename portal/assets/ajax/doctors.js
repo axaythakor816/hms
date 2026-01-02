@@ -98,6 +98,30 @@ window.state = window.state || {
             });
         });
 
+        $("#edit_bio").on("input", function() {
+            var count = $(this).val().length;
+            $("#edit_bio_count").text(count);
+            var desc = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                url: "doctors/save_doctor.php",
+                data: {
+                    action: "count",
+                    bio: desc
+                },
+                dataType: "json",
+                success: function(res) {
+                    $("#edit_bio_count").text(res.data);
+                },
+                error: function(xhr, status, error) {
+                    console.log("Ajax Error: ", error);
+                    console.log("Status: ", status);
+                    console.log("Response: ", xhr.responseText);
+                }
+            });
+        });
+
         $("#addDoctorModal").on("show.bs.modal", function () {
             get_department();
 
@@ -121,6 +145,103 @@ window.state = window.state || {
             $("#duplicate_message").text();
             $("input[name = 'duplicate_id']").val("");
             $("#duplicate_name").text();
+            $("#bio_count").text("0");    
+
+        });
+
+        $("#editDoctorModal").on("hide.bs.modal", function () {
+            $("#edit_doctor_form")[0].reset();
+            $(".error").text("");
+            $("button[name='update_doctor']").prop("disabled", false).text("Update Doctor");  
+            $("input[name='email']").prop("readonly", false);
+            $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+            $('#edit_email_verified_icon').hide();
+            $('#edit_email_verified').val("");  
+            $("button[name = 'resend_otp']").prop("disabled", true).text('Resend otp');
+            $('.otp_block').hide();
+            $('#edit_send_verification_btn').show();
+            $("#edit_bio_count").text("0");    
+        });
+
+        $(document).on("click", ".edit-btn", function () {
+
+            let id = $(this).data("id");
+            let middle_name = $(this).data("middle_name");
+            let first_name = $(this).data("first_name");
+            let last_name = $(this).data("last_name");
+            let qualification = $(this).data("qualification");
+            let specialty = $(this).data("specialty");
+            let sub_specialty = $(this).data("sub_specialty");
+            let department_id = $(this).data("department_id");
+            let years_experience = $(this).data("years_experience");
+            let medical_license_no = $(this).data("medical_license_no");
+            let license_issue_date = $(this).data("license_issue_date");
+            let license_expiry_date = $(this).data("license_expiry_date");
+            let consultation_fee = $(this).data("consultation_fee");
+            let available_days = $(this).data("available_days");
+            let available_time_from = $(this).data("available_time_from");
+            let available_time_to = $(this).data("available_time_to");
+            let dob = $(this).data("dob");
+            let profile_image = $(this).data("profile_image");
+            let languages_spoken = $(this).data("languages_spoken");
+            let gender = $(this).data("gender");
+            let bio = $(this).data("bio");
+            let street = $(this).data("street");
+            let city = $(this).data("city");
+            let state = $(this).data("state");
+            let pincode = $(this).data("pincode");
+            let phone = $(this).data("phone");
+            let email = $(this).data("email");
+            let status = $(this).data("status");
+            let doctor_status = $(this).data("doctor_status");
+            let is_consultation_online = $(this).data("is_consultation_online");
+            let two_fa_enabled = $(this).data("two_fa_enabled");
+
+            $("#edit_doctor_id").val(id);
+            if(bio) {
+                $("#edit_bio_count").text(bio.length);
+            }
+            get_department(function() {
+                $("#edit_department_id").val(department_id).trigger("change");
+            });
+
+            $("input[name='gender'][value='" + gender + "']").prop("checked", true);
+
+            $("#edit_first_name").val(first_name);
+            $("#edit_middle_name").val(middle_name);
+            $("#edit_last_name").val(last_name);
+            $("#edit_qualification").val(qualification);
+            $("#edit_specialty").val(specialty);
+            $("#edit_sub_specialty").val(sub_specialty);
+            $("#edit_department_id").val(department_id).trigger("change");
+            $("#edit_years_experience").val(years_experience);
+            $("#edit_medical_license_no").val(medical_license_no);
+            $("#edit_license_issue_date").val(license_issue_date);
+            $("#edit_license_expiry_date").val(license_expiry_date);
+            $("#edit_consultation_fee").val(consultation_fee);
+            $("#edit_available_days").val(available_days);
+            $("#edit_available_time_from").val(available_time_from);
+            $("#edit_available_time_to").val(available_time_to);
+            $("#edit_languages_spoken").val(languages_spoken);
+            $("#edit_bio").val(bio);
+            $("#edit_street").val(street);
+            $("#edit_city").val(city);
+            $("#edit_state").val(state);
+            $("#edit_pincode").val(pincode);
+            $("#edit_doctor_status").val(doctor_status).trigger("change");
+            $("#edit_is_consultation_online").val(is_consultation_online).trigger("change");
+            $("#edit_two_fa_enabled").val(two_fa_enabled).trigger("change");
+            $("#edit_email").val(email);
+            $("#edit_phone").val(phone);
+            $("#edit_dob").val(dob);
+            $("#edit_status").val(status).trigger("change");
+            $("#editDoctorModal").modal("show");
+
+            $('#edit_send_verification_btn').hide();
+
+            $("#edit_email_verified").val(email); 
+            $('#edit_email_verified_icon').show();
+        
         });
 
         $(document).on('click', '.send_verification_btn', function() {
@@ -133,16 +254,16 @@ window.state = window.state || {
             let errors = validateForm('#' + $(this).closest("form").attr("id"), rules);
             let formId = $(this).closest("form").attr("id");
 
-            // if(Object.keys(errors).length > 0) {
-            //     $.each(errors, function(index, value) {
-            //         $("#" + (formId === "edit_doctor_form" ? "edit_" : "") + index + "_error").text(value);
-            //     });
-            //     return false;
-            // }
+            if(Object.keys(errors).length > 0) {
+                $.each(errors, function(index, value) {
+                    $("#" + (formId === "edit_doctor_form" ? "edit_" : "") + index + "_error").text(value);
+                });
+                return false;
+            }
 
             var email = $(this).closest("form").find("input[name='email']").val();
             var csrf_token = $(this).closest("form").find("input[name='csrf_token']").val();
-            var edit_id = $(this).closest("form").find("#edit_doctor_id").val();
+            var edit_id = $(this).closest("form").find("input[name = 'doctor_id']").val();
 
             $.ajax({
                 type: "POST",
@@ -185,6 +306,7 @@ window.state = window.state || {
                                     $("button[name='send_verification']").prop("disabled", false).text(' Send');
                                     return;
                                 }
+                                $("button[name='send_verification']").prop("disabled", true).text(' Sending...');
                                 $("input[name = 'duplicate_id']").val(res.errors.user_id); 
 
                                 sendOtpRequest(formId, edit_id, email, csrf_token);
@@ -204,6 +326,64 @@ window.state = window.state || {
             
         });
 
+        $(document).on('click', '.resend_otp_btn', function () {
+            $(".error").text("");
+            
+            let rules = {
+                email: "required|email",
+            };
+            
+            let errors = validateForm('#' + $(this).closest("form").attr("id"), rules);
+            let formId = $(this).closest("form").attr("id");
+
+            if(Object.keys(errors).length > 0) {
+                let formId = $(this).closest("form").attr("id");
+                $.each(errors, function(index, value) {
+                    $("#" + (formId === "edit_doctor_form" ? "edit_" : "") + index + "_error").text(value);
+                });
+                return false;
+            }
+
+            var email = $(this).closest("form").find("input[name='email']").val();
+            var csrf_token = $(this).closest("form").find("input[name='csrf_token']").val();
+
+            $.ajax({
+                type: "POST",
+                url: "doctors/send_and_verifyotp.php",
+                data: {
+                    email: email,
+                    action: "send_otp",
+                    csrf_token: csrf_token,
+                },
+                beforeSend: function() {
+                    $("button[name = 'resend_otp']").prop("disabled", true).text('Resending...');
+                },
+                dataType: "json",
+                success: function (res) {
+                    if(res.status == "error") {
+                        $("button[name = 'resend_otp']").prop("disabled", false).text('Resend otp');
+                        if(res.message) {
+                            showAlert(res.status, res.message);
+                        }else{
+                            $.each(res.errors, function(field, message) {
+                                let prefix = (formId === "edit_doctor_form") ? "edit_" : "";
+                                $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
+                            });
+                        }
+                    }else if(res.status == "success") {
+                        showAlert(res.status, "OTP has been resent to your email. Please check your inbox.");
+                        $("button[name = 'resend_otp']").prop("disabled", true).text('Resend otp');
+                        startOtpTimer(300); 
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Status: ", status);
+                    console.log("Ajax Error: ", error);
+                    console.log("Response: ", xhr.responseText);
+                }
+            });
+        }); 
+
         $(document).on('click', '.verify_otp_btn', function() {
             $(".error").text("");
 
@@ -220,7 +400,7 @@ window.state = window.state || {
                 console.log("formid ", formId);
 
                 $.each(errors, function(index, value) {
-                    $("#" + (formId === "edituser_form" ? "edit_" : "") + index + "_error").text(value);
+                    $("#" + (formId === "edit_doctor_form" ? "edit_" : "") + index + "_error").text(value);
                 });
                 return false;
             }
@@ -250,7 +430,7 @@ window.state = window.state || {
                             showAlert(res.status, res.message);
                         }else{
                             $.each(res.errors, function(field, message) {
-                                let prefix = (formId === "edituser_form") ? "edit_" : "";
+                                let prefix = (formId === "edit_doctor_form") ? "edit_" : "";
                                 $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
                             });
                         }
@@ -418,6 +598,141 @@ window.state = window.state || {
             });
         });
 
+        $("#edit_doctor_form").submit(function(e) {
+            e.preventDefault();
+            $(".error").text("");
+        
+            let rules = {
+                first_name: "required|name|min:2|max:10",
+                middle_name: "required|name|min:1|max:10",
+                last_name: "required|name|min:2|max:10",
+                email: "required|email|max:30",
+                phone: "required|mobile",
+                specialty: "required|min:2|max:20",
+                sub_specialty: "required|min:2|max:20",
+                qualification: "required|min:2|max:20",
+                department_id: "required",
+                years_experience: "required|numeric|min_value:0|max_value:99",
+                medical_license_no: "required|min:5|max:20|regex:/^[A-Za-z0-9\/\-]+$/",
+                license_issue_date: "required|date",
+                license_expiry_date: "required|date",
+                consultation_fee     : "required|numeric|min_value:0",
+                available_days       : "required|min:3|max:50",
+                available_time_from : "required",
+                available_time_to   : "required",
+                gender  : "required",
+                dob: "required|date",
+                languages_spoken: "required|min:2|max:25",
+                bio: "required|min:10|max:300",
+                street  : "required|min:5|max:50",
+                city    : "required|name|min:2|max:20",
+                state   : "required|name|min:2|max:20",
+                pincode : "required|regex:/^[0-9]{5,6}$/",
+                // password : "required|password_strong|min:6|max:20",
+                // confirm_password : "required|match:password|min:6|max:20",
+                status: "required",
+                doctor_status: "required",
+                is_consultation_online: "required|numeric",
+                two_fa_enabled: "required|numeric",
+                // profile_image: "required|file:type:jpg,jpeg,png|max_size:2MB"
+            };
+            
+            let password = $(this).closest("form").find("input[name='password']").val().trim();
+            let confirm_password = $(this).closest("form").find("input[name='confirm_password']").val().trim();
+            let profile_image = $(this).closest("form").find("input[name='profile_image']").val().trim();
+
+            if(password !== "" || confirm_password !== "") {
+                rules.password = "required|password_strong";
+                rules.confirm_password = "required|match:password";
+            }
+            if(profile_image !== "") {
+                rules.profile_image = "required|file:type:jpg,jpeg,png|max_size:2MB";
+            }
+
+            let errors = validateForm("#edit_doctor_form", rules);
+
+            if(Object.keys(errors).length > 0) {
+                $.each(errors, function (index, value) {
+                    $("#edit_" + index + "_error").text(value);                 
+                });
+                return false;
+            }
+
+            let otpVisible = $(this).closest("form").find(".otp_block").is(":visible");
+
+            if(otpVisible) {
+                var checkotp = $("#edit_otp").val().trim();
+                if(!checkotp) {
+                    $("#edit_otp_error").text("Otp Is Required.");
+                    return false;
+                }
+            }
+
+            let verified_email = $(this).closest("form").find("input[name='email_verified']").val().trim();
+            let current_email  = $(this).closest("form").find("input[name='email']").val().trim();
+
+            if(!verified_email || verified_email !== current_email) {
+                $("#edit_email_error").text("Please verify your email.");
+                $("input[name='email']").prop("readonly", false);
+                $("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+                $('#edit_send_verification_btn').show();
+                $("#edit_otp").val('');
+                $('#edit_email_verified_icon').hide();
+
+                return false; 
+            }
+            let near = $(this).closest("form");
+
+            var form = $("#edit_doctor_form")[0];
+            var formdata = new FormData(form);
+
+            $.ajax({
+                type: "POST",
+                url: "doctors/edit_doctor.php",
+                data: formdata,
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $(".error").text("");
+                    $("button[name='update_doctor']").prop("disabled", true).text("Updating...");
+                }, 
+                success: function(res) {
+                    $("button[name='update_doctor']").prop("disabled", false).text("Update Doctor"); 
+                    if(res.status == "error") {
+                        if(res.message) {
+                            showAlert(res.status, res.message);
+                        }else{
+                            $.each(res.errors, function(field, message) {
+                                if(Array.isArray(message)) {
+                                    $("#edit_" + field + "_error").text(message.join(", "));
+                                }else{
+                                    $("#edit_" + field + "_error").text(message);
+                                    if(res.data == "unveryfied") {
+                                        near.find("input[name='email']").prop("readonly", false);
+                                        near.find("button[name = 'send_verification']").prop("disabled", false).text(' Send');
+                                        near.find('#edit_send_verification_btn').show();
+                                        near.find("#edit_otp").val('');
+                                        near.find('#edit_email_verified_icon').hide("");
+                                    }
+                                }
+                            });
+                        }
+                    }else if(res.status == "success") {
+                        showAlert(res.status, res.message);
+                        $("#editDoctorModal").modal("hide");
+                        $("#edit_doctor_form")[0].reset();
+                        loadpagedata();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Ajax Error: ", error);
+                    console.log("Status: ", status),
+                    console.log("Response: ", xhr.responseText);
+                }
+            });
+        });
+
+
     });
 
     function showConfirmModal(callback) {
@@ -452,7 +767,7 @@ window.state = window.state || {
                         showAlert(res.status, res.message);
                     }else{
                         $.each(res.errors, function(field, message) {
-                            let prefix = (formId === "edituser_form") ? "edit_" : "";
+                            let prefix = (formId === "edit_doctor_form") ? "edit_" : "";
                             $("#" + prefix + field + "_error").text(Array.isArray(message) ? message.join(", ") : message);
                         });
                     }
@@ -534,38 +849,6 @@ window.state = window.state || {
             $(".doctor-delete").addClass("disabled");
         }
     }
-     let otpInterval = null;
-
-    function startOtpTimer(duration = 300) {
-        if (otpInterval) {
-            clearInterval(otpInterval);
-        }
-
-        otpTime = duration;
-        $('.resend_otp_btn').prop('disabled', true);
-        updateOtpTimerUI();
-
-        otpInterval = setInterval(() => {
-            otpTime--;
-            updateOtpTimerUI();
-
-            if (otpTime <= 0) {
-                clearInterval(otpInterval);
-                otpInterval = null;
-                $('.otp_timer').text('Expired');
-                $('.resend_otp_btn').prop('disabled', false);
-            }
-        }, 1000);
-    }
-
-    function updateOtpTimerUI() {
-        let min = Math.floor(otpTime / 60);
-        let sec = otpTime % 60;
-
-        $('.otp_timer').text(
-            `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`
-        );
-    }
 
     function get_department(callback) {
         let csrf_token = $("input[name = 'csrf_token']").val();
@@ -581,7 +864,7 @@ window.state = window.state || {
                     showAlert(res.message);
                 }else if(res.status == "success") {
                     $("#department_id").html(res.data);
-                    $("#edit_depatrment_id").html(res.data);
+                    $("#edit_department_id").html(res.data);
                     if(callback) callback();
                 }
             }, 

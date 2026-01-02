@@ -146,15 +146,35 @@ if(has_permission('doctors', 'can_add')) {
 	require_once 'add_doctor_model.php';
 }
 
-// if(has_permission('doctors', 'can_edit')) {
-// 	require_once 'edit_doctor_model.php';
-// }
+if(has_permission('doctors', 'can_edit')) {
+	require_once 'edit_doctor_model.php';
+}
 
 // if(has_permission('doctors', 'can_delete')) {
 // 	require_once 'delete_doctor_model.php';
 // }
 
 ?>
+
+<div class="modal fade" id="confirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmation</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> -->
+      </div>
+      <div class="modal-body" id="">
+        <span id="duplicate_message"></span>
+         <span>, Are You Sure Change The <span id="duplicate_name"></span> Role.</span>
+      </div>
+      <input type="hidden" name="duplicate_id" id="duplicate_id">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="confirmNo">No</button>
+        <button type="button" class="btn btn-primary" id="confirmYes">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="../assets/ajax/doctors.js"></script>
 

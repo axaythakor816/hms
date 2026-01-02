@@ -203,9 +203,9 @@ window.state = window.state || {
             $("#edit_department_id").val(id);
             $("#edit_department_name").val(name);
             $("#edit_department_description").val(desc);
-
-            $("#edit_desc_count").text(desc.length);
-
+            if(desc){
+                $("#edit_desc_count").text(desc.length);
+            }
             $("#editDepartmentModal").modal("show");
         });
 
