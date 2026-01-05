@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 31, 2025 at 06:02 AM
+-- Generation Time: Jan 05, 2026 at 02:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -209,10 +209,6 @@ CREATE TABLE `doctors` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `doctors`
---
-
 -- --------------------------------------------------------
 
 --
@@ -246,6 +242,38 @@ CREATE TABLE `doctor_schedules` (
   `schedule_status` enum('active','inactive') DEFAULT 'active',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fields`
+--
+
+CREATE TABLE `fields` (
+  `field_id` int(11) NOT NULL,
+  `module_id` int(10) UNSIGNED NOT NULL,
+  `field_name` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `field_permissions`
+--
+
+CREATE TABLE `field_permissions` (
+  `sub_permission_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `field_id` int(11) NOT NULL,
+  `can_view` tinyint(1) DEFAULT 0,
+  `can_edit` tinyint(1) DEFAULT 0,
+  `can_add` tinyint(1) DEFAULT 0,
+  `can_delete` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -359,7 +387,9 @@ INSERT INTO `modules` (`module_id`, `module_name`, `created_at`, `updated_at`) V
 (12, 'profiles', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
 (13, 'roles', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
 (14, 'manage users', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
-(15, 'modules', '2025-12-18 08:16:36', '2025-12-18 08:16:36');
+(15, 'modules', '2025-12-18 08:16:36', '2025-12-18 08:16:36'),
+(16, 'fields', '2026-01-05 04:46:34', '2026-01-05 04:46:34'),
+(17, 'sub permissions', '2026-01-05 12:31:18', '2026-01-05 12:38:58');
 
 -- --------------------------------------------------------
 
@@ -534,32 +564,22 @@ CREATE TABLE `role_permissions` (
 
 INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module_id`, `can_view`, `can_add`, `can_edit`, `can_delete`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(2, 1, 2, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(3, 1, 3, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(4, 1, 4, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(5, 1, 5, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(6, 1, 6, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(7, 1, 7, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(8, 2, 1, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(9, 2, 5, 1, 0, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(10, 2, 3, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(11, 2, 8, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(12, 2, 9, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(13, 2, 7, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(14, 3, 1, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(15, 3, 5, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(16, 3, 8, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(17, 3, 6, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(18, 3, 7, 0, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(19, 4, 3, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(20, 4, 5, 1, 1, 1, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(21, 4, 7, 1, 0, 0, 0, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
-(22, 1, 10, 1, 1, 1, 1, '2025-12-12 18:29:12', '2025-12-17 17:46:47'),
-(23, 1, 11, 1, 1, 1, 1, '2025-12-16 15:14:47', '2025-12-17 17:46:47'),
-(24, 1, 12, 1, 1, 1, 1, '2025-12-16 15:15:17', '2025-12-17 17:46:47'),
-(25, 1, 13, 1, 1, 1, 1, '2025-12-16 15:15:36', '2025-12-17 17:46:47'),
-(26, 1, 14, 1, 1, 1, 1, '2025-12-17 17:36:39', '2025-12-17 17:46:47'),
-(27, 1, 15, 1, 1, 1, 1, '2025-12-18 13:46:52', '2025-12-18 13:46:52');
+(2, 1, 11, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(3, 1, 10, 1, 1, 1, 1, '2025-12-08 15:22:29', '2025-12-17 17:46:47'),
+(4, 1, 15, 1, 1, 1, 1, '2026-01-05 17:44:31', '2026-01-05 17:44:31'),
+(5, 1, 14, 1, 1, 1, 1, '2026-01-05 17:46:10', '2026-01-05 17:46:10'),
+(6, 1, 5, 0, 0, 0, 0, '2026-01-05 17:47:14', '2026-01-05 17:56:25'),
+(7, 1, 16, 1, 1, 1, 1, '2026-01-05 17:48:10', '2026-01-05 17:48:10'),
+(8, 1, 13, 1, 1, 1, 1, '2026-01-05 17:48:32', '2026-01-05 17:48:32'),
+(9, 1, 12, 1, 1, 1, 1, '2026-01-05 17:49:22', '2026-01-05 17:49:22'),
+(10, 1, 6, 0, 0, 0, 0, '2026-01-05 17:50:50', '2026-01-05 17:51:33'),
+(11, 1, 7, 0, 0, 0, 0, '2026-01-05 17:51:13', '2026-01-05 17:55:43'),
+(12, 1, 2, 0, 0, 0, 0, '2026-01-05 17:51:55', '2026-01-05 17:51:55'),
+(13, 1, 3, 0, 0, 0, 0, '2026-01-05 17:52:17', '2026-01-05 17:52:17'),
+(14, 1, 8, 0, 0, 0, 0, '2026-01-05 17:52:45', '2026-01-05 17:52:45'),
+(15, 1, 4, 0, 0, 0, 0, '2026-01-05 17:53:03', '2026-01-05 17:53:03'),
+(16, 1, 9, 0, 0, 0, 0, '2026-01-05 17:53:09', '2026-01-05 17:53:09'),
+(17, 1, 17, 1, 1, 1, 1, '2026-01-05 18:09:54', '2026-01-05 18:10:09');
 
 -- --------------------------------------------------------
 
@@ -601,6 +621,13 @@ CREATE TABLE `staff` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`staff_id`, `user_id`, `designation`, `department_id`, `staff_shift`, `join_date`, `staff_salary`, `street`, `city`, `state`, `pincode`, `email_verified`, `phone_verified`, `staff_status`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, NULL, 'rotational', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'active', '2026-01-03 12:57:31', '2026-01-03 12:57:31');
 
 -- --------------------------------------------------------
 
@@ -673,7 +700,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `uuid`, `profile_image`, `first_name`, `middle_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', NULL, 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$UNBVl1UkUJJa72NUgdhViuz9ji5R3TPRUhpvi4b.zXDjB5cDpvpvO', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2025-12-23 05:04:56', NULL, NULL);
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', NULL, 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$6E2xClL2wXvhj3UQOv3c8ODCcfd9oRvkepLcUOapaxvCr8MGpWcDu', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2026-01-03 12:57:31', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -810,6 +837,21 @@ ALTER TABLE `doctor_rounds`
 ALTER TABLE `doctor_schedules`
   ADD PRIMARY KEY (`schedule_id`),
   ADD KEY `doctor_id` (`doctor_id`);
+
+--
+-- Indexes for table `fields`
+--
+ALTER TABLE `fields`
+  ADD PRIMARY KEY (`field_id`),
+  ADD KEY `module_id` (`module_id`);
+
+--
+-- Indexes for table `field_permissions`
+--
+ALTER TABLE `field_permissions`
+  ADD PRIMARY KEY (`sub_permission_id`),
+  ADD KEY `role_id` (`role_id`),
+  ADD KEY `field_id` (`field_id`);
 
 --
 -- Indexes for table `insurance_claims`
@@ -1049,6 +1091,18 @@ ALTER TABLE `doctor_schedules`
   MODIFY `schedule_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `fields`
+--
+ALTER TABLE `fields`
+  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `field_permissions`
+--
+ALTER TABLE `field_permissions`
+  MODIFY `sub_permission_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `insurance_claims`
 --
 ALTER TABLE `insurance_claims`
@@ -1082,7 +1136,7 @@ ALTER TABLE `medical_history`
 -- AUTO_INCREMENT for table `modules`
 --
 ALTER TABLE `modules`
-  MODIFY `module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `nurse_notes`
@@ -1136,7 +1190,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -1148,7 +1202,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `staff_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `staff_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `staff_salary`
@@ -1257,6 +1311,19 @@ ALTER TABLE `doctor_rounds`
 --
 ALTER TABLE `doctor_schedules`
   ADD CONSTRAINT `doctor_schedules_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `fields`
+--
+ALTER TABLE `fields`
+  ADD CONSTRAINT `fields_ibfk_1` FOREIGN KEY (`module_id`) REFERENCES `modules` (`module_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `field_permissions`
+--
+ALTER TABLE `field_permissions`
+  ADD CONSTRAINT `field_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `field_permissions_ibfk_2` FOREIGN KEY (`field_id`) REFERENCES `fields` (`field_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `insurance_claims`

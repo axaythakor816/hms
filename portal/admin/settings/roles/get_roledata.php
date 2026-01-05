@@ -4,7 +4,7 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('roles', 'can_view')) {
-	json_response("error", "Access Denine");
+	json_response("error", "Access Denied");
 	exit;
 }
 

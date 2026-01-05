@@ -1,6 +1,5 @@
 <?php
 
-use PhpOffice\PhpSpreadsheet\Calculation\Engine\FormattedNumber;
 require_once '../../../../core/init.php';
 
 require_login();
@@ -19,33 +18,32 @@ if(!verify_csrf($_POST['csrf_token'] ?? '')) {
 
 $page = filterInput($_POST['page'], 'int');
 $perPage = filterInput($_POST['perPage'], 'int');
-$sortColumn = filterInput($_POST['sortColumn'] ?? 'module_id', 'string');
+$sortColumn = filterInput($_POST['sortColumn'] ?? 'field_id', 'string');
 $search = filterInput($_POST['search'] ?? '', 'string');
 $sortOrder = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
 
 $page = $page ?: 1;
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
 
-$allowedCols = ['module_id', 'module_name', 'created_at', 'updated_at'];
+$allowedCols = ['field_id', 'module_name', 'field_name', 'created_at', 'updated_at'];
 
 if(!in_array($sortColumn, $allowedCols)) {
-    $sortColumn = 'module_id';
-
+    $sortColumn = 'field_id';
 }
 
 $sortOrder = ($sortOrder === 'DESC') ? 'DESC' : 'ASC';
 
 $offset = ($page - 1) * $perPage;
 
-$sql = "SELECT * FROM modules WHERE 1";
+$sql = "SELECT f.*, m.module_name FROM fields f INNER JOIN modules m on f.module_id = m.module_id WHERE 1";
 $whereValues = [];
 $searchType = '';
 
 if(!empty($search)) {
-    $sql .= " AND (module_name LIKE ? OR Created_at LIKE ? OR Updated_at LIKE ?)";
+    $sql .= " AND (m.module_name LIKE ? OR f.field_name LiKE ? OR f.created_at LIKE ? OR f.updated_at LIKE ?)";
     $searchParam = "%$search%";
-    $whereValues = [$searchParam, $searchParam, $searchParam];
-    $searchType = "sss";
+    $whereValues = [$searchParam, $searchParam, $searchParam, $searchParam];
+    $searchType = "ssss";
 }
 
 $totalSql = $sql;
@@ -74,29 +72,32 @@ foreach($result['data'] as $row) {
     $html .= "<tr>
         <td>
             <div class='form-check check-tables'>
-                <input class='form-check-input row-check' type='checkbox' value='{$row['module_id']}'>
+                <input class='form-check-input row-check' type='checkbox' value='{$row['field_id']}'>
             </div>
         </td>
-        <td>{$row['module_id']}</td>
+        <td>{$row['field_id']}</td>
         <td>" . ucwords($row['module_name']) . "</td>
+        <td>" . ucwords($row['field_name']) . "</td>
+
         <td>{$created_at}</td>
         <td>{$updated_at}</td> 
 
-        " . (has_permission('modules', 'can_edit') ? "
+        " . (has_permission('fields', 'can_edit') ? "
         <td class='text-end'>
             <a class='dropdown-item edit-btn' href='#'
-            data-id='{$row['module_id']}'
-            data-module='{$row['module_name']}' >
+            data-id='{$row['field_id']}'
+            data-module='{$row['module_id']}'
+            data-field='{$row['field_name']}' >
                 <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit  
             </a>
         </td>
         " : "") . "
 
-        " . (has_permission('modules', 'can_delete') ? "
+        " . (has_permission('fields', 'can_delete') ? "
         <td class='text-end'>
             <a class='dropdown-item delete-btn' href='#' 
-            data-id='{$row['module_id']}'
-            data-name='{$row['module_name']}'>
+            data-id='{$row['field_id']}'
+            data-name='{$row['field_name']}'>
                 <i class='fa fa-trash'></i> Delete
             </a>
         </td>

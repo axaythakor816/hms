@@ -5,7 +5,7 @@ require_once '../../../core/init.php';
 require_login();
 
 if(!has_permission('manage users', 'can_add')) {
-	json_response("error", "Access Denine");
+	json_response("error", "Access Denied");
 	exit;
 }
 

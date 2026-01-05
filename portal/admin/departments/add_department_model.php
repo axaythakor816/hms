@@ -3,7 +3,7 @@ require_once '../../../core/init.php';
 require_login();	
 
 if(!has_permission('departments', 'can_add')) {
-	showalert("error", "Access Denine");
+	showalert("error", "Access Denied");
 	exit;
 }
 

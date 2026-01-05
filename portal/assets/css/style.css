@@ -6270,6 +6270,16 @@ a.btn.add-links:hover {
 	font-weight: 600;
 	margin-bottom: 0;
 }
+.field-table-blk h3 {
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+.subpermission-table-blk h3 {
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 0;
+}
 .doctor-table-blk, .department-table-blk, .permission-table-blk, .role-table-blk, .user-table-blk {
 	display: -webkit-box;
     display: -ms-flexbox;
@@ -6280,6 +6290,24 @@ a.btn.add-links:hover {
 	flex-wrap: wrap;
 }
 .module-table-blk {
+	display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.subpermission-table-blk {
+	display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.field-table-blk {
 	display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -6306,16 +6334,46 @@ a.btn.add-links:hover {
 	align-items: center;
 	flex-wrap: wrap;
 }
+.subpermission-search-blk {
+	display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.field-search-blk {
+	display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
 .doctor-search-blk .top-nav-search, .department-search-blk .top-nav-search, .permission-search-blk .top-nav-search, .role-search-blk .top-nav-search, .user-search-blk .top-nav-search {
 	margin-left: 15px;
 }
 .module-search-blk .top-nav-search {
 	margin-left: 15px;
 }
+.subpermission-search-blk .top-nav-search {
+	margin-left: 15px;
+}
+.field-search-blk .top-nav-search {
+	margin-left: 15px;
+}
 .doctor-search-blk .top-nav-search form, .department-search-blk .top-nav-search form, .permission-search-blk .top-nav-search form, .role-search-blk .top-nav-search form, .user-search-blk .top-nav-search form {
 	margin: 0px;
 }
 .module-search-blk .top-nav-search form {
+	margin: 0px;
+}
+.subpermission-search-blk .top-nav-search form {
+	margin: 0px;
+}
+.field-search-blk .top-nav-search form {
 	margin: 0px;
 }
 .add-group {
@@ -12573,10 +12631,22 @@ button.swal2-cancel {
 	.module-search-blk .add-group{
 		margin-top: 10px;
 	}
+	.subpermission-search-blk .add-group{
+		margin-top: 10px;
+	}
+	.field-search-blk .add-group{
+		margin-top: 10px;
+	}
 	.doctor-search-blk .top-nav-search, .department-search-blk .top-nav-search, .permission-search-blk .top-nav-search, .role-search-blk .top-nav-search, .user-search-blk .top-nav-search {
 		margin-left: 0;
 	}
 	.module-search-blk .top-nav-search {
+		margin-left: 0;
+	}
+	.subpermission-search-blk .top-nav-search {
+		margin-left: 0;
+	}
+	.field-search-blk .top-nav-search {
 		margin-left: 0;
 	}
 	.attachments li {

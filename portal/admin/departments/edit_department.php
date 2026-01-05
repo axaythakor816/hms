@@ -4,7 +4,7 @@ require_once '../../../core/init.php';
 require_login();
 
 if(!has_permission("departments", "can_edit")) {
-    json_response("error", "Access Denine");
+    json_response("error", "Access Denied");
 }
 
 if(isset($_POST['action']) && $_POST['action'] == "count") {

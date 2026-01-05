@@ -4,7 +4,7 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('modules', 'can_add')) {
-    json_response("error", "Access Denine");
+    json_response("error", "Access Denied");
     exit;
 }
 

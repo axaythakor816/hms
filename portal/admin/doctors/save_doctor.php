@@ -93,6 +93,7 @@ $verified_email = strtolower($_POST['email_verified']);
 $password = $_POST['password'];
 $password = password_hash($password, PASSWORD_DEFAULT);
 
+$duplicate_errors = [];
 if(!empty($duplicate_id)) {
     $dup = checkDuplicateFields("users", ["phone" => $phone], ["user_id" => $duplicate_id]);
 }else{
@@ -100,7 +101,7 @@ if(!empty($duplicate_id)) {
 }
 
 if($dup['status'] === "duplicate") {
-    json_response("error", "", "", $dup['errors']);
+    $duplicate_errors = array_merge($duplicate_errors, $dup['errors']);
 }
 
 if(!empty($duplicate_id)) {
@@ -110,7 +111,11 @@ if(!empty($duplicate_id)) {
 }
 
 if($license_dup['status'] === "duplicate") {
-    json_response("error", "", "", $license_dup['errors']);
+    $duplicate_errors = array_merge($duplicate_errors, $license_dup['errors']);
+}
+
+if(!empty($duplicate_errors)) {
+    json_response("error", "", "", $duplicate_errors);
 }
 
 if(empty($verified_email) || $verified_email != $email || $_SESSION['email_verified'] != $email) {

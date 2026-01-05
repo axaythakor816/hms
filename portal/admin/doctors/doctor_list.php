@@ -150,9 +150,9 @@ if(has_permission('doctors', 'can_edit')) {
 	require_once 'edit_doctor_model.php';
 }
 
-// if(has_permission('doctors', 'can_delete')) {
-// 	require_once 'delete_doctor_model.php';
-// }
+if(has_permission('doctors', 'can_delete')) {
+	require_once 'delete_doctor_model.php';
+}
 
 ?>
 

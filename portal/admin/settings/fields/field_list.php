@@ -3,7 +3,7 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-if(!has_permission('manage users', 'can_view')) {
+if(!has_permission('fields', 'can_view')) {
 	showalert("error", "Access Denied");
 	exit;
 }
@@ -19,15 +19,15 @@ require_role([1]);
 			<div class="row">
 				<div class="col-sm-12">
 					<ul class="breadcrumb">
-						<li class="breadcrumb-item"><a href="settings/manageusers/user_list.php" class="nav-link">User </a></li>
+						<li class="breadcrumb-item"><a href="settings/fields/field_list.php" class="nav-link">Fields </a></li>
 						<li class="breadcrumb-item"><i class="feather-chevron-right"></i></li>
-						<li class="breadcrumb-item active">User List</li>
+						<li class="breadcrumb-item active">Field List</li>
 					</ul>
 				</div>
 			</div>
 		</div>
 		<!-- /Page Header -->
-	
+
 		<div class="row">
 			<div class="col-sm-12">
 			
@@ -38,9 +38,9 @@ require_role([1]);
 						<div class="page-table-header mb-2">
 							<div class="row align-items-center">
 								<div class="col">
-									<div class="user-table-blk">
-										<h3>User List</h3>
-										<div class="user-search-blk">
+									<div class="field-table-blk">
+										<h3>Field List</h3>
+										<div class="field-search-blk">
 											<div class="top-nav-search table-search-blk">
 												<form>
 													<input type="text" class="form-control" placeholder="Search here" id="searchInput">
@@ -48,12 +48,12 @@ require_role([1]);
 												</form>
 											</div>
 											<div class="add-group">
-												<?php if(has_permission('manage users', 'can_add')): ?>
-												<a href="#" data-bs-toggle="modal" data-bs-target="#addUserModal" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
+												<?php if(has_permission('fields', 'can_add')): ?>
+												<a href="#" data-bs-toggle="modal" data-bs-target="#addFieldModal" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
 												<?php endif; ?>
-												<a href="javascript:;" class="btn btn-primary user-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
-												<?php if(has_permission('manage users', 'can_delete')): ?>
-												<a href="javascript:;" id="deleteSelected" class="btn btn-primary user-delete ms-2 disabled"><img src="../assets/img/icons/trash.svg" alt=""></a>
+												<a href="javascript:;" class="btn btn-primary field-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
+												<?php if(has_permission('fields', 'can_delete')): ?>
+												<a href="javascript:;" id="deleteSelected" class="btn btn-primary field-delete ms-2 disabled"><img src="../assets/img/icons/trash.svg" alt=""></a>
 												<?php endif; ?>
 												<select id="RecordsPerPage" class="form-select form-select-sm w-auto ms-2">
 													<option value="10"></option>
@@ -78,9 +78,9 @@ require_role([1]);
 						<!-- /Table Header -->
 						
 						<div class="table-responsive">
-							<input type="hidden" id="user_csrf_token" value="<?php echo csrf_token(); ?>">
+							<input type="hidden" id="field_csrf_token" value="<?php echo csrf_token(); ?>">
 
-							<table class="table border-0 custom-table comman-table datatable mb-0" id="user_table">
+							<table class="table border-0 custom-table comman-table datatable mb-0" id="field_table">
 								<thead>
 									<tr>
 										<th>
@@ -88,19 +88,12 @@ require_role([1]);
 												<input class="form-check-input" type="checkbox" id="checkAll" value="something">
 											</div>
 										</th>
-										<th data-column="user_id">Sr_No</th>
-										<th data-column="uuid">User UID</th>
-										<th data-column="first_name">First Name</th>
-										<th data-column="last_name">Last Name</th>
-										<th data-column="email">Email Address</th>
-										<th data-column="phone">Phone Number</th>
-										<th data-column="role_id">Role</th>
-										<th data-column="gender">Gender</th>
-										<th data-column="dob">Date Of Birth</th>
-										<th data-column="status">Status</th>
-										<th data-column="created_at">created Date</th>
+										<th data-column="field_id">Sr_No</th>
+										<th data-column="module_name">Module</th>
+										<th data-column="field_name">Fields</th>
+                                        <th data-column="created_at">Ceated Date</th>
 										<th data-column="updated_at">Updated Date</th>
-										<?php if(has_permission('manage users', 'can_edit') || has_permission('manage users', 'can_delete')) : ?>
+										<?php if(has_permission('fields', 'can_edit') || has_permission('fields', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
 										<?php endif ?>
 									</tr>
@@ -111,12 +104,12 @@ require_role([1]);
 							</table>
 						</div>
 						<div class="row align-items-center px-2 py-2">
-							<div class="col-sm mt-2 text-muted" id="user_InfoText" style="font-size:13px;">
+							<div class="col-sm mt-2 text-muted" id="field_InfoText" style="font-size:13px;">
 								<!-- information inserted dynamically -->
 							</div>
 
 							<div class="col-sm-auto">
-								<ul class="pagination my-2" id="user_Pagination">
+								<ul class="pagination my-2" id="field_Pagination">
 									<!-- pagignation inserted dynamically -->
 								</ul>
 							</div>
@@ -131,19 +124,15 @@ require_role([1]);
 </div>
 
 <?php 
-	if(has_permission('manage users', 'can_add')) {
-		require_once 'add_user_model.php'; 
+	if(has_permission('fields', 'can_add')) {
+		require_once 'add_field_model.php';
+	} 
+	if(has_permission('fields', 'can_edit')) {
+		require_once 'edit_field_model.php'; 
 	}
-	if(has_permission('manage users', 'can_edit')) {
-		require_once 'edit_user_model.php';
-	}
-	if(has_permission('manage users', 'can_delete')) {
-		require_once 'delete_user_model.php';
+	if(has_permission('fields', 'can_delete')) {
+		require_once 'delete_field_model.php'; 
 	}
 ?>
 
-<script src="../assets/ajax/manageusers.js"></script>
-<!-- 
-<script>
-	loadpagedata();
-</script> -->
+<script src="../assets/ajax/fields.js"></script>

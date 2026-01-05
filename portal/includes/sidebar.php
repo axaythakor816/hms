@@ -155,11 +155,17 @@
                         if(has_permission('permissions', 'can_view')) : ?>
                         <li><a href="settings/permissions/permission_list.php" class="nav-link">Permission Settings</a></li>
                         <?php endif;
+                        if(has_permission('sub permissions', 'can_view')) : ?>
+                        <li><a href="settings/sub_permissions/subpermission_list.php" class="nav-link">Sub Permission Settings</a></li>
+                        <?php endif;
                         if(has_permission('manage users', 'can_view')) : ?>
                         <li><a href="settings/manageusers/user_list.php" class="nav-link">Manage Users</a></li>
                         <?php endif;
                         if(has_permission('modules', 'can_view')) : ?>
                         <li><a href="settings/modules/module_list.php" class="nav-link">Module Setting</a></li>
+                        <?php endif;
+                        if(has_permission('fields', 'can_view')) : ?>
+                        <li><a href="settings/fields/field_list.php" class="nav-link">Field Setting</a></li>
                         <?php endif;?>
                     </ul>
                 </li>

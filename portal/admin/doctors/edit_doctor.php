@@ -1,10 +1,11 @@
 <?php
-require_once '../../../../core/init.php';
+require_once '../../../core/init.php';
+
 
 require_login();
 
 if(!has_permission('doctors', 'can_edit')) {
-	json_response("error", "Access Denine");
+	json_response("error", "Access Denied");
 	exit;
 }
 
@@ -40,7 +41,7 @@ $rules = [
     "doctor_status" => "required",
     "is_consultation_online" => "required|numeric",
     "two_fa_enabled" => "required|numeric",
-    "profile_image" => "required|file:type:jpg,jpeg,png|max_size:2MB"
+    // "profile_image" => "required|file:type:jpg,jpeg,png|max_size:2MB"
 ];
 $password   = trim($_POST['password'] ?? '');
 $confirm_password = trim($_POST['confirm_password'] ?? '');
@@ -63,7 +64,7 @@ if(!verify_csrf($_POST['csrf_token'])) {
 
 $_POST = filteration($_POST);
 
-$id = $_POST['doctor_id'];
+$doctor_id = $_POST['doctor_id'];
 $first_name = strtolower($_POST['first_name']);
 $middle_name = strtolower($_POST['middle_name']);
 $last_name = strtolower($_POST['last_name']);
@@ -99,14 +100,28 @@ if(!empty($password)) {
     $password = password_hash($password, PASSWORD_DEFAULT);
 }
 
-$dup = checkDuplicateFields("users", ["email" => $email, "phone" => $phone], ["user_id" => $id]);
+$duplicate_errors = [];
+
+$user = select("SELECT user_id FROM doctors WHERE doctor_id = ?", [$doctor_id], "i");
+if($user['status'] == "error") {
+    json_response("error", $user['message']);
+}elseif($user['rows'] == 0) {
+    json_response("error", "User id Not Found");
+}
+$user_id = $user['data'][0]['user_id'];
+
+$dup = checkDuplicateFields("users", ["email" => $email, "phone" => $phone], ["user_id" => $user_id]);
 if($dup['status'] === "duplicate") {
-    json_response("error", "", "", $dup['errors']);
+    $duplicate_errors = array_merge($duplicate_errors, $dup['errors']);
 }
 
-$license_dup = checkDuplicateFields("doctors", ["medical_license_no" => $medical_license_no], ["doctor_id" => $id]);
+$license_dup = checkDuplicateFields("doctors", ["medical_license_no" => $medical_license_no], ["doctor_id" => $doctor_id]);
 if($license_dup['status'] === "duplicate") {
-    json_response("error", "", "", $license_dup['errors']);
+    $duplicate_errors = array_merge($duplicate_errors, $license_dup['errors']);
+}
+
+if(!empty($duplicate_errors)) {
+    json_response("error", "","",$duplicate_errors);
 }
 
 $checksql = "SELECT email FROM users WHERE user_id = ?";
@@ -123,16 +138,29 @@ if ($email !== $original_email_from_db) {
     }
 }
 
-if (is_superadmin('role_id','users', 'user_id', $user_id)) {
-    $result = select("SELECT status FROM users WHERE user_id = ?", [$user_id], "i");
-    if($result['status'] === "success" && $result['rows'] > 0) {
-        $status  = $result['data'][0]['status'];
+if($doctor_status == "active") {
+    $role_id = 2;
+    $staff_check = select("SELECT * FROM staff WHERE user_id = ? ", [$user_id], "i");
+
+    if ($staff_check['rows'] > 0) {
+        $sql_get_old_image = select("SELECT profile_image FROM users WHERE user_id = ?", [$user_id], "i");
+        $get_old_image = $sql_get_old_image['data'][0]['profile_image'];
+        deletefile(realpath('../../assets/uploads/staff/profile_image/') . '/' . $get_old_image);
+        update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
     }
+
+}else{
+    $get_role_id = select("SELECT role_id FROM users WHERE user_id = ?", [$user_id], "i");
+    $role_id = $get_role_id['data'][0]['role_id']; 
 }
+
+$profile_image = uploadfile("profile_image", "../../assets/uploads/doctor/profile_image/", "users", $user_id, "user_id", ['jpg', 'jpeg', 'png']);
 
 if(!empty($password)) {
     $sql = "UPDATE users SET 
+        profile_image = ?,
         first_name = ?,
+        middle_name = ?,
         last_name = ?,
         email = ?,
         phone = ?,
@@ -143,11 +171,13 @@ if(!empty($password)) {
         status = ?
         WHERE user_id = ?";
 
-    $values = [$first_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status, $user_id];
-    $type = "sssisisssi";
+    $values = [$profile_image, $first_name, $middle_name, $last_name, $email, $phone, $password, $role_id, $gender, $dob, $status, $user_id];
+    $type = "sssssssisssi";
 }else{
     $sql = "UPDATE users SET 
+        profile_image = ?,
         first_name = ?,
+        middle_name = ?,
         last_name = ?,
         email = ?,
         phone = ?,
@@ -157,8 +187,8 @@ if(!empty($password)) {
         status = ?
         WHERE user_id = ?";
 
-    $values = [$first_name, $last_name, $email, $phone, $role_id, $gender, $dob, $status, $user_id];
-    $type = "sssiisssi";
+    $values = [$profile_image, $first_name, $middle_name, $last_name, $email, $phone, $role_id, $gender, $dob, $status, $user_id];
+    $type = "ssssssisssi";
 }
 
 $result = update($sql, $values, $type);
@@ -166,57 +196,38 @@ if($result['status'] !== "success") {
     json_response($result['status'], $result['message']);
 }
 
-$doctor_check = select("SELECT * FROM doctors WHERE user_id = ?", [$user_id], "i");
-$staff_check = select("SELECT * FROM staff WHERE user_id = ?", [$user_id], "i");
-$patient_check = select("SELECT * FROM patients WHERE user_id = ?", [$user_id], "i");
+$doctorsql = "UPDATE doctors SET 
+    specialty = ?, 
+    sub_specialty = ?, 
+    qualification = ?, 
+    years_experience = ?, 
+    department_id = ?, 
+    medical_license_no = ?, 
+    license_issue_date = ?, 
+    license_expiry_date = ?, 
+    consultation_fee = ?, 
+    available_days = ?, 
+    available_time_from = ?, 
+    available_time_to = ?, 
+    languages_spoken = ?, 
+    bio = ?, 
+    street = ?, 
+    city = ?, 
+    state = ?, 
+    pincode = ?, 
+    doctor_status = ?, 
+    is_consultation_online = ?, 
+    two_fa_enabled = ?
+    WHERE doctor_id = ?"; 
 
-$role_id = (int) $role_id; 
+$doctorvalues = [$specialty, $sub_specialty, $qualification, $years_experience, $department_id, $medical_license_no, $license_issue_date, $license_expiry_date, $consultation_fee, $available_days, $available_time_from, $available_time_to, $languages_spoken, $bio, $street, $city, $state, $pincode, $doctor_status, $is_consultation_online, $two_fa_enabled, $doctor_id];
+$doctordatatypes = "sssiisssdssssssssssiii";
 
-if ($doctor_check['rows'] > 0 && !in_array($role_id, [2, 3])) {
-    update("UPDATE doctors SET doctor_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
-}
+$doctorresult = update($doctorsql, $doctorvalues, $doctordatatypes);
 
-if (in_array($role_id, [2, 5]) && $staff_check['rows'] > 0) {
-    update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
-}
+$doctorresult['message'] = ($doctorresult['status'] === "success") 
+    ? "Doctor Updated Successfully." 
+    : $doctorresult['message'];
 
-switch($role_id) {
-    case 2: 
-        if($doctor_check['rows']>0){
-            update("UPDATE doctors SET doctor_status=? WHERE user_id=?", ['active', $user_id], "si");
-        } else {
-            insert("INSERT INTO doctors (user_id, doctor_status) VALUES (?, ?)", [$user_id,'active'], "is");
-        }
-        break;
-
-    case 3:
-        if($patient_check['rows']>0){
-            update("UPDATE patients SET patient_status=? WHERE user_id=?", ['admit', $user_id], "si");
-        } else {
-            insert("INSERT INTO patients (user_id, patient_status) VALUES (?, ?)", [$user_id,'admit'], "is");
-        }
-        break;
-
-    case 4: 
-        if($staff_check['rows']>0){
-            update("UPDATE staff SET staff_status=? WHERE user_id=?", ['active', $user_id], "si");
-        } else {
-            insert("INSERT INTO staff (user_id, staff_status) VALUES (?, ?)", [$user_id,'active'], "is");
-        }
-        break;
-
-    default: 
-        if($staff_check['rows']>0){
-            update("UPDATE staff SET staff_status=? WHERE user_id=?", ['active', $user_id], "si");
-        } else {
-            insert("INSERT INTO staff (user_id, staff_status) VALUES (?, ?)", [$user_id,'active'], "is");
-        }
-        break;
-}
-
-$result['message'] = ($result['status'] === "success") 
-    ? "User Updated Successfully." 
-    : $result['message'];
-
-json_response($result['status'], $result['message'], "", "");
+json_response($doctorresult['status'], $doctorresult['message'], "", "");
 ?>

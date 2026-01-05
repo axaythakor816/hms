@@ -1,6 +1,5 @@
 <?php
 
-// use PhpOffice\PhpSpreadsheet\Calculation\Engine\FormattedNumber;
 require_once '../../../core/init.php';
 
 require_login();
@@ -33,7 +32,7 @@ $offset = ($page - 1) * $perPage;
 
 $sql = "SELECT
     -- USERS
-    u.user_id,
+    -- u.user_id,
     u.first_name,
     u.middle_name,
     u.last_name,
@@ -119,7 +118,7 @@ foreach($result['data'] as $row) {
     $html .= "<tr>
                 <td>
                     <div class='form-check check-tables'>
-                        <input class='form-check-input row-check' type='checkbox' value='{$row['department_id']}'>
+                        <input class='form-check-input row-check' type='checkbox' value='{$row['doctor_id']}'>
                     </div>
                 </td>
                 <td>{$row['doctor_id']}</td>
@@ -148,7 +147,7 @@ foreach($result['data'] as $row) {
                 " . (has_permission('doctors', 'can_edit') ? "
                         <td class='text-end'>
                             <a class='dropdown-item edit-btn' href='#'
-                                data-id='{$row['doctor_id']}'
+                                data-doctor_id='{$row['doctor_id']}'
                                 data-first_name='{$row['first_name']}'
                                 data-middle_name='{$row['middle_name']}'
                                 data-last_name='{$row['last_name']}'

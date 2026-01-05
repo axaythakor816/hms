@@ -4,7 +4,7 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('manage users', 'can_view')) {
-	json_response("error", "Access Denine");
+	json_response("error", "Access Denied");
 	exit;
 }
 
@@ -17,7 +17,7 @@ if(!verify_csrf($_POST['csrf_token'] ?? '')) {
 $page = filterInput($_POST['page'] ?? 1, "int");
 $perPage = filterInput($_POST['perPage'] ?? 10, "int");
 $search = filterInput($_POST['search'] ?? "", "string");
-$sortColumn = filterInput($_POST['sortColumn'] ?? "user_id", "int");
+$sortColumn = filterInput($_POST['sortColumn'] ?? "user_id", "string");
 $sortOrder = filterInput($_POST['sortOrder'] ?? "ASC", "string");
 
 $allowedCols = ["user_id", "uuid", "first_name", "last_name", "email", "phone", "role_id", "gender", "dob", "status", "created_at", "updated_at"];

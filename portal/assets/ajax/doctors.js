@@ -165,7 +165,7 @@ window.state = window.state || {
 
         $(document).on("click", ".edit-btn", function () {
 
-            let id = $(this).data("id");
+            let id = $(this).data("doctor_id");
             let middle_name = $(this).data("middle_name");
             let first_name = $(this).data("first_name");
             let last_name = $(this).data("last_name");
@@ -732,6 +732,121 @@ window.state = window.state || {
             });
         });
 
+        $("#deleteDoctorModal").on("hide.bs.modal", function () {
+            $("#delete_doctor_form")[0].reset();
+            $("button[name='delete_doctor']").prop("disabled", false).text("Delete");
+        });
+
+        $(document).on("click", ".delete-btn", function () {
+            let id = $(this).data("id");
+            let name = $(this).data("name");
+            // console.log("id: ",id);
+            $("#delete_doctor_id").val(id);
+            $("#delete_doctor_name_text").text("Doctor Name : " + name.toUpperCase());
+            $("#deleteDoctorModal").modal("show");
+        }); 
+
+        $(document).on("click", "#deleteSelected", function () {
+
+            let ids = [];
+
+            $(".row-check:checked").each(function () {
+                ids.push($(this).val());
+                
+            });
+                // console.log("ids" , ids);
+            if (ids.length === 0) {
+                showAlert("error", "Please select at least one record.");
+                return;
+            }
+            // console.log(ids);
+            $("#delete_doctor_id").val(ids);  
+            $("#delete_doctor_name_text").text("Delete " + ids.length + " Selected Doctors?");
+            
+            $("#deleteDoctorModal").modal("show");
+        });
+
+        $("#delete_doctor_form").submit(function(e) {
+            e.preventDefault();
+            
+            var form = $("#delete_doctor_form")[0];
+            var formdata = new FormData(form);
+            
+            $.ajax({
+                type: "POST",
+                url: "doctors/delete_doctor.php",
+                data: formdata,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                beforeSend: function() {
+                    $("button[name='delete_doctor']").prop("disabled", true).text("Deleting...");
+                },
+                success: function(res) {
+                    $("button[name='delete_doctor']").prop("disabled", false).text("Delete");
+                    if(res.status == "error") {
+                        $("#deleteDoctorModal").modal("hide");
+                        showAlert(res.status, res.message);
+                    }else if(res.status, res.message) {
+                        showAlert(res.status, res.message);
+                        $("#delete_doctor_form")[0].reset();
+                        $("#deleteDoctorModal").modal("hide");
+                        $("#delete_doctor_name_text").text("");
+                        loadpagedata();
+
+                        $("#checkAll").prop("checked", false);
+                        $(".row-check").prop("checked", false);
+                        $(".doctor-delete").addClass("disabled");
+
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Ajax Error: ", error);
+                    console.log("Status: ", status);
+                    console.log("Response: ", xhr.responseText);
+                }
+            });
+        });
+
+        $(".exportdata").click(function (e) {
+            e.preventDefault();
+
+            const { page, perPage, search, sortColumn, sortOrder } = state;
+            const type = $(this).data("type");
+            const csrf = $(this).data("csrf");
+
+            let iframe = $('<iframe>', {
+                name: 'exportFrame',
+                style: 'display:none;'
+            });
+
+            $("body").append(iframe);
+
+            let form = $('<form>', {
+                method: "POST",
+                action: "doctors/export_doctordata.php",
+                target: 'exportFrame'
+            });
+
+            form.append(
+                $('<input>', {type:'hidden', name:'page', value:page}),
+                $('<input>', {type:'hidden', name:'perPage', value:perPage}),
+                $('<input>', {type:'hidden', name:'search', value:search}),
+                $('<input>', {type:'hidden', name:'sortColumn', value:sortColumn}),
+                $('<input>', {type:'hidden', name:'sortOrder', value:sortOrder}),
+                $('<input>', {type:'hidden', name:'type', value:type}),
+                $('<input>', {type:'hidden', name:'csrf_token', value:csrf})
+            );
+
+            $("body").append(form);
+
+            form.submit(); 
+
+            setTimeout(() => {
+                form.remove();
+                iframe.remove();
+            }, 2000);
+        });
 
     });
 

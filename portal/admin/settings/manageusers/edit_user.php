@@ -4,7 +4,7 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('manage users', 'can_edit')) {
-	json_response("error", "Access Denine");
+	json_response("error", "Access Denied");
 	exit;
 }
 
@@ -81,6 +81,11 @@ if (is_superadmin('role_id','users', 'user_id', $user_id)) {
     }
 }
 
+$sql_get_old_image = select("SELECT profile_image FROM users WHERE user_id = ?", [$user_id], "i");
+if ($sql_get_old_image['status'] === 'success' && $sql_get_old_image['rows'] > 0) {
+    $get_old_image = $sql_get_old_image['data'][0]['profile_image'];
+}
+
 if(!empty($password)) {
     $sql = "UPDATE users SET 
         first_name = ?,
@@ -124,10 +129,12 @@ $patient_check = select("SELECT * FROM patients WHERE user_id = ?", [$user_id], 
 $role_id = (int) $role_id; 
 
 if ($doctor_check['rows'] > 0 && !in_array($role_id, [2, 3])) {
+    deletefile(realpath('../../../assets/uploads/doctor/profile_image/') . '/' . $get_old_image);
     update("UPDATE doctors SET doctor_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
 }
 
 if (in_array($role_id, [2, 5]) && $staff_check['rows'] > 0) {
+    deletefile(realpath('../../../assets/uploads/staff/profile_image/') . '/' . $get_old_image);
     update("UPDATE staff SET staff_status = ? WHERE user_id = ?", ['suspended', $user_id], "si");
 }
 
@@ -171,3 +178,5 @@ $result['message'] = ($result['status'] === "success")
 
 json_response($result['status'], $result['message'], "", "");
 ?>
+
+<!-- no image insert -->

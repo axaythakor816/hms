@@ -3,7 +3,7 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-if(!has_permission('permissions', 'can_view')) {
+if(!has_permission('sub permissions', 'can_view')) {
 	json_response("error", "Access Denied");
 	exit;
 }
@@ -17,13 +17,13 @@ if(!verify_csrf($_POST['csrf_token'] ?? '')) {
 $page       = filterInput($_POST['page'] ?? 1, "int");
 $perPage    = filterInput($_POST['perPage'] ?? 10, "int");
 $search     = filterInput($_POST['search'] ?? '', "string");
-$sortColumn = filterInput($_POST['sortColumn'] ?? 'permission_id', "string");
+$sortColumn = filterInput($_POST['sortColumn'] ?? 'sub_permission_id', "string");
 $sortOrder  = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
 
 $page    = $page ?: 1;  
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
 
-$allowedCols = ['permission_id', 'role_id', 'module_id', "can_view", "can_add", "can_edit", "can_delete", "created_at", "updated_at"];
+$allowedCols = ['sub_permission_id', 'role_id', 'module_id', "can_view", "can_add", "can_edit", "can_delete", "created_at", "updated_at"];
 if (!in_array($sortColumn, $allowedCols)) {
     $sortColumn = 'permission_id';
 }

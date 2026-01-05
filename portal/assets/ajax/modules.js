@@ -145,7 +145,6 @@ window.state = window.state || {
             $("#editmodule_form")[0].reset();
             $(".error").text("");
             $("button[name='update_module']").prop("disabled", false).text("Update Module");  
-
         });
 
         $(document).on("click", ".edit-btn", function () {
@@ -219,7 +218,7 @@ window.state = window.state || {
 
         $("#deleteModuleModal").on("hide.bs.modal", function () {
             $("#delete_module_form")[0].reset();
-            $("button[name='delete_module']").prop("disabled", false).text("Delete");
+            $("button[name='delete_module']").prop("disabled", false).text("Delete");           
         });
 
         $(document).on("click", ".delete-btn", function () {

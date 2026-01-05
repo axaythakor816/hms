@@ -89,7 +89,9 @@ function select($sql, $values = [], $datatypes = "") {
             ];
         }
     }else{
-        return ["status" => "error", "message" => "Query failed", "error" => mysqli_error($conn)];
+        // return ["status" => "error", "message" => "Query failed", "error" => mysqli_error($conn)];
+        return ["status" => "error", "message" => "Query failed" . mysqli_error($conn)];
+
     }
 }
 

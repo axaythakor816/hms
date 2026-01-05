@@ -4,7 +4,7 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('modules', 'can_delete')) {
-	json_response("error", "Access Denine");
+	json_response("error", "Access Denied");
 	exit;
 }
 
@@ -31,7 +31,7 @@ $sql = "DELETE FROM modules WHERE module_id IN ($placeholders)";
 $result = delete($sql, $ids, $type);
 
 $result['message'] = ($result['status'] == "success") ? 
-    "Role Deleted Successfully."
+    "Module Deleted Successfully."
     : $result['message'];
 
 json_response($result['status'], $result['message'], "", "");
