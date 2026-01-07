@@ -59,6 +59,10 @@ function has_permission($module_name, $action = 'can_view') {
 
 function has_sub_permission($module_name, $field_name, $action = 'can_view') {
     if(!isset($_SESSION['role_id'])) return false;
+    $user = is_active();
+    if (!$user['active']) {
+        return false;
+    }
     $role_id = $_SESSION['role_id'];
 
     $modRes = select("SELECT module_id FROM modules WHERE module_name=? LIMIT 1", [$module_name], "s");

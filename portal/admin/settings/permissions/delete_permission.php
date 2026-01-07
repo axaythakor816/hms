@@ -8,7 +8,7 @@ if(!has_permission('permissions', 'can_delete')) {
 	exit;
 }
 
-require_role([1]);
+require_role([1, 6]);
 
 $_POST = filteration($_POST);
 

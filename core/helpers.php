@@ -354,21 +354,16 @@ function checkfile($fileInputName) {
 function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id = null, $idcolumn = "", $allowedTypes = ['jpg','jpeg','png','pdf','docx']) {
     global $conn;
 
-    // Ensure upload folder exists
     if (!is_dir($uploadFolder)) {
         mkdir($uploadFolder, 0755, true);
     }
 
     $oldFileName = "";
 
-    // Fetch old filename if this is an update
     if ($id && $table && $idcolumn) {
         $column = str_replace("edit_", "", $fileInputName);
         $id = intval($id);
 
-        // -----------------------------
-        // Prepared Statement
-        // -----------------------------
         $sql = "SELECT `$column` FROM `$table` WHERE `$idcolumn` = ? LIMIT 1";
         $stmt = mysqli_prepare($conn, $sql);
         if ($stmt) {
@@ -385,22 +380,17 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
         }
     }
 
-    // Check if a new file is uploaded
     if (!isset($_FILES[$fileInputName]) || $_FILES[$fileInputName]['error'] !== 0) {
-        // No new file uploaded, return old filename (if update) or empty string (if insert)
         return $oldFileName;
     }
 
-    // Get original filename & extension
     $fileName = $_FILES[$fileInputName]['name'];
     $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-    // Validate allowed file types
     if (!in_array($ext, $allowedTypes)) {
-        return $oldFileName; // invalid type, keep old filename
+        return $oldFileName; 
     }
 
-    // Create unique filename
     $role = basename(dirname(rtrim($uploadFolder, '/')));
     if($role == "doctor" || $role == "staff" || $role == "patient") {
         $uniqueName = $role . "_" . ($id ?? "new" ) .  "_" . time() . "_" . uniqid() . "." . $ext;
@@ -410,10 +400,8 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
 
     $targetPath = rtrim($uploadFolder, '/') . '/' . $uniqueName;
 
-    // Move uploaded file
     if (move_uploaded_file($_FILES[$fileInputName]['tmp_name'], $targetPath)) {
 
-        // Delete old file if updating
         if (!empty($oldFileName)) {
             $oldPath = rtrim($uploadFolder, '/') . '/' . $oldFileName;
             if (file_exists($oldPath) && is_file($oldPath)) {
@@ -424,7 +412,6 @@ function uploadfile($fileInputName, $uploadFolder = "uploads/", $table = "", $id
         return $uniqueName;
     }
 
-    // If move failed, return old filename
     return $oldFileName;
 }
 
@@ -640,7 +627,7 @@ function checkselectdata($data, $column) {
     if (isset($data['status']) && $data['status'] === 'error') {
         return ['status' => $data['status'], 'message' => $data['message'] . $data['error']];
     } elseif (empty($data['data'])) {
-        return ['status' => 'success', 'data' => '<option>No data found</option>'];
+        return ['status' => 'success','message' => '', 'data' => '<option value="">No data found</option>'];
     } else { 
         $html = '';
         $html .= '<option value="">Select</option>';

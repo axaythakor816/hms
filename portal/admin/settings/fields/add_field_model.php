@@ -31,6 +31,7 @@ require_role([1]);
 
                     <div class="row">
                         <!-- Module Select -->
+                        <?php if(has_sub_permission("fields", "module_id", "can_add") && has_sub_permission("fields", "field_name", "can_add")): ?>
                         <div class="col-md-12">
                             <div class="input-block local-forms">
                                 <label>Module <span class="login-danger">*</span></label>
@@ -40,7 +41,9 @@ require_role([1]);
                                 <span class="error" id="module_id_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
                         <!-- Field Name -->
+                        <?php if(has_sub_permission("fields", "module_id", "can_add") && has_sub_permission("fields", "field_name", "can_add")): ?>
                         <div class="col-md-12">
                             <div class="input-block local-forms">
                                 <label>Field Name <span class="login-danger">*</span></label>
@@ -48,6 +51,7 @@ require_role([1]);
                                 <span class="error" id="field_name_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Buttons -->

@@ -49,7 +49,7 @@ require_role([1]);
 											</div>
 											<div class="add-group">
 												<?php if(has_permission('sub permissions', 'can_add')): ?>
-												<a href="#" data-bs-toggle="modal" data-bs-target="#addpermissionModal" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
+												<a href="#" data-bs-toggle="modal" data-bs-target="#addSubPermissionModal" class="btn btn-primary add-pluss ms-2"><img src="../assets/img/icons/plus.svg" alt=""></a>
 												<?php endif; ?>
 												<a href="javascript:;" class="btn btn-primary subpermission-refresh ms-2"><img src="../assets/img/icons/re-fresh.svg" alt=""></a>
 												<?php if(has_permission('sub permissions', 'can_delete')): ?>
@@ -89,15 +89,34 @@ require_role([1]);
 											</div>
 										</th>
 										<th data-column="sub_permission_id">Sr_No</th>
+										<?php if(has_sub_permission("sub permissions", "role_id", "can_view")) : ?>
 										<th data-column="role_id">Roles</th>
-										<th data-column="module_id">Modules</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "module_id", "can_view")) : ?>
+										<th data-column="module_name">Modules</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "field_id", "can_view")) : ?>
+										<th data-column="field_name">Fields</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "can_view", "can_view")) : ?>
 										<th data-column="can_view">Can View</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "can_add", "can_view")) : ?>
 										<th data-column="can_add">Can Add</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "can_edit", "can_view")) : ?>
 										<th data-column="can_edit">Can Edit</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "can_delete", "can_view")) : ?>
 										<th data-column="can_delete">Can Delete</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "created_at", "can_view")) : ?>
 										<th data-column="created_at">Ceated Date</th>
+										<?php endif;
+										if(has_sub_permission("sub permissions", "updated_at", "can_view")) : ?>
 										<th data-column="updated_at">Updated Date</th>
-										<?php if(has_permission('sub permissions', 'can_edit') || has_permission('sub permissions', 'can_delete')) : ?>
+										<?php endif;
+										if(has_permission('sub permissions', 'can_edit') || has_permission('sub permissions', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
 										<?php endif ?>
 									</tr>

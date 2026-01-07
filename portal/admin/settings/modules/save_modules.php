@@ -12,9 +12,22 @@ require_role([1]);
 
 $_POST = filteration($_POST);
 
-$rules = [
-    'module_name' => 'required|max:20'
-];
+$fields = [];
+$types  = '';
+$values = [];
+
+if(has_sub_permission("modules", "module_name", "can_add") && isset($_POST['module_name'])) {
+    $fields[] = "module_name";
+    $types   .= "s";
+    $values[] = strtolower($_POST['module_name']); 
+}
+
+if(!verify_csrf($_POST['csrf_token'] ?? '')) {
+    json_response("error", "Invalid CSRF Token", "", "");
+}
+
+$rules = [];
+if(in_array("module_name", $fields)) $rules['module_name'] = 'required|max:20';
 
 $errors = validate($_POST, $rules);
 
@@ -22,27 +35,24 @@ if(!empty($errors)) {
     json_response("error", "", "", $errors);
 }
 
-if(!verify_csrf($_POST['csrf_token'])) {
-    json_response("error", "Invalid CSRF Token", "", "");
+if(in_array("module_name", $fields)) {
+    $dup = checkDuplicateFields("modules", ["module_name" => strtolower($_POST['module_name'])], '', 'OR');
+    if($dup['status'] === "duplicate") {
+        json_response("error", "", "", $dup['errors']);
+    }
 }
 
-$module = strtolower($_POST['module_name']);
+if(!empty($fields)) {
+    $query = "INSERT INTO modules (" . implode(", ", $fields) . ") VALUES (" . implode(", ", array_fill(0, count($fields), "?")) . ")";
+    
+    $result = insert($query, $values, $types);
 
-$dup = checkDuplicateFields("modules", ["module_name" => $module]);
+    $result['message'] = ($result['status'] === "success") 
+        ? "Module Created Successfully." 
+        : $result['message'];
 
-if($dup['status'] === "duplicate") {
-    json_response("error", "", "", $dup['errors']);
+    json_response($result['status'], $result['message'], "", "");
+} else {
+    json_response("error", "No fields available to insert. Permission denied for all fields.");
 }
-
-$query = "INSERT INTO modules (module_name) VALUES (?)";
-$types = "s";
-$values = [$module];
-
-$result = insert($query, $values, $types);
-
-$result['message'] = ($result['status'] === "success") 
-    ? "Module Created Successfully." 
-    : $result['message'];
-
-json_response($result['status'], $result['message'], "", "");
 ?>

@@ -85,10 +85,10 @@ window.state = window.state || {
             e.preventDefault();
             $(".error").text("");
 
-            let rules = {
-                module_id: "required",
-                field_name: "required|min:2|max:30",
-            };
+            let rules = {};
+
+            $("#module_id").length && (rules.module_id = "required");
+            $("#field_name").length && (rules.field_name = "required|min:2|max:30");
 
             let errors = validateForm("#addfield_form", rules);
 
@@ -162,10 +162,9 @@ window.state = window.state || {
             e.preventDefault();
             $(".error").text("");
 
-            let rules =  {
-                module_id: "required",
-                field_name: "required|min:2|max:30",
-            };
+            let rules = {};
+            $("#edit_module_id").length && (rules.module_id = "required");
+            $("#edit_field_name").length && (rules.field_name = "required|min:2|max:30");
 
             let errors = validateForm("#editfield_form", rules);
 

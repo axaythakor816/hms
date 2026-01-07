@@ -83,10 +83,11 @@ window.state = window.state || {
         $("#addrole_form").submit(function(e) {
             e.preventDefault();
             $(".error").text("");
+            let rules = {};
 
-            let rules = {
-                role_name: "required",
-            };
+            if($("#role_name").length) { 
+                rules.role_name = "required";
+            }
 
             let errors = validateForm("#addrole_form", rules);
 
@@ -156,7 +157,9 @@ window.state = window.state || {
 
             $("#edit_role_id").val(id);
 
-            $("#edit_role_name").val(role);
+            if ($("#edit_role_name").length) {
+                $("#edit_role_name").val(role);
+            }
         
             $("#editRoleModal").modal("show");
         });
@@ -165,9 +168,11 @@ window.state = window.state || {
         e.preventDefault();
             $(".error").text("");
         
-            let rules = {
-                role_name: "required",
-            };
+            let rules = {};
+
+            if ($("#edit_role_name").length) {
+                rules.role_name = "required";
+            }
 
             let errors = validateForm("#editrole_form", rules);
 
@@ -189,7 +194,7 @@ window.state = window.state || {
                 contentType: false,
                 beforeSend: function() {
                     $(".error").text("");
-                    $("button[name='update_role]").prop("disabled", true).text("Updating...");
+                    $("button[name='update_role']").prop("disabled", true).text("Updating...");
                 }, 
                 success: function(res) {
                     $("button[name='update_role']").prop("disabled", false).text("Update Role"); 

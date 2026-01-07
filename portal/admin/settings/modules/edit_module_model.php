@@ -35,6 +35,7 @@ require_role([1]);
                     <div class="row">
 
                         <!-- Module Name -->
+                        <?php if(has_sub_permission("modules", "module_name", "can_edit")): ?>
                         <div class="col-md-12">
                             <div class="input-block local-forms">
                                 <label>Module Name <span class="login-danger">*</span></label>
@@ -46,6 +47,7 @@ require_role([1]);
                                 <span class="error" id="edit_module_name_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                     </div>
 

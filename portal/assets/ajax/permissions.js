@@ -22,7 +22,7 @@ window.state = window.state || {
             state.page = 1;
             state.perPage = 10;
             state.search = "";
-            state.sortColumn = "department_id";
+            state.sortColumn = "permission_id";
             state.sortOrder = "ASC";
 
             $("#RecordsPerPage").val("10").trigger("change");
@@ -89,10 +89,10 @@ window.state = window.state || {
             e.preventDefault();
             $(".error").text("");
 
-            let rules = {
-                role_id: "required",
-                module_id: "required",
-            };
+            let rules = {};
+
+            $("#module_id").length && (rules.module_id = "required");
+            $("#role_id").length && (rules.role_id = "required");
 
             let errors = validateForm("#addpermission_form", rules);
 
@@ -186,10 +186,10 @@ window.state = window.state || {
         e.preventDefault();
             $(".error").text("");
         
-            let rules = {
-                role_id: "required",
-                module_id: "required",
-            };
+            let rules = {};
+
+            $("#edit_module_id").length && (rules.module_id = "required");
+            $("#edit_role_id").length && (rules.role_id = "required");
 
             let errors = validateForm("#editpermission_form", rules);
 
@@ -373,8 +373,6 @@ window.state = window.state || {
             success: function (res) {
                 $("#role_id").html(res.data);  
                 $("#edit_role_id").html(res.data);
-            
-
                 if(callback) callback();
             },
             error: function(xhr, status, error) {

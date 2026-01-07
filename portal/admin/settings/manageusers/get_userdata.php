@@ -7,8 +7,7 @@ if(!has_permission('manage users', 'can_view')) {
 	json_response("error", "Access Denied");
 	exit;
 }
-
-require_role([1]);
+require_role([1,6]);
 
 if(!verify_csrf($_POST['csrf_token'] ?? '')) {
     json_response("error", "Invalid CSRF Token");

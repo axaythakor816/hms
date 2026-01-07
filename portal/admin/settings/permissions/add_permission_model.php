@@ -8,7 +8,7 @@ if(!has_permission('permissions', 'can_add')) {
 	exit;
 }
 
-require_role([1]);
+require_role([1, 6]);
 
 ?>
 <div class="modal fade" id="addpermissionModal" tabindex="-1" aria-hidden="true">
@@ -29,6 +29,7 @@ require_role([1]);
                     <div class="row">
 
                         <!-- Role -->
+                        <?php if(has_sub_permission("permissions", "role_id", "can_add") && has_sub_permission("permissions", "module_id", "can_add")): ?>
                         <div class="col-md-6">
                             <div class="input-block local-forms">
                                 <label>Role <span class="login-danger">*</span></label>
@@ -38,8 +39,10 @@ require_role([1]);
                                 <span class="error" id="role_id_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                         <!-- Module -->
+                        <?php if(has_sub_permission("permissions", "role_id", "can_add") && has_sub_permission("permissions", "module_id", "can_add")): ?>
                         <div class="col-md-6">
                             <div class="input-block local-forms">
                                 <label>Module <span class="login-danger">*</span></label>
@@ -49,34 +52,41 @@ require_role([1]);
                                 <span class="error" id="module_id_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                         <!-- Permissions -->
+                        <?php if(has_sub_permission("permissions", "role_id", "can_add") && has_sub_permission("permissions", "module_id", "can_add")): ?>
                         <div class="col-md-12 mt-3">
                             <label>Permissions</label>
                             <div class="d-flex gap-4 mt-1">
 
+                            <?php if(has_sub_permission("permissions", "can_view", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_view" id="can_view" value="1">
                                     <label class="form-check-label">Can View</label>
                                 </div>
-
+                            <?php endif;
+                            if(has_sub_permission("permissions", "can_add", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_add" id="can_add" value="1">
                                     <label class="form-check-label">Can Add</label>
                                 </div>
-
+                            <?php endif;
+                            if(has_sub_permission("permissions", "can_edit", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_edit" id="can_edit" value="1">
                                     <label class="form-check-label">Can Edit</label>
                                 </div>
-
+                            <?php endif;
+                            if(has_sub_permission("permissions", "can_delete", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_delete" id="can_delete" value="1">
                                     <label class="form-check-label">Can Delete</label>
                                 </div>
-
+                            <?php endif; ?>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                     </div>
 

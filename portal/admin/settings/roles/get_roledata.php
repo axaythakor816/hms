@@ -14,16 +14,35 @@ if(!verify_csrf($_POST['csrf_token'] ?? '')) {
     json_response("error", "Invalid CSRF Token");
 }
 
-$page       = filterInput($_POST['page'] ?? 1, "int");
-$perPage    = filterInput($_POST['perPage'] ?? 10, "int");
-$search     = filterInput($_POST['search'] ?? '', "string");
+$page = filterInput($_POST['page'] ?? 1, "int");
+$perPage = filterInput($_POST['perPage'] ?? 10, "int");
+$search = filterInput($_POST['search'] ?? '', "string");
 $sortColumn = filterInput($_POST['sortColumn'] ?? 'id', "string");
-$sortOrder  = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
+$sortOrder = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
 
-$page    = $page ?: 1;  
+$page = $page ?: 1;  
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
 
-$allowedCols = ['id', 'role_name', "created_at", "updated_at"];
+$allowedCols = ['id'];
+$searchablecol = [];
+$selectfield = ['id'];
+if(has_sub_permission("roles", "role_name", "can_view")) {
+    $selectfield[] = 'role_name';
+    $allowedCols[] = 'role_name';
+    $searchablecol[] = 'role_name';
+}
+
+if(has_sub_permission("roles", "created_at", "can_view")) {
+    $selectfield[] = 'created_at';
+    $allowedCols[] = 'created_at';
+    $searchablecol[] = 'created_at';
+}
+if(has_sub_permission("roles", "updated_at", "can_view")) {
+    $selectfield[] = 'updated_at';
+    $allowedCols[] = 'updated_at';
+    $searchablecol[] = 'updated_at';
+}
+
 if (!in_array($sortColumn, $allowedCols)) {
     $sortColumn = 'id';
 }
@@ -32,15 +51,18 @@ $sortOrder = ($sortOrder === "DESC") ? "DESC" : "ASC";
 
 $offset = ($page - 1) * $perPage;
 
-$sql = "SELECT * FROM roles WHERE 1";
+$sql = "SELECT " . implode(", ", $selectfield) . " FROM roles WHERE 1";
 $whereValues = [];
 $searchType  = "";
 
-if (!empty($search)) {
-    $sql .= " AND (role_name LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
-    $searchParam = "%$search%";
-    $whereValues = [$searchParam, $searchParam, $searchParam];
-    $searchType  = "sss";
+if(!empty($search) && !empty($searchablecol)) {
+    $orParts = [];
+    foreach($searchablecol as $col){
+        $orParts[] = "$col LIKE ?";
+        $whereValues[] = "%$search%";
+        $searchType .= "s";
+    }
+    $sql .= " AND (" . implode(" OR ", $orParts) . ")";
 }
 
 $totalSql = $sql;
@@ -67,10 +89,8 @@ $sr_no = $offset + 1;
 
 foreach ($result['data'] as $row) {
 
-    $created_at =  format_datetime($row['created_at']);
-    $updated_at =  format_datetime($row['updated_at']
-    // ,"Y-m-d H:i:s"
-    );
+    $created_at = (isset($row['created_at']) ? format_datetime($row['created_at']) : "");
+    $updated_at = (isset($row['updated_at']) ? format_datetime($row['updated_at']) : "");
 
     $html .= "
         <tr>
@@ -80,16 +100,26 @@ foreach ($result['data'] as $row) {
                 </div>
             </td>
             <td>{$row['id']}</td>
-            <td>" . ucwords($row['role_name']) . "</td>
-            <td>{$created_at}</td>
-            <td>{$updated_at}</td>
+            " . (isset($row['role_name']) ? "
+                <td>" . ucwords($row['role_name']) . "</td>
+            " : "") . "
+
+            " . (!empty($created_at) ? "
+                <td>{$created_at}</td>
+            " : "") . "
+
+            " . (!empty($updated_at) ? "
+                <td>{$updated_at}</td>
+            " : "") . "
 
              " . (has_permission('roles', 'can_edit') ? "
 
             <td class='text-end'>
                 <a class='dropdown-item edit-btn' href='#'
                 data-id='{$row['id']}'
-                data-role='{$row['role_name']}' >
+                " . (isset($row['role_name']) ? "
+                data-role='{$row['role_name']}' " : "") . "
+                 >
                     <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit
                 </a>
             </td>
@@ -100,7 +130,9 @@ foreach ($result['data'] as $row) {
             <td class='text-end'>
                 <a class='dropdown-item delete-btn' href='#' 
                 data-id='{$row['id']}'
-                data-name='{$row['role_name']}'>
+                " . (isset($row['role_name']) ? "
+                data-name='{$row['role_name']}'" : "") . "
+                >
                     <i class='fa fa-trash'></i> Delete
                 </a>
             </td>

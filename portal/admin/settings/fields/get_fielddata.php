@@ -24,8 +24,33 @@ $sortOrder = filterInput($_POST['sortOrder'] ?? 'ASC', "string");
 
 $page = $page ?: 1;
 $perPage = ($perPage >= 1 && $perPage <= 100) ? $perPage : 10;
+$allowedCols = ['field_id'];
+$searchablecol = [];
+$selectfield = ['f.field_id'];
 
-$allowedCols = ['field_id', 'module_name', 'field_name', 'created_at', 'updated_at'];
+if (has_sub_permission('fields', 'module_id', 'can_view')) {
+    $selectfield[]   = 'm.module_name';
+    $allowedCols[]   = 'module_name';
+    $searchablecol[] = 'm.module_name';
+}
+
+if (has_sub_permission('fields', 'field_name', 'can_view')) {
+    $selectfield[]   = 'f.field_name';
+    $allowedCols[]   = 'field_name';
+    $searchablecol[] = 'f.field_name';
+}
+
+if (has_sub_permission('fields', 'created_at', 'can_view')) {
+    $selectfield[]   = 'f.created_at';
+    $allowedCols[]   = 'created_at';
+    $searchablecol[] = 'f.created_at';
+}
+
+if (has_sub_permission('fields', 'updated_at', 'can_view')) {
+    $selectfield[]   = 'f.updated_at';
+    $allowedCols[]   = 'updated_at';
+    $searchablecol[] = 'f.updated_at';
+}
 
 if(!in_array($sortColumn, $allowedCols)) {
     $sortColumn = 'field_id';
@@ -35,15 +60,18 @@ $sortOrder = ($sortOrder === 'DESC') ? 'DESC' : 'ASC';
 
 $offset = ($page - 1) * $perPage;
 
-$sql = "SELECT f.*, m.module_name FROM fields f INNER JOIN modules m on f.module_id = m.module_id WHERE 1";
+$sql = "SELECT " . implode(", ", $selectfield) . ", f.module_id FROM fields f LEFT JOIN modules m on f.module_id = m.module_id WHERE 1";
 $whereValues = [];
 $searchType = '';
 
-if(!empty($search)) {
-    $sql .= " AND (m.module_name LIKE ? OR f.field_name LiKE ? OR f.created_at LIKE ? OR f.updated_at LIKE ?)";
-    $searchParam = "%$search%";
-    $whereValues = [$searchParam, $searchParam, $searchParam, $searchParam];
-    $searchType = "ssss";
+if (!empty($search) && !empty($searchablecol)) {
+    $orParts = [];
+    foreach ($searchablecol as $col) {
+        $orParts[] = "$col LIKE ?";
+        $whereValues[] = "%$search%";
+        $searchType .= "s";
+    }
+    $sql .= " AND (" . implode(" OR ", $orParts) . ")";
 }
 
 $totalSql = $sql;
@@ -67,8 +95,8 @@ if ($result['status'] == "error") {
 $html = "";
 
 foreach($result['data'] as $row) {
-    $created_at = format_datetime($row['created_at']);
-    $updated_at = format_datetime($row['updated_at']);
+    $created_at = isset($row['created_at']) ? format_datetime($row['created_at']) : '';
+    $updated_at = isset($row['updated_at']) ? format_datetime($row['updated_at']) : '';
     $html .= "<tr>
         <td>
             <div class='form-check check-tables'>
@@ -76,18 +104,18 @@ foreach($result['data'] as $row) {
             </div>
         </td>
         <td>{$row['field_id']}</td>
-        <td>" . ucwords($row['module_name']) . "</td>
-        <td>" . ucwords($row['field_name']) . "</td>
-
-        <td>{$created_at}</td>
-        <td>{$updated_at}</td> 
+        
+        " . (isset($row['module_name']) ? "<td>" . ucwords($row['module_name']) . "</td>" : "") . "
+        " . (isset($row['field_name']) ? "<td>" . ucwords($row['field_name']) . "</td>" : "") . "
+        " . (!empty($created_at) ? "<td>{$created_at}</td>" : "") . "
+        " . (!empty($updated_at) ? "<td>{$updated_at}</td>" : "") . " 
 
         " . (has_permission('fields', 'can_edit') ? "
         <td class='text-end'>
             <a class='dropdown-item edit-btn' href='#'
             data-id='{$row['field_id']}'
             data-module='{$row['module_id']}'
-            data-field='{$row['field_name']}' >
+            " . (isset($row['field_name']) ? "data-field='{$row['field_name']}'" : "") . ">
                 <i class='fa-solid fa-pen-to-square m-r-5'></i> Edit  
             </a>
         </td>
@@ -97,7 +125,7 @@ foreach($result['data'] as $row) {
         <td class='text-end'>
             <a class='dropdown-item delete-btn' href='#' 
             data-id='{$row['field_id']}'
-            data-name='{$row['field_name']}'>
+            " . (isset($row['field_name']) ? "data-name='{$row['field_name']}'" : "") . ">
                 <i class='fa fa-trash'></i> Delete
             </a>
         </td>

@@ -8,7 +8,7 @@ if(!has_permission('permissions', 'can_delete')) {
 	exit;
 }
 
-require_role([1]);
+require_role([1, 6]);
 
 ?>
 <div id="deletePermissionModal" class="modal fade delete-modal" tabindex="-1" aria-hidden="true">

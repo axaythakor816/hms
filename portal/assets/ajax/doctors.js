@@ -966,7 +966,8 @@ window.state = window.state || {
     }
 
     function get_department(callback) {
-        let csrf_token = $("input[name = 'csrf_token']").val();
+        let csrf_token = $("#csrf_token").val();
+
         $.ajax({
             type: "POST",
             url: "doctors/loadoptions.php",
@@ -975,13 +976,9 @@ window.state = window.state || {
             }, 
             dataType: "json",
             success: function(res) {
-                if(res.status == "error") {
-                    showAlert(res.message);
-                }else if(res.status == "success") {
-                    $("#department_id").html(res.data);
-                    $("#edit_department_id").html(res.data);
-                    if(callback) callback();
-                }
+                $("#department_id").html(res.data);
+                $("#edit_department_id").html(res.data);
+                if(callback) callback();
             }, 
             error: function(xhr, status, error){
                 console.log("Status: ", status);

@@ -4,51 +4,62 @@ require_once '../../../../core/init.php';
 require_login();
 
 if(!has_permission('roles', 'can_edit')) {
-	json_response("error", "Access Denied");
-	exit;
+    json_response("error", "Access Denied");
 }
 
 require_role([1]);
+
 $_POST = filteration($_POST);
 
-$rules = [
-    'role_name' => 'required',
-];
+$fields = [];
+$types  = '';
+$values = [];
 
+if(has_sub_permission("roles", "role_name", "can_edit") && isset($_POST['role_name'])) {
+    $fields[]  = "role_name";
+    $types    .= "s";
+    $values[]  = $_POST['role_name'];
+}
+
+if(!verify_csrf($_POST['csrf_token'] ?? '')) {
+    json_response("error", "Invalid CSRF Token", "", "");
+}
+
+$rules = [];
+if(in_array("role_name", $fields)) {
+    $rules['role_name'] = 'required';
+}
 $errors = validate($_POST, $rules);
-
 if(!empty($errors)) {
     json_response("error", "", "", $errors);
 }
 
-if(!verify_csrf($_POST['csrf_token'])) {
-    json_response("error", "Invalid CSRF Token", "", "");
+if(in_array("role_name", $fields)) {
+    $dup = checkDuplicateFields("roles", ["role_name" => $_POST['role_name']], ["id" => $_POST['role_id']], "AND");
+    if($dup['status'] === "duplicate") {
+        json_response("error", "", "", $dup['errors']);
+    }
 }
 
-$role_id = $_POST['role_id'];
-$role_name = $_POST['role_name'];
+if(!empty($fields)) {
+    $setparts = [];
+    foreach($fields as $field) {
+        $setparts[] = "$field = ?";
+    }
 
+    $values[] = $_POST['role_id']; 
+    $types   .= "i";
 
-$dup = checkDuplicateFields("roles", ["role_name" => $role_name], ["id" => $role_id], "AND");
+    $sql = "UPDATE roles SET " . implode(", ", $setparts) . " WHERE id = ?";
 
-if($dup['status'] === "duplicate") {
-    json_response("error", "", "", $dup['errors']);
+    $result = update($sql, $values, $types);
+
+    $result['message'] = ($result['status'] === "success") 
+        ? "Role Updated Successfully." 
+        : $result['message'];
+
+    json_response($result['status'], $result['message'], "", "");
+} else {
+    json_response("error", "No fields available to update. Permission denied for all fields.");
 }
-
-$sql = "UPDATE roles SET 
-    role_name  = ?
-    WHERE id  = ?";
-
-$values = [$role_name, $role_id];
-$type = "si";
-
-$result = update($sql, $values, $type);
-
-$result['message'] = ($result['status'] === "success") 
-    ? "Role Updated Successfully." 
-    : $result['message'];
-
-json_response($result['status'], $result['message'], "", "");
-
-
 ?>

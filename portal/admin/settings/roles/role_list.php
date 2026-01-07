@@ -89,10 +89,16 @@ require_role([1]);
 											</div>
 										</th>
 										<th data-column="id">Sr_No</th>
+										<?php if(has_sub_permission("roles", "role_name", "can_view")) : ?>
 										<th data-column="role_name">Roles</th>
+										<?php endif; 
+										if(has_sub_permission("roles", "created_at", "can_view")) : ?>
 										<th data-column="created_at">Ceated Date</th>
+										<?php endif;
+										if(has_sub_permission("roles", "updated_at", "can_view")) : ?>
 										<th data-column="updated_at">Updated Date</th>
-										<?php if(has_permission('roles', 'can_edit') || has_permission('roles', 'can_delete')) : ?>
+										<?php endif;
+										if(has_permission('roles', 'can_edit') || has_permission('roles', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
 										<?php endif ?>
 									</tr>
@@ -135,8 +141,3 @@ require_role([1]);
 	}
 ?>
 <script src="../assets/ajax/roles.js"></script>
-
-
-<!-- <script>
-	loadpagedata();
-</script> -->

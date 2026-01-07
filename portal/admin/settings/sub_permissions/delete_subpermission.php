@@ -3,7 +3,7 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-if(!has_permission('permissions', 'can_delete')) {
+if(!has_permission('sub permissions', 'can_delete')) {
 	json_response("error", "Access Denied");
 	exit;
 }
@@ -16,7 +16,7 @@ if(!verify_csrf($_POST['csrf_token'])) {
     json_response("error", "Invalid CSRF Token", "", "");
 }
 
-$ids = explode(',', $_POST['permission_id']);  
+$ids = explode(',', $_POST['sub_permission_id']);  
 $ids = array_filter($ids);
 
 if(empty($ids)) {
@@ -27,7 +27,7 @@ $superAdmins = [];
 $idsToDelete = [];
 
 foreach ($ids as $id) {
-    if (is_superadmin('role_id', 'role_permissions', 'permission_id', $id)) {
+    if (is_superadmin('role_id', 'field_permissions', 'sub_permission_id', $id)) {
         $superAdmins[] = $id;
     } else {
         $idsToDelete[] = $id;
@@ -39,7 +39,7 @@ if (!empty($idsToDelete)) {
     $placeholders = implode(',', array_fill(0, count($idsToDelete), '?'));
     $type = str_repeat('i', count($idsToDelete));
 
-    $sql = "DELETE FROM role_permissions WHERE permission_id IN ($placeholders)";
+    $sql = "DELETE FROM field_permissions WHERE sub_permission_id IN ($placeholders)";
     $result = delete($sql, $idsToDelete, $type);
 }
 

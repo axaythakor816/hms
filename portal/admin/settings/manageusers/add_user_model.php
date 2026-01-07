@@ -8,7 +8,7 @@ if(!has_permission('manage users', 'can_add')) {
     exit;
 }
 
-require_role([1]);
+require_role([1, 6]);
 ?>
 
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">

@@ -2,6 +2,10 @@
 require_once '../../../../core/init.php';
 
 require_login();
+if(!has_permission('permissions', 'can_add')) {
+	json_response("error", "Access Denied");
+	exit;
+}
 $action = $_POST['action'];
 
 if($action == 'roles') {
@@ -11,7 +15,7 @@ if($action == 'roles') {
     $type = "";
     $columnname = ["column_id" => "id", "column_name" => "role_name"];
 
-    $result = checkselectdata(select($sql, $value, $value), $columnname);
+    $result = checkselectdata(select($sql, $value, $type), $columnname);
 
     json_response($result['status'], $result['message'], $result['data'], "");
 }
@@ -23,7 +27,7 @@ if($action == 'modules') {
     $type = "";
     $columnname = ["column_id" => "module_id", "column_name" => "module_name"];
 
-    $result = checkselectdata(select($sql, $value, $value), $columnname);
+    $result = checkselectdata(select($sql, $value, $type), $columnname);
 
     json_response($result['status'], $result['message'], $result['data'], "");
 }

@@ -8,7 +8,7 @@ if(!has_permission('manage users', 'can_add')) {
 	exit;
 }
 
-require_role([1]);
+require_role([1,6]);
 
 $_POST = filteration($_POST);
 
@@ -36,12 +36,18 @@ if(!verify_csrf($_POST['csrf_token'])) {
     json_response("error", "Invalid CSRF Token", "", "");
 }
 
+$role_id = $_POST['role_id'];
+if ($role_id == 1 && $_SESSION['role_id'] != 1) {
+    json_response("error", "Access Denied: Only Super Admin can create another Super Admin.");
+    exit;
+}
+
+
 $first_name = strtolower($_POST['first_name']);
 $last_name = strtolower($_POST['last_name']);
 $email = strtolower($_POST['email']);
 $phone = $_POST['phone'];
 $password = $_POST['password'];
-$role_id = $_POST['role_id'];
 $gender = $_POST['gender'];
 $dob = $_POST['dob'];
 $status = $_POST['status'];

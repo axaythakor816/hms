@@ -8,7 +8,7 @@ if(!has_permission('manage users', 'can_view')) {
 	exit;
 }
 
-require_role([1]);
+require_role([1, 6]);
 
 ?>
 

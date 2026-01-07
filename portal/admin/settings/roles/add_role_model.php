@@ -32,6 +32,7 @@ require_role([1]);
                     <div class="row">
 
                         <!-- Role Name -->
+                        <?php if(has_sub_permission("roles", "role_name", "can_add")): ?>
                         <div class="col-md-12">
                             <div class="input-block local-forms">
                                 <label>Role Name <span class="login-danger">*</span></label>
@@ -40,6 +41,7 @@ require_role([1]);
                                 <span class="error" id="role_name_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Buttons -->

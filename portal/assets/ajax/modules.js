@@ -83,9 +83,11 @@ window.state = window.state || {
             e.preventDefault();
             $(".error").text("");
 
-            let rules = {
-                module_name: "required|max:20",
-            };
+            let rules = {};
+
+            if ($("#module_name").length) {
+                rules.module_name = "required|max:20";
+            }
 
             let errors = validateForm("#addmodule_form", rules);
 
@@ -158,12 +160,14 @@ window.state = window.state || {
         });
 
         $("#editmodule_form").submit(function(e) {
-        e.preventDefault();
+            e.preventDefault();
             $(".error").text("");
         
-            let rules = {
-                module_name: "required|max:20",
-            };
+            let rules = {};
+
+            if ($("#edit_module_name").length) {
+                rules.module_name = "required|max:20";
+            }
 
             let errors = validateForm("#editmodule_form", rules);
 

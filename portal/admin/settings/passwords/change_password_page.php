@@ -3,10 +3,10 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-// if(!has_permission('passwords', 'can_edit')) {
-// 	showalert("error", "Access Denied");
-// 	exit;
-// }
+if(!has_permission('passwords', 'can_edit')) {
+	showalert("error", "Access Denied");
+	exit;
+}
 
 ?>        
 <div class="page-wrapper">

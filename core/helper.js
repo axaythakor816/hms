@@ -238,10 +238,8 @@ function showAlert(type = "success", msg = "Message", position = "top-center") {
 
     let alertClass = (type === "success") ? "alert-success" : "alert-danger";
     // console.log("function message", msg);
-    // Remove old alert
     $(".custom-alert-wrapper").remove();
 
-    // Position classes
     let positions = {
         "top-left": "top:20px; left:20px;",
         "top-center": "top:20px; left:50%; transform:translateX(-50%);",
@@ -269,7 +267,7 @@ function showAlert(type = "success", msg = "Message", position = "top-center") {
                         style="position:absolute; top:-15px; right:-12px; transform: scale(0.7);">
                 </button>
 
-                <strong class="me-3">${msg}</strong>
+                <span style="font-weight: 600;" class="me-3">${msg}</span>
 
             </div>
         </div>

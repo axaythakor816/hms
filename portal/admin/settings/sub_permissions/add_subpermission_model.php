@@ -3,33 +3,33 @@ require_once '../../../../core/init.php';
 
 require_login();
 
-if(!has_permission('permissions', 'can_add')) {
+if(!has_permission('sub permissions', 'can_add')) {
 	showalert("error", "Access Denied");
 	exit;
 }
 
 require_role([1]);
-
 ?>
-<div class="modal fade" id="addpermissionModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addSubPermissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Add / Edit Permission</h5>
+                <h5 class="modal-title">Add / Edit Sub Permission</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
 
-                <form id="addpermission_form">
+                <form id="addSubPermission_form">
 
-					<input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
+					<input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo csrf_token(); ?>">
 
                     <div class="row">
 
                         <!-- Role -->
-                        <div class="col-md-6">
+                        <?php if(has_sub_permission("sub permissions", "role_id", "can_add") && has_sub_permission("sub permissions", "module_id", "can_add") && has_sub_permission("sub permissions", "field_id", "can_add")): ?>
+                        <div class="col-md-4">
                             <div class="input-block local-forms">
                                 <label>Role <span class="login-danger">*</span></label>
                                 <select class="form-select form-control" name="role_id" id="role_id">
@@ -38,9 +38,11 @@ require_role([1]);
                                 <span class="error" id="role_id_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                         <!-- Module -->
-                        <div class="col-md-6">
+                        <?php if(has_sub_permission("sub permissions", "role_id", "can_add") && has_sub_permission("sub permissions", "module_id", "can_add") && has_sub_permission("sub permissions", "field_id", "can_add")): ?>
+                        <div class="col-md-4">
                             <div class="input-block local-forms">
                                 <label>Module <span class="login-danger">*</span></label>
                                 <select name="module_id" id="module_id" class="form-select form-control">
@@ -49,40 +51,61 @@ require_role([1]);
                                 <span class="error" id="module_id_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
+
+                        <!-- Field -->
+                        <?php if(has_sub_permission("sub permissions", "role_id", "can_add") && has_sub_permission("sub permissions", "module_id", "can_add") && has_sub_permission("sub permissions", "field_id", "can_add")): ?>
+                        <div class="col-md-4">
+                            <div class="input-block local-forms">
+                                <label>Field <span class="login-danger">*</span></label>
+                                <select name="field_id" id="field_id" class="form-select form-control">
+                                    <!-- options insert dynamically based on selected module -->
+                                </select>
+                                <span class="error" id="field_id_error"></span>
+                            </div>
+                        </div>
+                        <?php endif; ?>
 
                         <!-- Permissions -->
+                        <?php if(has_sub_permission("sub permissions", "role_id", "can_add") && has_sub_permission("sub permissions", "module_id", "can_add") && has_sub_permission("sub permissions", "field_id", "can_add")): ?>
                         <div class="col-md-12 mt-3">
                             <label>Permissions</label>
                             <div class="d-flex gap-4 mt-1">
 
+                            <?php if(has_sub_permission("sub permissions", "can_view", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_view" id="can_view" value="1">
                                     <label class="form-check-label">Can View</label>
                                 </div>
-
+                            <?php endif;
+                            if(has_sub_permission("sub permissions", "can_add", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_add" id="can_add" value="1">
                                     <label class="form-check-label">Can Add</label>
                                 </div>
-
+                            <?php endif;
+                            if(has_sub_permission("sub permissions", "can_edit", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_edit" id="can_edit" value="1">
                                     <label class="form-check-label">Can Edit</label>
                                 </div>
-
+                            <?php endif;
+                            if(has_sub_permission("sub permissions", "can_delete", "can_add")) : ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="can_delete" id="can_delete" value="1">
                                     <label class="form-check-label">Can Delete</label>
                                 </div>
+                            <?php endif; ?>
 
                             </div>
                         </div>
+                        <?php endif; ?>
 
                     </div>
 
                     <div class="text-end mt-4">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" name="save_permission" class="btn btn-primary">Create Permission</button>
+                        <button type="submit" name="save_sub_permission" class="btn btn-primary">Save Sub Permission</button>
                     </div>
 
                 </form>

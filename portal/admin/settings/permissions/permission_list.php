@@ -8,7 +8,7 @@ if(!has_permission('permissions', 'can_view')) {
 	exit;
 }
 
-require_role([1]);
+require_role([1, 6]);
 
 ?>
 
@@ -89,15 +89,31 @@ require_role([1]);
 											</div>
 										</th>
 										<th data-column="permission_id">Sr_No</th>
+										<?php if(has_sub_permission("permissions", "role_id", "can_view")) : ?>
 										<th data-column="role_id">Roles</th>
+										<?php endif;
+										if(has_sub_permission("permissions", "module_id", "can_view")) : ?>
 										<th data-column="module_id">Modules</th>
+										<?php endif;
+										if(has_sub_permission("permissions", "can_view", "can_view")) : ?>
 										<th data-column="can_view">Can View</th>
+										<?php endif;
+										if(has_sub_permission("permissions", "can_add", "can_view")) : ?>
 										<th data-column="can_add">Can Add</th>
+										<?php endif;
+										if(has_sub_permission("permissions", "can_edit", "can_view")) : ?>
 										<th data-column="can_edit">Can Edit</th>
+										<?php endif;
+										if(has_sub_permission("permissions", "can_delete", "can_view")) : ?>
 										<th data-column="can_delete">Can Delete</th>
+										<?php endif;
+										if(has_sub_permission("permissions", "created_at", "can_view")) : ?>
 										<th data-column="created_at">Ceated Date</th>
+										<?php endif;
+										if(has_sub_permission("permissions", "updated_at", "can_view")) : ?>
 										<th data-column="updated_at">Updated Date</th>
-										<?php if(has_permission('permissions', 'can_edit') || has_permission('permissions', 'can_delete')) : ?>
+										<?php endif;
+										if(has_permission('permissions', 'can_edit') || has_permission('permissions', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
 										<?php endif ?>
 									</tr>

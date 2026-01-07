@@ -7,8 +7,7 @@ if(!has_permission('manage users', 'can_edit')) {
 	json_response("error", "Access Denied");
 	exit;
 }
-
-require_role([1]);
+require_role([1,6]);
 $_POST = filteration($_POST);
 
 $rules = [
@@ -41,6 +40,12 @@ if(!verify_csrf($_POST['csrf_token'])) {
 }
 
 $user_id = $_POST['user_id'];
+$user_id = $_POST['user_id'];
+
+if (is_superadmin('role_id','users', 'user_id', $user_id) && $_SESSION['role_id'] != 1) {
+    json_response("error", "Access Denied: Only Super Admin can update another Super Admin.");
+}
+
 $first_name = strtolower($_POST['first_name']);
 $last_name = strtolower($_POST['last_name']);
 $email = strtolower($_POST['email']);

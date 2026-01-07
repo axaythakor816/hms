@@ -89,10 +89,16 @@ require_role([1]);
 											</div>
 										</th>
 										<th data-column="module_id">Sr_No</th>
+										<?php if(has_sub_permission("modules", "module_name", "can_view")) : ?>
 										<th data-column="module_name">Modules</th>
+										<?php endif; 
+										if(has_sub_permission("modules", "created_at", "can_view")) : ?>
                                         <th data-column="created_at">Ceated Date</th>
+										<?php endif;
+										if(has_sub_permission("modules", "updated_at", "can_view")) : ?>
 										<th data-column="updated_at">Updated Date</th>
-										<?php if(has_permission('modules', 'can_edit') || has_permission('modules', 'can_delete')) : ?>
+										<?php endif;
+										if(has_permission('modules', 'can_edit') || has_permission('modules', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
 										<?php endif ?>
 									</tr>

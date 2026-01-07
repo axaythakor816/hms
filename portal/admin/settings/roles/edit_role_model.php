@@ -32,7 +32,8 @@ require_role([1]);
                     <div class="row">
 
                         <!-- Role Name -->
-                        <div class="col-md-12">
+                        <?php if(has_sub_permission("roles", "role_name", "can_edit")): ?>
+                            <div class="col-md-12">
                             <div class="input-block local-forms">
                                 <label>Role Name <span class="login-danger">*</span></label>
                                 <input type="text" name="role_name" id="edit_role_name"
@@ -40,6 +41,7 @@ require_role([1]);
                                 <span class="error" id="edit_role_name_error"></span>
                             </div>
                         </div>
+                        <?php endif; ?>
 
                         <!-- Optional: Description -->
                         <!-- <div class="col-md-12 mt-3">

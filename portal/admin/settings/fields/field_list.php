@@ -88,12 +88,21 @@ require_role([1]);
 												<input class="form-check-input" type="checkbox" id="checkAll" value="something">
 											</div>
 										</th>
+										
 										<th data-column="field_id">Sr_No</th>
+										<?php if(has_sub_permission("fields", "module_id", "can_view")) : ?>
 										<th data-column="module_name">Module</th>
+										<?php endif;
+										if(has_sub_permission("fields", "field_name", "can_view")) : ?>
 										<th data-column="field_name">Fields</th>
+										<?php endif;
+										if(has_sub_permission("fields", "created_at", "can_view")) : ?>
                                         <th data-column="created_at">Ceated Date</th>
+										<?php endif;
+										if(has_sub_permission("fields", "updated_at", "can_view")) : ?>
 										<th data-column="updated_at">Updated Date</th>
-										<?php if(has_permission('fields', 'can_edit') || has_permission('fields', 'can_delete')) : ?>
+										<?php endif;
+										if(has_permission('fields', 'can_edit') || has_permission('fields', 'can_delete')) : ?>
 										<th colspan="2" class="text-center">Action</th>
 										<?php endif ?>
 									</tr>

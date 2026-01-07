@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Jan 05, 2026 at 02:27 PM
+-- Generation Time: Jan 07, 2026 at 02:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -209,6 +209,13 @@ CREATE TABLE `doctors` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `doctors`
+--
+
+INSERT INTO `doctors` (`doctor_id`, `user_id`, `specialty`, `sub_specialty`, `qualification`, `years_experience`, `department_id`, `medical_license_no`, `license_issue_date`, `license_expiry_date`, `consultation_fee`, `available_days`, `available_time_from`, `available_time_to`, `languages_spoken`, `bio`, `street`, `city`, `state`, `pincode`, `doctor_status`, `is_consultation_online`, `ratings_avg`, `ratings_count`, `two_fa_enabled`, `meta`, `created_at`, `updated_at`) VALUES
+(1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 0, 0.00, 0, 0, NULL, '2026-01-07 08:30:23', '2026-01-07 08:30:23');
+
 -- --------------------------------------------------------
 
 --
@@ -258,6 +265,39 @@ CREATE TABLE `fields` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `fields`
+--
+
+INSERT INTO `fields` (`field_id`, `module_id`, `field_name`, `created_at`, `updated_at`) VALUES
+(1, 13, 'role_name', '2026-01-06 10:58:46', '2026-01-06 10:58:46'),
+(2, 13, 'created_at', '2026-01-06 10:59:01', '2026-01-06 10:59:01'),
+(3, 13, 'updated_at', '2026-01-06 10:59:15', '2026-01-06 10:59:15'),
+(4, 16, 'field_name', '2026-01-07 05:36:58', '2026-01-07 05:36:58'),
+(5, 16, 'created_at', '2026-01-07 05:37:08', '2026-01-07 05:37:08'),
+(6, 16, 'updated_at', '2026-01-07 05:37:25', '2026-01-07 05:37:25'),
+(7, 16, 'module_id', '2026-01-07 05:37:35', '2026-01-07 05:37:35'),
+(8, 15, 'module_name', '2026-01-07 06:11:30', '2026-01-07 09:50:08'),
+(9, 15, 'created_at', '2026-01-07 09:51:46', '2026-01-07 09:51:46'),
+(10, 15, 'updated_at', '2026-01-07 09:52:00', '2026-01-07 09:52:00'),
+(11, 10, 'role_id', '2026-01-07 11:06:03', '2026-01-07 11:06:03'),
+(12, 10, 'module_id', '2026-01-07 11:06:21', '2026-01-07 11:06:21'),
+(13, 10, 'can_add', '2026-01-07 11:06:35', '2026-01-07 11:06:35'),
+(14, 10, 'can_view', '2026-01-07 11:06:47', '2026-01-07 11:06:47'),
+(15, 10, 'can_edit', '2026-01-07 11:06:57', '2026-01-07 11:06:57'),
+(16, 10, 'can_delete', '2026-01-07 11:07:15', '2026-01-07 11:07:15'),
+(17, 10, 'created_at', '2026-01-07 11:07:39', '2026-01-07 11:07:39'),
+(18, 10, 'updated_at', '2026-01-07 11:07:48', '2026-01-07 11:07:48'),
+(19, 17, 'role_id', '2026-01-07 12:30:11', '2026-01-07 12:30:11'),
+(20, 17, 'module_id', '2026-01-07 12:30:47', '2026-01-07 12:30:47'),
+(21, 17, 'field_id', '2026-01-07 12:31:09', '2026-01-07 12:31:09'),
+(22, 17, 'created_at', '2026-01-07 12:31:23', '2026-01-07 12:31:29'),
+(23, 17, 'updated_at', '2026-01-07 12:31:37', '2026-01-07 12:31:37'),
+(24, 17, 'can_add', '2026-01-07 12:31:47', '2026-01-07 12:31:47'),
+(25, 17, 'can_view', '2026-01-07 12:31:56', '2026-01-07 12:31:56'),
+(26, 17, 'can_edit', '2026-01-07 12:32:07', '2026-01-07 12:32:19'),
+(27, 17, 'can_delete', '2026-01-07 12:32:36', '2026-01-07 12:32:36');
+
 -- --------------------------------------------------------
 
 --
@@ -275,6 +315,39 @@ CREATE TABLE `field_permissions` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `field_permissions`
+--
+
+INSERT INTO `field_permissions` (`sub_permission_id`, `role_id`, `field_id`, `can_view`, `can_edit`, `can_add`, `can_delete`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 1, 1, 1, '2026-01-06 10:59:34', '2026-01-06 12:33:42'),
+(2, 1, 2, 1, 1, 1, 1, '2026-01-06 11:02:32', '2026-01-06 12:34:15'),
+(3, 1, 3, 1, 1, 1, 1, '2026-01-06 11:03:12', '2026-01-06 12:34:25'),
+(4, 1, 7, 1, 1, 1, 1, '2026-01-07 05:37:57', '2026-01-07 06:48:52'),
+(5, 1, 4, 1, 1, 1, 1, '2026-01-07 05:38:45', '2026-01-07 10:53:56'),
+(6, 1, 5, 1, 1, 1, 1, '2026-01-07 05:40:02', '2026-01-07 06:13:34'),
+(7, 1, 6, 1, 1, 1, 1, '2026-01-07 05:40:36', '2026-01-07 06:13:46'),
+(8, 1, 8, 1, 1, 1, 1, '2026-01-07 08:04:20', '2026-01-07 08:04:20'),
+(9, 1, 9, 1, 1, 1, 1, '2026-01-07 09:52:34', '2026-01-07 09:52:34'),
+(10, 1, 10, 1, 1, 1, 1, '2026-01-07 09:52:46', '2026-01-07 09:52:46'),
+(11, 1, 12, 1, 1, 1, 1, '2026-01-07 11:08:09', '2026-01-07 11:55:08'),
+(12, 1, 11, 1, 1, 1, 1, '2026-01-07 11:09:25', '2026-01-07 11:09:25'),
+(13, 1, 13, 1, 1, 1, 1, '2026-01-07 11:09:55', '2026-01-07 11:55:58'),
+(14, 1, 14, 1, 1, 1, 1, '2026-01-07 11:10:48', '2026-01-07 11:10:48'),
+(15, 1, 15, 1, 1, 1, 1, '2026-01-07 11:11:06', '2026-01-07 11:11:06'),
+(16, 1, 16, 1, 1, 1, 1, '2026-01-07 11:11:23', '2026-01-07 11:11:23'),
+(17, 1, 17, 1, 1, 1, 1, '2026-01-07 11:11:39', '2026-01-07 11:11:39'),
+(18, 1, 18, 1, 1, 1, 1, '2026-01-07 11:11:50', '2026-01-07 11:11:50'),
+(19, 1, 19, 1, 1, 1, 1, '2026-01-07 12:34:09', '2026-01-07 12:34:09'),
+(20, 1, 20, 1, 1, 1, 1, '2026-01-07 12:34:37', '2026-01-07 12:34:37'),
+(21, 1, 21, 1, 1, 1, 1, '2026-01-07 12:34:53', '2026-01-07 12:34:53'),
+(22, 1, 24, 1, 1, 1, 1, '2026-01-07 12:35:39', '2026-01-07 12:35:39'),
+(23, 1, 26, 1, 1, 1, 1, '2026-01-07 12:36:05', '2026-01-07 12:36:05'),
+(24, 1, 22, 1, 1, 1, 1, '2026-01-07 12:36:41', '2026-01-07 12:36:41'),
+(25, 1, 23, 1, 1, 1, 1, '2026-01-07 12:37:11', '2026-01-07 12:37:11'),
+(26, 1, 25, 1, 1, 1, 1, '2026-01-07 12:37:37', '2026-01-07 12:37:37'),
+(27, 1, 27, 1, 1, 1, 0, '2026-01-07 12:38:18', '2026-01-07 13:01:09');
 
 -- --------------------------------------------------------
 
@@ -389,7 +462,8 @@ INSERT INTO `modules` (`module_id`, `module_name`, `created_at`, `updated_at`) V
 (14, 'manage users', '2025-12-17 12:16:47', '2025-12-17 12:16:47'),
 (15, 'modules', '2025-12-18 08:16:36', '2025-12-18 08:16:36'),
 (16, 'fields', '2026-01-05 04:46:34', '2026-01-05 04:46:34'),
-(17, 'sub permissions', '2026-01-05 12:31:18', '2026-01-05 12:38:58');
+(17, 'sub permissions', '2026-01-05 12:31:18', '2026-01-05 12:38:58'),
+(18, 'passwords', '2026-01-07 08:42:29', '2026-01-07 08:42:29');
 
 -- --------------------------------------------------------
 
@@ -538,7 +612,8 @@ INSERT INTO `roles` (`id`, `role_name`, `created_at`, `updated_at`) VALUES
 (2, 'doctor', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
 (3, 'patient', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
 (4, 'staff', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
-(5, 'user', '2025-12-08 15:21:49', '2025-12-08 15:21:49');
+(5, 'user', '2025-12-08 15:21:49', '2025-12-08 15:21:49'),
+(6, 'admin', '2026-01-07 10:26:08', '2026-01-07 10:26:08');
 
 -- --------------------------------------------------------
 
@@ -570,16 +645,17 @@ INSERT INTO `role_permissions` (`permission_id`, `role_id`, `module_id`, `can_vi
 (5, 1, 14, 1, 1, 1, 1, '2026-01-05 17:46:10', '2026-01-05 17:46:10'),
 (6, 1, 5, 0, 0, 0, 0, '2026-01-05 17:47:14', '2026-01-05 17:56:25'),
 (7, 1, 16, 1, 1, 1, 1, '2026-01-05 17:48:10', '2026-01-05 17:48:10'),
-(8, 1, 13, 1, 1, 1, 1, '2026-01-05 17:48:32', '2026-01-05 17:48:32'),
+(8, 1, 13, 1, 1, 1, 1, '2026-01-05 17:48:32', '2026-01-06 17:19:17'),
 (9, 1, 12, 1, 1, 1, 1, '2026-01-05 17:49:22', '2026-01-05 17:49:22'),
 (10, 1, 6, 0, 0, 0, 0, '2026-01-05 17:50:50', '2026-01-05 17:51:33'),
 (11, 1, 7, 0, 0, 0, 0, '2026-01-05 17:51:13', '2026-01-05 17:55:43'),
-(12, 1, 2, 0, 0, 0, 0, '2026-01-05 17:51:55', '2026-01-05 17:51:55'),
+(12, 1, 2, 0, 0, 0, 0, '2026-01-05 17:51:55', '2026-01-07 14:08:23'),
 (13, 1, 3, 0, 0, 0, 0, '2026-01-05 17:52:17', '2026-01-05 17:52:17'),
 (14, 1, 8, 0, 0, 0, 0, '2026-01-05 17:52:45', '2026-01-05 17:52:45'),
 (15, 1, 4, 0, 0, 0, 0, '2026-01-05 17:53:03', '2026-01-05 17:53:03'),
 (16, 1, 9, 0, 0, 0, 0, '2026-01-05 17:53:09', '2026-01-05 17:53:09'),
-(17, 1, 17, 1, 1, 1, 1, '2026-01-05 18:09:54', '2026-01-05 18:10:09');
+(17, 1, 17, 1, 1, 1, 1, '2026-01-05 18:09:54', '2026-01-05 18:10:09'),
+(18, 1, 18, 1, 1, 1, 1, '2026-01-07 14:12:43', '2026-01-07 14:12:43');
 
 -- --------------------------------------------------------
 
@@ -627,7 +703,8 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`staff_id`, `user_id`, `designation`, `department_id`, `staff_shift`, `join_date`, `staff_salary`, `street`, `city`, `state`, `pincode`, `email_verified`, `phone_verified`, `staff_status`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, NULL, 'rotational', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'active', '2026-01-03 12:57:31', '2026-01-03 12:57:31');
+(1, 1, NULL, NULL, 'rotational', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'active', '2026-01-03 12:57:31', '2026-01-03 12:57:31'),
+(2, 2, NULL, NULL, 'rotational', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'suspended', '2026-01-07 08:15:24', '2026-01-07 08:30:23');
 
 -- --------------------------------------------------------
 
@@ -700,7 +777,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `uuid`, `profile_image`, `first_name`, `middle_name`, `last_name`, `email`, `phone`, `password`, `role_id`, `gender`, `dob`, `status`, `created_at`, `updated_at`, `reset_token_hash`, `reset_token_expiry`) VALUES
-(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', NULL, 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$6E2xClL2wXvhj3UQOv3c8ODCcfd9oRvkepLcUOapaxvCr8MGpWcDu', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2026-01-03 12:57:31', NULL, NULL);
+(1, '24c4cb10-c93a-11f0-894f-d89ef3933eb9', NULL, 'axay', NULL, 'thakor', 'axaythakarda816@gmail.com', '1234567891', '$2y$10$6E2xClL2wXvhj3UQOv3c8ODCcfd9oRvkepLcUOapaxvCr8MGpWcDu', 1, 'Male', '2005-05-07', 'active', '2025-11-24 13:33:21', '2026-01-03 12:57:31', NULL, NULL),
+(2, '039d4d3f-eba1-11f0-9554-fcaa141337b9', NULL, 'nirav', NULL, 'patel', 'nyyeqlzsqs1845@novamails.my', '1111111118', '$2y$10$BM60DR5S2b6RDWcyy4pTtOwc7boUYx3HcaK3GEzr7VCFxoc2ihCWe', 2, 'Male', '2026-01-24', 'inactive', '2026-01-07 08:15:24', '2026-01-07 08:31:14', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -843,7 +921,9 @@ ALTER TABLE `doctor_schedules`
 --
 ALTER TABLE `fields`
   ADD PRIMARY KEY (`field_id`),
-  ADD KEY `module_id` (`module_id`);
+  ADD UNIQUE KEY `uniq_module_field` (`module_id`,`field_name`),
+  ADD KEY `module_id` (`module_id`),
+  ADD KEY `idx_module_id` (`module_id`);
 
 --
 -- Indexes for table `field_permissions`
@@ -1076,7 +1156,7 @@ ALTER TABLE `discharge_summaries`
 -- AUTO_INCREMENT for table `doctors`
 --
 ALTER TABLE `doctors`
-  MODIFY `doctor_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `doctor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `doctor_rounds`
@@ -1094,13 +1174,13 @@ ALTER TABLE `doctor_schedules`
 -- AUTO_INCREMENT for table `fields`
 --
 ALTER TABLE `fields`
-  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `field_permissions`
 --
 ALTER TABLE `field_permissions`
-  MODIFY `sub_permission_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `sub_permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `insurance_claims`
@@ -1136,7 +1216,7 @@ ALTER TABLE `medical_history`
 -- AUTO_INCREMENT for table `modules`
 --
 ALTER TABLE `modules`
-  MODIFY `module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `nurse_notes`
@@ -1184,13 +1264,13 @@ ALTER TABLE `radiology_reports`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -1202,7 +1282,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `staff_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `staff_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `staff_salary`
@@ -1220,7 +1300,7 @@ ALTER TABLE `tax`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `vitals`
